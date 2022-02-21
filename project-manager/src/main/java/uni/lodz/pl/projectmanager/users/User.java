@@ -1,21 +1,28 @@
 package uni.lodz.pl.projectmanager.users;
 
-import lombok.*;
-//import org.hibernate.Hibernate;
-//
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
-//import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-//@Entity
+import javax.persistence.*;
+
+@Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-//    @Id
-//    @Column(name = "id", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
-    private String firstname;
-    private String secondname;
+    private String username;
+    private String password;
+    private String email;
+    private String name;
+    private String surname;
+//    @ManyToMany
+//    private List<Authority> authorities;
 }
+

@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.security;
+package uni.lodz.pl.projectmanager.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +20,7 @@ public class Credentials implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return "USER";
-            }
-        });
+        return List.of((GrantedAuthority) () -> "ADMIN");
     }
 
     @Override

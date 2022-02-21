@@ -1,35 +1,33 @@
 package uni.lodz.pl.projectmanager.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import uni.lodz.pl.projectmanager.security.model.LoginResponse;
+import uni.lodz.pl.projectmanager.users.User;
+import uni.lodz.pl.projectmanager.users.UserService;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final BCryptPasswordEncoder bCrypt;
+    private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String login) {
-        if (!login.equals("username")) {
-            throw new UsernameNotFoundException("Username not found");
-        }
-        return new User(login, bCrypt.encode("password"), List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return "USER";
-            }
-        }));
+    public UserDetails loadUserByUsername(String username) {
+        User user = userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), bCrypt.encode(user.getPassword()), List.of((GrantedAuthority) () -> "ADMIN"));
     }
 
-    public Long loadIdByUsername(String username) {
-        return 1L;
+    public LoginResponse getCredentials(String username) {
+        return new LoginResponse(userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
     }
 }
