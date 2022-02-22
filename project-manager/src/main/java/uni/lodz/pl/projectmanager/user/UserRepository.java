@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.users;
+package uni.lodz.pl.projectmanager.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

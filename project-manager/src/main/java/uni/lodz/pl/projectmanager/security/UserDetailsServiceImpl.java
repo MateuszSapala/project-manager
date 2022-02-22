@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import uni.lodz.pl.projectmanager.security.model.LoginResponse;
-import uni.lodz.pl.projectmanager.users.User;
-import uni.lodz.pl.projectmanager.users.UserService;
+import uni.lodz.pl.projectmanager.user.User;
+import uni.lodz.pl.projectmanager.user.UserDto;
+import uni.lodz.pl.projectmanager.user.UserService;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), bCrypt.encode(user.getPassword()), List.of((GrantedAuthority) () -> "ADMIN"));
     }
 
-    public LoginResponse getCredentials(String username) {
-        return new LoginResponse(userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
+    public UserDto getCredentials(String username) {
+        return new UserDto(userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
     }
 }

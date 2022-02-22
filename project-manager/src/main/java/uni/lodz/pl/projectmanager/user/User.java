@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.users;
+package uni.lodz.pl.projectmanager.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,5 @@ public class User {
     private String email;
     private String name;
     private String surname;
-//    @ManyToMany
-//    private List<Authority> authorities;
 }
 

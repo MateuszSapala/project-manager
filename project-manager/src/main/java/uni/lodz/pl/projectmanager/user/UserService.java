@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.users;
+package uni.lodz.pl.projectmanager.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
