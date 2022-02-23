@@ -11,7 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import uni.lodz.pl.projectmanager.user.UserDto;
+import uni.lodz.pl.projectmanager.security.model.Credentials;
+import uni.lodz.pl.projectmanager.security.model.LoginDetails;
+import uni.lodz.pl.projectmanager.user.model.UserDto;
 
 @Slf4j
 @RestController

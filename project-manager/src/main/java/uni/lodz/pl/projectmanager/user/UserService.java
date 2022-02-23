@@ -2,6 +2,7 @@ package uni.lodz.pl.projectmanager.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uni.lodz.pl.projectmanager.user.model.User;
 
 import java.util.List;
 import java.util.Optional;

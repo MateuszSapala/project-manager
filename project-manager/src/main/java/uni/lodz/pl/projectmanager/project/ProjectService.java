@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.sprint.Sprint;
+import uni.lodz.pl.projectmanager.task.model.Task;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,11 @@ public class ProjectService {
     public void addSprintToProject(Sprint sprint, String projectName) {
         Project project = projectRepository.findByName(projectName).orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + projectName + "\"} not found"));
         project.getSprintList().add(sprint);
+        projectRepository.save(project);
+    }
+
+    public void addTaskToProject(Project project, Task task) {
+        project.taskList.add(task);
         projectRepository.save(project);
     }
 }

@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.security;
+package uni.lodz.pl.projectmanager.security.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

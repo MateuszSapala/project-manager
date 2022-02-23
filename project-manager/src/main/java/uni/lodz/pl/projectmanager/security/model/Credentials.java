@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.security;
+package uni.lodz.pl.projectmanager.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

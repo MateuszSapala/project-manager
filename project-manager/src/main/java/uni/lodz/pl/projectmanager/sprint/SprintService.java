@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,8 +14,8 @@ import java.util.Optional;
 public class SprintService {
     private final SprintRepository sprintRepository;
 
-    public Sprint createNewSprint(final String name) {
-        Sprint sprint = new Sprint(name);
+    public Sprint createNewSprint(final String name, final LocalDate start, final LocalDate end) {
+        Sprint sprint = new Sprint(name, start, end);
         return sprintRepository.save(sprint);
     }
 

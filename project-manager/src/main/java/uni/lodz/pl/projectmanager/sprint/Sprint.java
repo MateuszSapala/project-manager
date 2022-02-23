@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -14,8 +15,12 @@ public class Sprint {
     @Column(nullable = false)
     private Long id;
     private String name;
+    private LocalDate start;
+    private LocalDate end;
 
-    public Sprint(String name) {
+    public Sprint(String name, LocalDate start, LocalDate end) {
         this.name = name;
+        this.start = start;
+        this.end = end;
     }
 }

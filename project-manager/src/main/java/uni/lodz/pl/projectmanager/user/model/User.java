@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.user;
+package uni.lodz.pl.projectmanager.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private String email;

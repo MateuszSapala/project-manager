@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.user;
+package uni.lodz.pl.projectmanager.user.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

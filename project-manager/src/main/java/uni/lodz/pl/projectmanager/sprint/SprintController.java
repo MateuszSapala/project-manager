@@ -9,18 +9,20 @@ import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.project.ProjectService;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/v1/sprints")
 @RequiredArgsConstructor
-@SecurityRequirement(name="Authorization")
+@SecurityRequirement(name = "Authorization")
 @Tag(name = "Sprint")
 public class SprintController {
     private final SprintService sprintService;
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<Sprint> createSprint(String name, String projectName) {
-        Sprint sprint = sprintService.createNewSprint(name);
+    public ResponseEntity<Sprint> createSprint(String name, LocalDate start, LocalDate end, String projectName) {
+        Sprint sprint = sprintService.createNewSprint(name, start, end);
         projectService.addSprintToProject(sprint, projectName);
         return ResponseEntity.status(HttpStatus.CREATED).body(sprint);
     }

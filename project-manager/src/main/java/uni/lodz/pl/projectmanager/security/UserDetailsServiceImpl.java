@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import uni.lodz.pl.projectmanager.user.User;
-import uni.lodz.pl.projectmanager.user.UserDto;
 import uni.lodz.pl.projectmanager.user.UserService;
+import uni.lodz.pl.projectmanager.user.model.User;
+import uni.lodz.pl.projectmanager.user.model.UserDto;
 
 import java.util.List;
 
