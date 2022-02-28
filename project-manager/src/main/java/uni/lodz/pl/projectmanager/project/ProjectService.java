@@ -2,9 +2,6 @@ package uni.lodz.pl.projectmanager.project;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
-import uni.lodz.pl.projectmanager.sprint.Sprint;
-import uni.lodz.pl.projectmanager.task.model.Task;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,23 +19,16 @@ public class ProjectService {
         return projectRepository.findByName(name);
     }
 
+    public Optional<Project> getProjectById(final Long id) {
+        return projectRepository.findById(id);
+    }
+
     public Project createNewProject(final String name) {
         Project project = new Project(name);
         return projectRepository.save(project);
     }
 
-    public void deleteProjectByName(final String name) {
-        projectRepository.deleteByName(name);
-    }
-
-    public void addSprintToProject(Sprint sprint, String projectName) {
-        Project project = projectRepository.findByName(projectName).orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + projectName + "\"} not found"));
-        project.getSprintList().add(sprint);
-        projectRepository.save(project);
-    }
-
-    public void addTaskToProject(Project project, Task task) {
-        project.taskList.add(task);
-        projectRepository.save(project);
+    public void deleteProjectById(Long id) {
+        projectRepository.deleteById(id);
     }
 }

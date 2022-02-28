@@ -1,7 +1,8 @@
-package uni.lodz.pl.projectmanager.sprint;
+package uni.lodz.pl.projectmanager.sprint.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import uni.lodz.pl.projectmanager.project.Project;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,10 +18,13 @@ public class Sprint {
     private String name;
     private LocalDate start;
     private LocalDate end;
+    @ManyToOne
+    private Project project;
 
-    public Sprint(String name, LocalDate start, LocalDate end) {
+    public Sprint(String name, LocalDate start, LocalDate end, Project project) {
         this.name = name;
         this.start = start;
         this.end = end;
+        this.project = project;
     }
 }

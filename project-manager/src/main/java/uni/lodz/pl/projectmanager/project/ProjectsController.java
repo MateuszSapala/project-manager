@@ -25,14 +25,14 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createNewProject(String name) {
+    public ResponseEntity<Project> createNewProject(@RequestBody String name) {
         Project project = projectService.createNewProject(name);
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteProjectByName(String name) {
-        projectService.deleteProjectByName(name);
+    public ResponseEntity<Void> deleteProjectById(Long id) {
+        projectService.deleteProjectById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

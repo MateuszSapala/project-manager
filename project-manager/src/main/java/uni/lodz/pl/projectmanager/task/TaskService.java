@@ -2,15 +2,16 @@ package uni.lodz.pl.projectmanager.task;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.project.Project;
 import uni.lodz.pl.projectmanager.project.ProjectService;
+import uni.lodz.pl.projectmanager.sprint.SprintService;
+import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 import uni.lodz.pl.projectmanager.task.model.AddTaskDto;
 import uni.lodz.pl.projectmanager.task.model.Task;
-import uni.lodz.pl.projectmanager.user.UserRepository;
+import uni.lodz.pl.projectmanager.user.UserService;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.user.model.UserDto;
 
@@ -21,21 +22,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProjectService projectService;
+    private final SprintService sprintService;
 
     public Task createTask(AddTaskDto taskDto) {
-        Project project = projectService.getProjectByName(taskDto.getProjectName())
-                .orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + taskDto.getProjectName() + "\"} not found"));
+        Project project = projectService.getProjectById(taskDto.getProjectId())
+                .orElseThrow(() -> new NotFoundException("Project {\"id\":\"" + taskDto.getProjectId() + "\"} not found"));
+        Sprint sprint = sprintService.getSprintById(taskDto.getSprintId())
+                .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + taskDto.getSprintId() + "\"} not found"));
         Long authorId = ((UserDto) SecurityContextHolder.getContext().getAuthentication().getCredentials()).getId();
-        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundException("Task author not found"));
-        User assingedTo = StringUtils.isNotBlank(taskDto.getAssignedToUsername()) ?
-                userRepository.findByUsername(taskDto.getAssignedToUsername())
-                        .orElseThrow(() -> new NotFoundException("User {\"username\":\"" + taskDto.getAssignedToUsername() + "\"}"))
+        User author = userService.getUserById(authorId);
+        User assingedTo = taskDto.getAssignedToId() != null
+                ? userService.getUserById(taskDto.getAssignedToId())
                 : null;
-        Task task = taskRepository.save(new Task(taskDto, author, assingedTo));
-        projectService.addTaskToProject(project, task);
-        return task;
+        return taskRepository.save(new Task(taskDto, author, assingedTo, project, sprint));
     }
 
     public void deleteSprint(Long id) {

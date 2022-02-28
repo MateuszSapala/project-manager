@@ -3,8 +3,12 @@ package uni.lodz.pl.projectmanager.sprint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
+import uni.lodz.pl.projectmanager.project.Project;
+import uni.lodz.pl.projectmanager.project.ProjectService;
+import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
+import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +17,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SprintService {
     private final SprintRepository sprintRepository;
+    private final ProjectService projectService;
 
-    public Sprint createNewSprint(final String name, final LocalDate start, final LocalDate end) {
-        Sprint sprint = new Sprint(name, start, end);
+    public Sprint createNewSprint(final AddSprintDto addSprintDto) {
+        Project project = projectService.getProjectById(addSprintDto.getProjectId())
+                .orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + addSprintDto.getProjectId() + "\"} not found"));
+        Sprint sprint = new Sprint(addSprintDto.getName(), addSprintDto.getStart(), addSprintDto.getEnd(), project);
         return sprintRepository.save(sprint);
     }
 

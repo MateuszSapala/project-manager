@@ -11,6 +11,7 @@ public class AddTaskDto {
     private String name;
     private String description;
     private LocalDate end;
-    private String assignedToUsername;
-    private String projectName;
+    private Long assignedToId;
+    private Long projectId;
+    private Long sprintId;
 }
