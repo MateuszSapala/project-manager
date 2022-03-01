@@ -2,6 +2,8 @@ package uni.lodz.pl.projectmanager.project;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uni.lodz.pl.projectmanager.project.model.AddProjectDto;
+import uni.lodz.pl.projectmanager.project.model.Project;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +25,8 @@ public class ProjectService {
         return projectRepository.findById(id);
     }
 
-    public Project createNewProject(final String name) {
-        Project project = new Project(name);
+    public Project createNewProject(final AddProjectDto projectDto) {
+        Project project = new Project(projectDto.getName());
         return projectRepository.save(project);
     }
 

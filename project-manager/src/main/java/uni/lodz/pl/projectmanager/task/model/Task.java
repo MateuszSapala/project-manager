@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.MissingRequestValueException;
-import uni.lodz.pl.projectmanager.project.Project;
+import uni.lodz.pl.projectmanager.project.model.Project;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 import uni.lodz.pl.projectmanager.user.model.User;
 

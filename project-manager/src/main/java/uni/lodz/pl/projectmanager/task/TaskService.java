@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-import uni.lodz.pl.projectmanager.project.Project;
+import uni.lodz.pl.projectmanager.project.model.Project;
 import uni.lodz.pl.projectmanager.project.ProjectService;
 import uni.lodz.pl.projectmanager.sprint.SprintService;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
@@ -13,7 +13,6 @@ import uni.lodz.pl.projectmanager.task.model.AddTaskDto;
 import uni.lodz.pl.projectmanager.task.model.Task;
 import uni.lodz.pl.projectmanager.user.UserService;
 import uni.lodz.pl.projectmanager.user.model.User;
-import uni.lodz.pl.projectmanager.user.model.UserDto;
 
 import java.util.Optional;
 
@@ -31,8 +30,7 @@ public class TaskService {
                 .orElseThrow(() -> new NotFoundException("Project {\"id\":\"" + taskDto.getProjectId() + "\"} not found"));
         Sprint sprint = sprintService.getSprintById(taskDto.getSprintId())
                 .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + taskDto.getSprintId() + "\"} not found"));
-        Long authorId = ((UserDto) SecurityContextHolder.getContext().getAuthentication().getCredentials()).getId();
-        User author = userService.getUserById(authorId);
+        User author = (User) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         User assingedTo = taskDto.getAssignedToId() != null
                 ? userService.getUserById(taskDto.getAssignedToId())
                 : null;

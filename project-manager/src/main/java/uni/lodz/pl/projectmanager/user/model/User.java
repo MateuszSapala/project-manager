@@ -1,5 +1,6 @@
 package uni.lodz.pl.projectmanager.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class User {
     private Long id;
     @Column(unique = true)
     private String username;
+    @JsonIgnore
     private String password;
     private String email;
     private String name;

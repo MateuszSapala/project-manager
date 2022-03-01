@@ -2,7 +2,7 @@ package uni.lodz.pl.projectmanager.sprint.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uni.lodz.pl.projectmanager.project.Project;
+import uni.lodz.pl.projectmanager.project.model.Project;
 
 import javax.persistence.*;
 import java.time.LocalDate;

@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import uni.lodz.pl.projectmanager.user.UserService;
 import uni.lodz.pl.projectmanager.user.model.User;
-import uni.lodz.pl.projectmanager.user.model.UserDto;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), bCrypt.encode(user.getPassword()), List.of((GrantedAuthority) () -> "ADMIN"));
     }
 
-    public UserDto getCredentials(String username) {
-        return new UserDto(userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
+    public User getCredentials(String username) {
+        return userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 }

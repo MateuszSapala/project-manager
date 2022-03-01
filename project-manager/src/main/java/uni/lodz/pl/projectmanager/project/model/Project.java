@@ -1,4 +1,4 @@
-package uni.lodz.pl.projectmanager.project;
+package uni.lodz.pl.projectmanager.project.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

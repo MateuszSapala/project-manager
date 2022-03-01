@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-import uni.lodz.pl.projectmanager.project.Project;
+import uni.lodz.pl.projectmanager.project.model.Project;
 import uni.lodz.pl.projectmanager.project.ProjectService;
 import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;

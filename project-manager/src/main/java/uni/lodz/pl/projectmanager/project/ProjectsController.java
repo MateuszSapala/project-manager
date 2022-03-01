@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
+import uni.lodz.pl.projectmanager.project.model.AddProjectDto;
+import uni.lodz.pl.projectmanager.project.model.Project;
 
 import java.util.List;
 
@@ -25,8 +27,8 @@ public class ProjectsController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createNewProject(@RequestBody String name) {
-        Project project = projectService.createNewProject(name);
+    public ResponseEntity<Project> createNewProject(@RequestBody AddProjectDto projectDto) {
+        Project project = projectService.createNewProject(projectDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
 

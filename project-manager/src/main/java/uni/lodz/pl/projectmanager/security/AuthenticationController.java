@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.security.model.Credentials;
 import uni.lodz.pl.projectmanager.security.model.LoginDetails;
-import uni.lodz.pl.projectmanager.user.model.UserDto;
+import uni.lodz.pl.projectmanager.user.model.User;
 
 @Slf4j
 @RestController
@@ -39,8 +39,8 @@ public class AuthenticationController {
 
     @SecurityRequirement(name = "Authorization")
     @GetMapping("verify")
-    public ResponseEntity<UserDto> verify() {
+    public ResponseEntity<User> verify() {
         log.info("Verify token");
-        return ResponseEntity.ok().body((UserDto) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        return ResponseEntity.ok().body((User) SecurityContextHolder.getContext().getAuthentication().getCredentials());
     }
 }
