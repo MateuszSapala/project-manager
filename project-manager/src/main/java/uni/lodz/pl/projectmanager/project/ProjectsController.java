@@ -1,5 +1,6 @@
 package uni.lodz.pl.projectmanager.project;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,27 +22,39 @@ public class ProjectsController {
     private final ProjectService projectService;
 
     @GetMapping
+    @Operation(summary = "Get projects")
     public ResponseEntity<List<Project>> getProjects() {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.status(HttpStatus.OK).body(projects);
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get project by id")
+    public ResponseEntity<Project> getProjectById(@PathVariable("id") Long id) {
+        Project project = projectService.getProjectById(id)
+                .orElseThrow(() -> new NotFoundException("Project {\"id\":\"" + id + "\"} not found"));
+        return ResponseEntity.status(HttpStatus.OK).body(project);
+    }
+
+    @GetMapping("/name/{name}")
+    @Operation(summary = "Get project by name")
+    public ResponseEntity<Project> getProjectByName(@PathVariable("name") String name) {
+        Project project = projectService.getProjectById(name)
+                .orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + name + "\"} not found"));
+        return ResponseEntity.status(HttpStatus.OK).body(project);
+    }
+
     @PostMapping
+    @Operation(summary = "Add new project")
     public ResponseEntity<Project> createNewProject(@RequestBody AddProjectDto projectDto) {
         Project project = projectService.createNewProject(projectDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
 
     @DeleteMapping
+    @Operation(summary = "Delete project by id")
     public ResponseEntity<Void> deleteProjectById(Long id) {
         projectService.deleteProjectById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{name}")
-    public ResponseEntity<Project> getProjectByName(@PathVariable("name") String name) {
-        Project project = projectService.getProjectByName(name)
-                .orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + name + "\"} not found"));
-        return ResponseEntity.status(HttpStatus.OK).body(project);
     }
 }

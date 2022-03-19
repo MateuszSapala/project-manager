@@ -17,7 +17,7 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Optional<Project> getProjectByName(final String name) {
+    public Optional<Project> getProjectById(final String name) {
         return projectRepository.findByName(name);
     }
 
