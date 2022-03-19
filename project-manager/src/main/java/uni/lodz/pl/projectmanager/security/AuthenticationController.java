@@ -1,5 +1,6 @@
 package uni.lodz.pl.projectmanager.security;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import uni.lodz.pl.projectmanager.user.UserDto;
+import uni.lodz.pl.projectmanager.security.model.Credentials;
+import uni.lodz.pl.projectmanager.security.model.LoginDetails;
+import uni.lodz.pl.projectmanager.user.model.User;
 
 @Slf4j
 @RestController
@@ -24,6 +27,7 @@ public class AuthenticationController {
     private final JwtUtil jwtTokenUtil;
 
     @PostMapping("login")
+    @Operation(summary = "Login", description = "Upon successful login, the API returns a JSON Web Token in the authorization header. Add this header to be able to send successful requests to authorized endpoints. In the Swagger UI, you paste the JSON Web Token without the initial word \"Bearer\", because the swagger adds it itself.")
     public ResponseEntity<Void> login(@RequestBody LoginDetails loginDetails) {
         log.info("Login user: " + loginDetails.getUsername());
         Credentials credentials = new Credentials(loginDetails.getUsername(), loginDetails.getPassword());
@@ -37,8 +41,9 @@ public class AuthenticationController {
 
     @SecurityRequirement(name = "Authorization")
     @GetMapping("verify")
-    public ResponseEntity<UserDto> verify() {
+    @Operation(summary = "Verify user", description = "Return user details based od Authorization header")
+    public ResponseEntity<User> verify() {
         log.info("Verify token");
-        return ResponseEntity.ok().body((UserDto) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        return ResponseEntity.ok().body((User) SecurityContextHolder.getContext().getAuthentication().getCredentials());
     }
 }
