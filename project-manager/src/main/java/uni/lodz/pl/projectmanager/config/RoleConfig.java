@@ -3,7 +3,7 @@ package uni.lodz.pl.projectmanager.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import uni.lodz.pl.projectmanager.authorization.model.ProjectRole;
+import uni.lodz.pl.projectmanager.access.model.ProjectRole;
 
 @Configuration
 @PropertySource("classpath:role.properties")

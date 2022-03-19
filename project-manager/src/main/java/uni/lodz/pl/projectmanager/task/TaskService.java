@@ -49,9 +49,9 @@ public class TaskService {
                 ? userService.getUserById(taskDto.getAssignedToId())
                 : null;
         //Edit data
-        task.setName(taskDto.getName());
-        task.setDescription(taskDto.getDescription());
-        task.setEnd(taskDto.getEnd());
+        if (taskDto.getName() != null) task.setName(taskDto.getName());
+        if (taskDto.getDescription() != null) task.setDescription(taskDto.getDescription());
+        if (task.getEnd() != null) task.setEnd(taskDto.getEnd());
         if (assingedTo != null) task.setAssignedTo(assingedTo);
         if (sprint != null) task.setSprint(sprint);
         return taskRepository.save(task);
