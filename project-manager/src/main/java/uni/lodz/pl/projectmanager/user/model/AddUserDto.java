@@ -11,4 +11,5 @@ public class AddUserDto {
     private String email;
     private String name;
     private String surname;
+    private Boolean admin;
 }

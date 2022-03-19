@@ -1,28 +1,33 @@
 package uni.lodz.pl.projectmanager.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uni.lodz.pl.projectmanager.user.model.AddUserDto;
 import uni.lodz.pl.projectmanager.user.model.User;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
     public User addUser(AddUserDto user) {
+        if (!((User) SecurityContextHolder.getContext().getAuthentication().getCredentials()).isAdmin()) {
+            log.info("Only admin can add new users");
+            throw new AuthorizationServiceException("Only admin can add new users");
+        }
         return userRepository.save(new User(user));
     }
 
     public List<User> getUsers() {
         return userRepository.findAll();
-    }
-
-    public User editUser(User user) {
-        return userRepository.save(user);
     }
 
     public Optional<User> getUserByUsername(String username) {
@@ -34,6 +39,22 @@ public class UserService {
     }
 
     public User editUser(AddUserDto user, Long id) {
+        validateEditUserAuthorization(id, user.getAdmin() != null);
         return userRepository.save(new User(user, id));
+    }
+
+    private void validateEditUserAuthorization(Long editedUserId, boolean editedUserFieldAdminSet) {
+        User credentials = (User) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        if (credentials.isAdmin()) {
+            return;
+        }
+        if (!Objects.equals(credentials.getId(), editedUserId)) {
+            log.info("User can edit only his details");
+            throw new AuthorizationServiceException("User can edit only his details");
+        }
+        if (editedUserFieldAdminSet) {
+            log.info("User can't edit admin privileges");
+            throw new AuthorizationServiceException("User can't edit admin privileges");
+        }
     }
 }

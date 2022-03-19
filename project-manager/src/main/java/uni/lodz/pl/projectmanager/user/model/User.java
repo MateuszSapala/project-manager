@@ -23,17 +23,19 @@ public class User {
     private String email;
     private String name;
     private String surname;
+    private boolean admin;
 
-    public User(String username, String password, String email, String name, String surname) {
+    public User(String username, String password, String email, String name, String surname, Boolean admin) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.surname = surname;
+        if (admin != null) this.admin = admin;
     }
 
     public User(AddUserDto user) {
-        this(user.getUsername(), user.getPassword(), user.getEmail(), user.getName(), user.getSurname());
+        this(user.getUsername(), user.getPassword(), user.getEmail(), user.getName(), user.getSurname(), user.getAdmin());
     }
 
     public User(AddUserDto user, Long id) {
