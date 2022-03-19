@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: project_manager
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: password
     networks:
       - netw
 
