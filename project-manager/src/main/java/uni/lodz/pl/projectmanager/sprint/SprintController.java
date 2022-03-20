@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
-import uni.lodz.pl.projectmanager.project.ProjectService;
 import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 
@@ -21,7 +19,6 @@ import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 @Tag(name = "Sprint")
 public class SprintController {
     private final SprintService sprintService;
-    private final ProjectService projectService;
 
     @PostMapping
     @Operation(summary = "Add sprint")
@@ -41,8 +38,7 @@ public class SprintController {
     @GetMapping("/{id}")
     @Operation(summary = "Get sprint by id")
     public ResponseEntity<Sprint> getSprintById(@PathVariable("id") Long id) {
-        Sprint sprint = sprintService.getSprintById(id)
-                .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + id + "\"} not found"));
+        Sprint sprint = sprintService.getSprintById(id);
         return ResponseEntity.status(HttpStatus.OK).body(sprint);
     }
 }

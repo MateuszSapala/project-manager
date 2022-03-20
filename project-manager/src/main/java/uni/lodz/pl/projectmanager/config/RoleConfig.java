@@ -8,7 +8,30 @@ import uni.lodz.pl.projectmanager.access.model.ProjectRole;
 @Configuration
 @PropertySource("classpath:role.properties")
 public class RoleConfig {
+    public enum Option {VIEW, EDIT}
 
+    public boolean canSprint(ProjectRole role, Option option) {
+        return switch (option) {
+            case VIEW -> canViewSprint(role);
+            case EDIT -> canEditSprint(role);
+        };
+    }
+
+    public boolean canTask(ProjectRole role, Option option) {
+        return switch (option) {
+            case VIEW -> canViewTask(role);
+            case EDIT -> canEditTask(role);
+        };
+    }
+
+    public boolean canAccess(ProjectRole role, Option option) {
+        return switch (option) {
+            case VIEW -> canViewAccess(role);
+            case EDIT -> canEditAccess(role);
+        };
+    }
+
+    //<editor-fold desc="Sprint">
     @Value("${sprint.viewing.product-owner}")
     boolean sprintViewing_ProductOwner;
     @Value("${sprint.viewing.scrum-master}")
@@ -18,30 +41,12 @@ public class RoleConfig {
     @Value("${sprint.viewing.viewer}")
     boolean sprintViewing_Viewer;
 
-    public boolean canViewSprint(ProjectRole role) {
+    private boolean canViewSprint(ProjectRole role) {
         return switch (role) {
             case PRODUCT_OWNER -> sprintViewing_ProductOwner;
             case SCRUM_MASTER -> sprintViewing_ScrumMaster;
             case DEVELOPER -> sprintViewing_Developer;
             case VIEWER -> sprintViewing_Viewer;
-        };
-    }
-
-    @Value("${sprint.creating.product-owner}")
-    boolean sprintCreating_ProductOwner;
-    @Value("${sprint.creating.scrum-master}")
-    boolean sprintCreating_ScrumMaster;
-    @Value("${sprint.creating.developer}")
-    boolean sprintCreating_Developer;
-    @Value("${sprint.creating.viewer}")
-    boolean sprintCreating_Viewer;
-
-    public boolean canCreateSprint(ProjectRole role) {
-        return switch (role) {
-            case PRODUCT_OWNER -> sprintCreating_ProductOwner;
-            case SCRUM_MASTER -> sprintCreating_ScrumMaster;
-            case DEVELOPER -> sprintCreating_Developer;
-            case VIEWER -> sprintCreating_Viewer;
         };
     }
 
@@ -54,15 +59,17 @@ public class RoleConfig {
     @Value("${sprint.editing.viewer}")
     boolean sprintEditing_Viewer;
 
-    public boolean canEditSprint(ProjectRole role) {
+    private boolean canEditSprint(ProjectRole role) {
         return switch (role) {
             case PRODUCT_OWNER -> sprintEditing_ProductOwner;
-            case SCRUM_MASTER -> sprintCreating_ScrumMaster;
+            case SCRUM_MASTER -> sprintEditing_ScrumMaster;
             case DEVELOPER -> sprintEditing_Developer;
             case VIEWER -> sprintEditing_Viewer;
         };
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Task">
     @Value("${task.viewing.product-owner}")
     boolean taskViewing_ProductOwner;
     @Value("${task.viewing.scrum-master}")
@@ -72,30 +79,12 @@ public class RoleConfig {
     @Value("${task.viewing.viewer}")
     boolean taskViewing_Viewer;
 
-    public boolean canViewTask(ProjectRole role) {
+    private boolean canViewTask(ProjectRole role) {
         return switch (role) {
             case PRODUCT_OWNER -> taskViewing_ProductOwner;
             case SCRUM_MASTER -> taskViewing_ScrumMaster;
             case DEVELOPER -> taskViewing_Developer;
             case VIEWER -> taskViewing_Viewer;
-        };
-    }
-
-    @Value("${task.creating.product-owner}")
-    boolean taskCreating_ProductOwner;
-    @Value("${task.creating.scrum-master}")
-    boolean taskCreating_ScrumMaster;
-    @Value("${task.creating.developer}")
-    boolean taskCreating_Developer;
-    @Value("${task.creating.viewer}")
-    boolean taskCreating_Viewer;
-
-    public boolean canCreateTask(ProjectRole role) {
-        return switch (role) {
-            case PRODUCT_OWNER -> taskCreating_ProductOwner;
-            case SCRUM_MASTER -> taskCreating_ScrumMaster;
-            case DEVELOPER -> taskCreating_Developer;
-            case VIEWER -> taskCreating_Viewer;
         };
     }
 
@@ -108,7 +97,7 @@ public class RoleConfig {
     @Value("${task.editing.viewer}")
     boolean taskEditing_Viewer;
 
-    public boolean canEditTask(ProjectRole role) {
+    private boolean canEditTask(ProjectRole role) {
         return switch (role) {
             case PRODUCT_OWNER -> taskEditing_ProductOwner;
             case SCRUM_MASTER -> taskEditing_ScrumMaster;
@@ -116,40 +105,43 @@ public class RoleConfig {
             case VIEWER -> taskEditing_Viewer;
         };
     }
+    //</editor-fold>
 
-    @Value("${editing-developer-or-viewer.product-owner}")
-    boolean editingDeveloperOrViewer_ProductOwner;
-    @Value("${editing-developer-or-viewer.scrum-master}")
-    boolean editingDeveloperOrViewer_ScrumMaster;
-    @Value("${editing-developer-or-viewer.developer}")
-    boolean editingDeveloperOrViewer_Developer;
-    @Value("${editing-developer-or-viewer.viewer}")
-    boolean editingDeveloperOrViewer_Viewer;
+    //<editor-fold desc="Access">
+    @Value("${access.viewing.product-owner}")
+    boolean accessViewing_ProductOwner;
+    @Value("${access.viewing.scrum-master}")
+    boolean accessViewing_ScrumMaster;
+    @Value("${access.viewing.developer}")
+    boolean accessViewing_Developer;
+    @Value("${access.viewing.viewer}")
+    boolean accessViewing_Viewer;
 
-    public boolean canEditAuthorization(ProjectRole role) {
+    private boolean canViewAccess(ProjectRole role) {
         return switch (role) {
-            case PRODUCT_OWNER -> editingDeveloperOrViewer_ProductOwner;
-            case SCRUM_MASTER -> editingDeveloperOrViewer_ScrumMaster;
-            case DEVELOPER -> editingDeveloperOrViewer_Developer;
-            case VIEWER -> editingDeveloperOrViewer_Viewer;
+            case PRODUCT_OWNER -> accessViewing_ProductOwner;
+            case SCRUM_MASTER -> accessViewing_ScrumMaster;
+            case DEVELOPER -> accessViewing_Developer;
+            case VIEWER -> accessViewing_Viewer;
         };
     }
 
-    @Value("${creating-developer-or-viewer.product-owner}")
-    boolean creatingDeveloperOrViewer_ProductOwner;
-    @Value("${creating-developer-or-viewer.scrum-master}")
-    boolean creatingDeveloperOrViewer_ScrumMaster;
-    @Value("${creating-developer-or-viewer.developer}")
-    boolean creatingDeveloperOrViewer_Developer;
-    @Value("${creating-developer-or-viewer.viewer}")
-    boolean creatingDeveloperOrViewer_Viewer;
+    @Value("${access.editing-developer-or-viewer.product-owner}")
+    boolean accessEditingDeveloperOrViewer_ProductOwner;
+    @Value("${access.editing-developer-or-viewer.scrum-master}")
+    boolean accessEditingDeveloperOrViewer_ScrumMaster;
+    @Value("${access.editing-developer-or-viewer.developer}")
+    boolean accessEditingDeveloperOrViewer_Developer;
+    @Value("${access.editing-developer-or-viewer.viewer}")
+    boolean accessEditingDeveloperOrViewer_Viewer;
 
-    public boolean canCreateAuthorization(ProjectRole role) {
+    private boolean canEditAccess(ProjectRole role) {
         return switch (role) {
-            case PRODUCT_OWNER -> creatingDeveloperOrViewer_ProductOwner;
-            case SCRUM_MASTER -> creatingDeveloperOrViewer_ScrumMaster;
-            case DEVELOPER -> creatingDeveloperOrViewer_Developer;
-            case VIEWER -> creatingDeveloperOrViewer_Viewer;
+            case PRODUCT_OWNER -> accessEditingDeveloperOrViewer_ProductOwner;
+            case SCRUM_MASTER -> accessEditingDeveloperOrViewer_ScrumMaster;
+            case DEVELOPER -> accessEditingDeveloperOrViewer_Developer;
+            case VIEWER -> accessEditingDeveloperOrViewer_Viewer;
         };
     }
+    //</editor-fold>
 }

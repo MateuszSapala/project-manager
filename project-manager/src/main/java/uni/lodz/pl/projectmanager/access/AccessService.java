@@ -1,10 +1,12 @@
 package uni.lodz.pl.projectmanager.access;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.access.model.Access;
 import uni.lodz.pl.projectmanager.access.model.UpdateAccessDto;
+import uni.lodz.pl.projectmanager.config.RoleConfig;
 import uni.lodz.pl.projectmanager.project.ProjectRepository;
 import uni.lodz.pl.projectmanager.project.model.Project;
 import uni.lodz.pl.projectmanager.user.UserRepository;
@@ -18,9 +20,18 @@ public class AccessService {
     private final AccessRepository accessRepository;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final RoleConfig roleConfig;
 
     public List<Access> getAccesses(Long userId, Long projectId) {
         return accessRepository.findByUserIdAndProjectId(userId, projectId);
+    }
+
+    public Access getAccess(@NonNull Long userId, @NonNull Long projectId) {
+        List<Access> list = accessRepository.findByUserIdAndProjectId(userId, projectId);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     public Access updateOrAddAccess(UpdateAccessDto update) {

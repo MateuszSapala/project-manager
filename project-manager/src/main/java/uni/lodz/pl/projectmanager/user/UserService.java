@@ -3,11 +3,11 @@ package uni.lodz.pl.projectmanager.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.user.model.AddUserDto;
 import uni.lodz.pl.projectmanager.user.model.User;
+import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User addUser(AddUserDto user) {
-        if (!((User) SecurityContextHolder.getContext().getAuthentication().getCredentials()).isAdmin()) {
+        if (!AuthorizationUtil.getLoggedUser().isAdmin()) {
             log.info("Only admin can add new users");
             throw new AuthorizationServiceException("Only admin can add new users");
         }
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     private void validateEditUserAuthorization(Long editedUserId, boolean editedUserFieldAdminSet) {
-        User credentials = (User) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        User credentials = AuthorizationUtil.getLoggedUser();
         if (credentials.isAdmin()) {
             return;
         }
