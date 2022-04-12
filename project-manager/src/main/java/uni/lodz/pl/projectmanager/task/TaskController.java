@@ -37,15 +37,14 @@ public class TaskController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete task by id")
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
-        taskService.deleteSprint(id);
+        taskService.deleteTask(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Det task by id")
+    @Operation(summary = "Get task by id")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
-        Task task = taskService.getTaskById(id)
-                .orElseThrow(() -> new NotFoundException("Task {\"id\":\"" + id + "\"} not found"));
+        Task task = taskService.getTaskById(id);
         return ResponseEntity.status(HttpStatus.OK).body(task);
     }
 }

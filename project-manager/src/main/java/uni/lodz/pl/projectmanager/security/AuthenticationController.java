@@ -9,12 +9,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.security.model.Credentials;
 import uni.lodz.pl.projectmanager.security.model.LoginDetails;
 import uni.lodz.pl.projectmanager.user.model.User;
+import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
 @Slf4j
 @RestController
@@ -44,6 +44,6 @@ public class AuthenticationController {
     @Operation(summary = "Verify user", description = "Return user details based od Authorization header")
     public ResponseEntity<User> verify() {
         log.info("Verify token");
-        return ResponseEntity.ok().body((User) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        return ResponseEntity.ok().body(AuthorizationUtil.getLoggedUser());
     }
 }

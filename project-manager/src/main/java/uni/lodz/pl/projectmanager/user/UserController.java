@@ -20,13 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Authorization")
 @Tag(name = "User")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
     @Operation(summary = "Get users")
-    @SecurityRequirement(name = "Authorization")
     public ResponseEntity<List<User>> getUsers() {
         log.info("Get users");
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
@@ -36,12 +36,11 @@ public class UserController {
     @Operation(summary = "Add new users")
     public ResponseEntity<User> addUser(@RequestBody AddUserDto user) throws JsonProcessingException {
         log.info("Add user :" + JsonUtil.writeValueAsString(user));
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Edit user")
-    @SecurityRequirement(name = "Authorization")
     public ResponseEntity<User> editUser(@RequestBody AddUserDto user, @PathParam("id") Long id) throws JsonProcessingException {
         log.info("Edit user " + id + " :" + JsonUtil.writeValueAsString(user));
         return ResponseEntity.status(HttpStatus.OK).body(userService.editUser(user, id));
