@@ -83,8 +83,8 @@ public class TaskService {
             throw new AuthorizationServiceException("No access to this project");
         }
         if (!roleConfig.canTask(access.getProjectRole(), option)) {
-            log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " task in project {\"id\":" + projectId + "}");
-            throw new AuthorizationServiceException("Insufficient access to view task");
+            log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " access in project {\"id\":" + projectId + "}");
+            throw new AuthorizationServiceException("Insufficient access to " + option.name().toLowerCase() + " task");
         }
     }
 }

@@ -56,7 +56,7 @@ public class SprintService {
         }
         if (!roleConfig.canSprint(access.getProjectRole(), option)) {
             log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " sprints in project {\"id\":" + projectId + "}");
-            throw new AuthorizationServiceException("Insufficient access to view sprints");
+            throw new AuthorizationServiceException("Insufficient access to " + option.name().toLowerCase() + " sprints");
         }
     }
 }
