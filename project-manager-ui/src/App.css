@@ -29,3 +29,28 @@
     width: 100%;
     overflow: hidden;
 }
+
+.content{
+    background-color: white;
+}
+
+.menu-link{
+    color: white;
+    display: block;
+    margin-bottom: 5px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    /* pointer-events: none; */
+}
+
+.menu-link:focus{
+    outline: none;
+    background-color: transparent;
+}
+
+.menu-link:hover{
+    outline: none;
+    background-color: transparent;
+}

@@ -1,17 +1,21 @@
 import "../App.css";
 import { User } from "../model/User";
-import Sidebar from "./Sidebar";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Button } from "react-bootstrap";
+import { Project } from "../model/Project";
 
 interface Props {
   loggedUser: User;
+  content: JSX.Element;
+  projects: Array<Project>;
 }
 
-function Main({ loggedUser }: Props) {
+function Main({ loggedUser, content, projects }: Props) {
+  const Content = () => <div className="content">{content}</div>;
+
   return (
     <div id="page-top">
       <div id="wrapper">
-        <p style={{ backgroundColor: "black" }}>dasdas</p>
+        {/* <p style={{ backgroundColor: "black" }}>dasdas</p> */}
         <div className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
           <div className="sidebar-brand-text mx-3">Project manager</div>
           <hr className="sidebar-divider my-0" />
@@ -20,8 +24,21 @@ function Main({ loggedUser }: Props) {
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Projects</Accordion.Header>
                 <Accordion.Body>
-                  <p>Project 1</p>
-                  <p>Project 2</p>
+                  {projects.map((p: Project) => {
+                    return (
+                      <Button
+                        key={p.id}
+                        onClick={() => {
+                          window.location.replace(
+                            window.location.origin + "/projects/" + p.name
+                          );
+                        }}
+                        className="btn btn-link menu-link"
+                      >
+                        {p.name}
+                      </Button>
+                    );
+                  })}
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>
@@ -43,11 +60,9 @@ function Main({ loggedUser }: Props) {
         <div
           id="content-wrapper"
           className="d-flex flex-column"
-          style={{ paddingLeft: 135 }}
+          style={{ paddingLeft: 180 }}
         >
-          <div id="content">
-            <h1 className="h3 mb-4 text-gray-800">Blank Pagessss</h1>
-          </div>
+          <Content />
           {/* <Footer /> */}
         </div>
       </div>

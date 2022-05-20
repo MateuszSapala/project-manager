@@ -4,22 +4,24 @@ import "./css/sb-admin-2.css";
 import "./App.css";
 import Login from "./components/Login";
 import Main from "./components/Main";
-import Page1 from "./components/page1";
+import StartPage from "./components/StartPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { sendVerify } from "./service/Login";
 import Logout from "./components/Logout";
 import { User } from "./model/User";
-// import Footer from "./components/Footer";
-// import Sidebar from "./components/Sidebar";
+import DisplayProject from "./components/DisplayProject";
+import { getProjects } from "./service/ProjectService";
+import { AxiosResponse } from "axios";
+import { Project } from "./model/Project";
 
 function App() {
+  //LOGGING
   // const [loaddingUser, setLoaddingUser] = useState<Boolean>(false);
   const [loggedUser, setloggedUser] = useState<User | null>(null);
-
   let navigate = useNavigate();
   useEffect(() => {
     if (loggedUser !== null) {
-      console.log(loggedUser);
+      console.log({ loggedUser: loggedUser });
       return;
     }
     if (window.location.pathname === "/login") {
@@ -32,7 +34,6 @@ function App() {
     // setLoaddingUser(true);
     sendVerify(window.localStorage.getItem("authorization") as string).then(
       (response) => {
-        console.log(response);
         if (window.location.pathname === "/login") {
           navigate("/");
         }
@@ -43,37 +44,49 @@ function App() {
         // setLoaddingUser(false);
       }
     );
-  });
+  }, [loggedUser]);
+
+  //PROJECTS
+  const [projects, setProjects] = useState<Array<Project> | null>(null);
+  useEffect(() => {
+    if (loggedUser == null || projects != null) return;
+    getProjects().then((response) => {
+      const resp = response as AxiosResponse;
+      if (resp.status !== 200) {
+        console.log("Unable to load project list");
+        return;
+      }
+      console.log({ projects: resp.data });
+      setProjects(resp.data);
+    });
+  }, [projects, loggedUser]);
 
   return (
     <div>
       <Routes>
         <Route path="/login" element={<Login message="" />} />
-        <Route path="/page1" element={<Page1 />} />
-        <Route path="/" element={<Main loggedUser={loggedUser!}></Main>} />
-        {/* <Route
+        <Route path="/logout" element={<Logout />} />
+
+        <Route
           path="/"
           element={
-            <div id="page-top">
-              <div id="wrapper">
-                <Sidebar />
-                <p style={{ backgroundColor: "black" }}>dasdas</p>
-                <div id="content-wrapper" className="d-flex flex-column">
-                  <div id="content">
-                    <div className="container-fluid">
-                      <h1 className="h3 mb-4 text-gray-800">Blank Page</h1>
-                    </div>
-                  </div>
-                  <Footer />
-                </div>
-              </div>
-              <a className="scroll-to-top rounded" href="#page-top">
-                <i className="fas fa-angle-up"></i>
-              </a>
-            </div>
+            <Main
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+              content={<StartPage />}
+            />
           }
-        /> */}
-        <Route path="/logout" element={<Logout />} />
+        />
+        <Route
+          path="/projects/:projectName"
+          element={
+            <Main
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+              content={<DisplayProject />}
+            />
+          }
+        />
       </Routes>
     </div>
   );
