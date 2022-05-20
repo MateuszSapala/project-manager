@@ -1,6 +1,6 @@
 import "../App.css";
 
-function StartPage() {
+function Backlog() {
   return (
     <div>
       <h1>This is start page</h1>
@@ -8,4 +8,4 @@ function StartPage() {
   );
 }
 
-export default StartPage;
+export default Backlog;

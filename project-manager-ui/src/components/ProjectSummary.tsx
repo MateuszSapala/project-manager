@@ -1,6 +1,7 @@
+import { useParams } from "react-router-dom";
 import "../App.css";
-import { User } from "../model/User";
 import { Project } from "../model/Project";
+import { User } from "../model/User";
 import Sidebar from "./Sidebar";
 
 interface Props {
@@ -8,17 +9,18 @@ interface Props {
   projects: Array<Project>;
 }
 
-function Main({ loggedUser, projects }: Props) {
+function ProjectSummary({ loggedUser, projects }: Props) {
+  let { projectName } = useParams();
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} />
+        <Sidebar projects={projects} selectedProject={projectName} />
         <div className="d-flex flex-column main-content">
-          <h1>This is start page</h1>
+          <h1>Project {projectName}</h1>
         </div>
       </div>
     </div>
   );
 }
 
-export default Main;
+export default ProjectSummary;

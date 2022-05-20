@@ -30,10 +30,6 @@
     overflow: hidden;
 }
 
-.content{
-    background-color: white;
-}
-
 .menu-link{
     color: white;
     display: block;
@@ -53,4 +49,8 @@
 .menu-link:hover{
     outline: none;
     background-color: transparent;
+}
+
+.main-content{
+    padding-left: 230px;
 }

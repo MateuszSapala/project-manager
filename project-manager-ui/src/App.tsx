@@ -4,12 +4,12 @@ import "./css/sb-admin-2.css";
 import "./App.css";
 import Login from "./components/Login";
 import Main from "./components/Main";
-import StartPage from "./components/StartPage";
+import Backlog from "./components/Backlog";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { sendVerify } from "./service/Login";
 import Logout from "./components/Logout";
 import { User } from "./model/User";
-import DisplayProject from "./components/DisplayProject";
+import ProjectSummary from "./components/ProjectSummary";
 import { getProjects } from "./service/ProjectService";
 import { AxiosResponse } from "axios";
 import { Project } from "./model/Project";
@@ -73,17 +73,15 @@ function App() {
             <Main
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
-              content={<StartPage />}
             />
           }
         />
         <Route
           path="/projects/:projectName"
           element={
-            <Main
+            <ProjectSummary
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
-              content={<DisplayProject />}
             />
           }
         />
