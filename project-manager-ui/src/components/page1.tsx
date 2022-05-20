@@ -1,14 +1,7 @@
-import '../App.css';
-import Nav from './Nav';
-
+import "../App.css";
 
 function Page1() {
-    return (
-        <div className="App">
-            <Nav></Nav>
-
-        </div>
-    );
+  return <div></div>;
 }
 
 export default Page1;
