@@ -32,18 +32,21 @@ function App() {
       navigate("/login");
     }
     // setLoaddingUser(true);
-    sendVerify(window.localStorage.getItem("authorization") as string).then(
-      (response) => {
+    sendVerify(window.localStorage.getItem("authorization") as string)
+      .then((response) => {
+        console.log(response);
         if (window.location.pathname === "/login") {
           navigate("/");
         }
-        if (response.status === 403) {
-          navigate("/login");
-        }
         setloggedUser(response.data);
         // setLoaddingUser(false);
-      }
-    );
+      })
+      .catch((error) => {
+        console.log(error.response);
+        if (error.response.status === 403) {
+          window.location.replace(window.location.origin + "/login");
+        }
+      });
   }, [loggedUser]);
 
   //PROJECTS
