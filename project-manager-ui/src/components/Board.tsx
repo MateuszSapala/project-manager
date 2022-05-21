@@ -9,18 +9,18 @@ interface Props {
   projects: Array<Project>;
 }
 
-function Backlog({ loggedUser, projects }: Props) {
+function Board({ loggedUser, projects }: Props) {
   let { projectName } = useParams();
   return (
     <div id="page-top">
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName} />
         <div className="d-flex flex-column main-content">
-          <h1>Tasks {projectName}</h1>
+          <h1>Board {projectName}</h1>
         </div>
       </div>
     </div>
   );
 }
 
-export default Backlog;
+export default Board;

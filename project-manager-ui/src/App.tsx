@@ -13,6 +13,7 @@ import ProjectSummary from "./components/ProjectSummary";
 import { getProjects } from "./service/ProjectService";
 import { AxiosResponse } from "axios";
 import { Project } from "./model/Project";
+import Board from "./components/Board";
 
 function App() {
   //LOGGING
@@ -83,6 +84,24 @@ function App() {
           path="/projects/:projectName"
           element={
             <ProjectSummary
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName/board"
+          element={
+            <Board
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName/backlog"
+          element={
+            <Backlog
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
             />
