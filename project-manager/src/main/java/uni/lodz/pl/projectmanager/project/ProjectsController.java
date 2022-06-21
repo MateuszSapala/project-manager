@@ -39,7 +39,7 @@ public class ProjectsController {
     @GetMapping("/name/{name}")
     @Operation(summary = "Get project by name")
     public ResponseEntity<Project> getProjectByName(@PathVariable("name") String name) {
-        Project project = projectService.getProjectById(name)
+        Project project = projectService.getProjectByName(name)
                 .orElseThrow(() -> new NotFoundException("Project {\"name\":\"" + name + "\"} not found"));
         return ResponseEntity.status(HttpStatus.OK).body(project);
     }

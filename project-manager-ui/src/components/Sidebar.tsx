@@ -1,18 +1,19 @@
 import "../index.css";
 import "../App.css";
-import { Accordion, Button } from "react-bootstrap";
-import { Project } from "../model/Project";
+import {Accordion, Button} from "react-bootstrap";
+import {Project} from "../model/Project";
 
 interface Props {
   projects: Array<Project>;
   selectedProject?: string;
 }
 
-function Sidebar({ projects, selectedProject }: Props) {
+function Sidebar({projects, selectedProject}: Props) {
   const projectPath = window.location.origin + "/projects/" + selectedProject;
-  const generateButton = (path: string, desc: string, key?: string) => {
+  const generateButton = (path: string, desc: string, key: string) => {
     return (
       <Button
+        key={key}
         onClick={() => {
           window.location.replace(path);
         }}
@@ -26,12 +27,12 @@ function Sidebar({ projects, selectedProject }: Props) {
   return (
     <div className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
       <div className="sidebar-brand-text mx-3">Project manager</div>
-      <hr className="sidebar-divider my-0" />
-      <div className="nav-item" style={{ marginLeft: "10px" }}>
-        {generateButton(window.location.origin, "Main page")}
+      <hr className="sidebar-divider my-0"/>
+      <div className="nav-item" style={{marginLeft: "10px"}}>
+        {generateButton(window.location.origin, "Main page", "main_page")}
       </div>
       <div className="nav-item">
-        <hr className="sidebar-divider my-0" />
+        <hr className="sidebar-divider my-0"/>
         <Accordion
           defaultActiveKey={!selectedProject ? "0" : "1"}
           className="nav-link"
@@ -52,17 +53,25 @@ function Sidebar({ projects, selectedProject }: Props) {
       </div>
       {selectedProject != null && (
         <>
-          <hr className="sidebar-divider my-0" />
+          <hr className="sidebar-divider my-0"/>
           <div className="nav-item">
             <Accordion defaultActiveKey="0" className="nav-link">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Dashboard</Accordion.Header>
                 <Accordion.Body>
-                  {generateButton(projectPath + "/backlog", "Backlog")}
-                  {generateButton(projectPath + "/sprints", "Sprints")}
-                  {generateButton(projectPath + "/board", "Board")}
-                  {generateButton(projectPath + "/users", "Users")}
-                  {generateButton(projectPath + "/access", "Access")}
+                  {generateButton(
+                    projectPath + "/backlog",
+                    "Backlog",
+                    "backlog"
+                  )}
+                  {generateButton(
+                    projectPath + "/sprints",
+                    "Sprints",
+                    "sprints"
+                  )}
+                  {generateButton(projectPath + "/board", "Board", "board")}
+                  {generateButton(projectPath + "/users", "Users", "users")}
+                  {generateButton(projectPath + "/access", "Access", "access")}
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>

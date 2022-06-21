@@ -1,10 +1,10 @@
-import React, { SyntheticEvent } from "react";
+import React, {SyntheticEvent} from "react";
 import "../index.css";
 import "../App.css";
-import { useNavigate } from "react-router-dom";
-import { AxiosResponse } from "axios";
+import {useNavigate} from "react-router-dom";
+import {AxiosResponse} from "axios";
 import Credentials from "../model/Credentials";
-import { sendLogin } from "../service/Login";
+import {sendLogin} from "../service/Login";
 import Message from "../model/Message";
 
 function Login(props: Message) {

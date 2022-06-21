@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, {AxiosResponse} from "axios";
 import AppConfig from "../AppConfig";
 import Credentials from "../model/Credentials";
 

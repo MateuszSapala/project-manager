@@ -25,9 +25,9 @@ function Nav() {
 
   return (
     <div className="nav">
-      <AnchorForPath path="/" name="Home" />
-      <AnchorForPath path="/page1" name="Page1" />
-      <AnchorForPath path="/logout" name="Logout" />
+      <AnchorForPath path="/" name="Home"/>
+      <AnchorForPath path="/page1" name="Page1"/>
+      <AnchorForPath path="/logout" name="Logout"/>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import "../App.css";
-import { User } from "../model/User";
-import { Project } from "../model/Project";
+import {User} from "../model/User";
+import {Project} from "../model/Project";
 import Sidebar from "./Sidebar";
 
 interface Props {
@@ -8,11 +8,11 @@ interface Props {
   projects: Array<Project>;
 }
 
-function Main({ loggedUser, projects }: Props) {
+function Main({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} />
+        <Sidebar projects={projects}/>
         <div className="d-flex flex-column main-content">
           <h1>This is start page</h1>
         </div>

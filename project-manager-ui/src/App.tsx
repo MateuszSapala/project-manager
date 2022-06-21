@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./css/sb-admin-2.min.css";
 import "./css/sb-admin-2.css";
 import "./App.css";
 import Login from "./components/Login";
 import Main from "./components/Main";
 import Backlog from "./components/Backlog";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { sendVerify } from "./service/Login";
+import {Route, Routes, useNavigate} from "react-router-dom";
+import {sendVerify} from "./service/Login";
 import Logout from "./components/Logout";
-import { User } from "./model/User";
+import {User} from "./model/User";
 import ProjectSummary from "./components/ProjectSummary";
-import { getProjects } from "./service/ProjectService";
-import { AxiosResponse } from "axios";
-import { Project } from "./model/Project";
-import Board from "./components/Board";
+import {getProjects} from "./service/ProjectService";
+import {AxiosResponse} from "axios";
+import {Project} from "./model/Project";
+import Board from "./components/board/Board";
 
 function App() {
   //LOGGING
@@ -22,7 +22,7 @@ function App() {
   let navigate = useNavigate();
   useEffect(() => {
     if (loggedUser !== null) {
-      console.log({ loggedUser: loggedUser });
+      console.log({loggedUser: loggedUser});
       return;
     }
     if (window.location.pathname === "/login") {
@@ -35,7 +35,7 @@ function App() {
     // setLoaddingUser(true);
     sendVerify(window.localStorage.getItem("authorization") as string)
       .then((response) => {
-        console.log(response);
+        console.log({verify: response.data});
         if (window.location.pathname === "/login") {
           navigate("/");
         }
@@ -60,7 +60,7 @@ function App() {
         console.log("Unable to load project list");
         return;
       }
-      console.log({ projects: resp.data });
+      console.log({projects: resp.data});
       setProjects(resp.data);
     });
   }, [projects, loggedUser]);
@@ -68,8 +68,8 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/login" element={<Login message="" />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/login" element={<Login message=""/>}/>
+        <Route path="/logout" element={<Logout/>}/>
 
         <Route
           path="/"
@@ -90,18 +90,18 @@ function App() {
           }
         />
         <Route
-          path="/projects/:projectName/board"
+          path="/projects/:projectName/backlog"
           element={
-            <Board
+            <Backlog
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
             />
           }
         />
         <Route
-          path="/projects/:projectName/backlog"
+          path="/projects/:projectName/board"
           element={
-            <Backlog
+            <Board
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
             />

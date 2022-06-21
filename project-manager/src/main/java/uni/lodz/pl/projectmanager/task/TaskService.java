@@ -19,6 +19,9 @@ import uni.lodz.pl.projectmanager.user.UserService;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -86,5 +89,15 @@ public class TaskService {
             log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " access in project {\"id\":" + projectId + "}");
             throw new AuthorizationServiceException("Insufficient access to " + option.name().toLowerCase() + " task");
         }
+    }
+
+    public List<Task> getTaskByProjectName(String projectName) {
+        Optional<Project> project = projectService.getProjectByName(projectName);
+        if (project.isEmpty()) {
+            log.info("Project " + projectName + " not found");
+            throw new NotFoundException("Project " + projectName + " not found");
+        }
+        validateTaskAccess(project.get().getId(), RoleConfig.Option.VIEW);
+        return taskRepository.findByProjectName(projectName);
     }
 }

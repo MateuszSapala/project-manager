@@ -36,7 +36,7 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Project> getProjectById(final String name) {
+    public Optional<Project> getProjectByName(final String name) {
         Optional<Project> project = projectRepository.findByName(name);
         project.ifPresent(value -> validateProjectAccessView(value.getId()));
         return project;
