@@ -1,10 +1,22 @@
-import '../App.css';
-import Nav from "./Nav"
+import "../App.css";
+import {User} from "../model/User";
+import {Project} from "../model/Project";
+import Sidebar from "./Sidebar";
 
-function Main() {
+interface Props {
+  loggedUser: User;
+  projects: Array<Project>;
+}
+
+function Main({loggedUser, projects}: Props) {
   return (
-    <div className="App">
-      <Nav />
+    <div id="page-top">
+      <div id="wrapper">
+        <Sidebar projects={projects}/>
+        <div className="d-flex flex-column main-content">
+          <h1>This is start page</h1>
+        </div>
+      </div>
     </div>
   );
 }

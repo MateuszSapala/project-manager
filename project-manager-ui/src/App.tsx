@@ -1,42 +1,112 @@
-import React from 'react';
-import './App.css';
-import Login from './components/Login'
-import Main from './components/Main'
-import Page1 from './components/page1'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import { sendVerify } from './service/Sender';
-import { AxiosResponse } from 'axios';
-import Logout from './components/Logout';
+import React, {useEffect, useState} from "react";
+import "./css/sb-admin-2.min.css";
+import "./css/sb-admin-2.css";
+import "./App.css";
+import Login from "./components/Login";
+import Main from "./components/Main";
+import Backlog from "./components/Backlog";
+import {Route, Routes, useNavigate} from "react-router-dom";
+import {sendVerify} from "./service/Login";
+import Logout from "./components/Logout";
+import {User} from "./model/User";
+import ProjectSummary from "./components/ProjectSummary";
+import {getProjects} from "./service/ProjectService";
+import {AxiosResponse} from "axios";
+import {Project} from "./model/Project";
+import Board from "./components/board/Board";
 
 function App() {
+  //LOGGING
+  // const [loaddingUser, setLoaddingUser] = useState<Boolean>(false);
+  const [loggedUser, setloggedUser] = useState<User | null>(null);
   let navigate = useNavigate();
-  //todo
-  // verify();
-
-
-  async function verify() {
-    const auth: string = window.localStorage.getItem("authorization") as string
-    console.log(auth);
+  useEffect(() => {
+    if (loggedUser !== null) {
+      console.log({loggedUser: loggedUser});
+      return;
+    }
+    if (window.location.pathname === "/login") {
+      return;
+    }
+    const auth: string = window.localStorage.getItem("authorization") as string;
     if (!auth) {
       navigate("/login");
     }
-    const response = await sendVerify(window.localStorage.getItem("authorization") as string);
-    console.log(response)
-    if (window.location.pathname === "/login") {
-      navigate("/");
-    }
-    if (response === false || (response as AxiosResponse).status !== 200) {
-      navigate("/login");
-    }
-  }
+    // setLoaddingUser(true);
+    sendVerify(window.localStorage.getItem("authorization") as string)
+      .then((response) => {
+        console.log({verify: response.data});
+        if (window.location.pathname === "/login") {
+          navigate("/");
+        }
+        setloggedUser(response.data);
+        // setLoaddingUser(false);
+      })
+      .catch((error) => {
+        console.log(error.response);
+        if (error.response.status === 403) {
+          window.location.replace(window.location.origin + "/login");
+        }
+      });
+  }, [loggedUser]);
+
+  //PROJECTS
+  const [projects, setProjects] = useState<Array<Project> | null>(null);
+  useEffect(() => {
+    if (loggedUser == null || projects != null) return;
+    getProjects().then((response) => {
+      const resp = response as AxiosResponse;
+      if (resp.status !== 200) {
+        console.log("Unable to load project list");
+        return;
+      }
+      console.log({projects: resp.data});
+      setProjects(resp.data);
+    });
+  }, [projects, loggedUser]);
 
   return (
     <div>
       <Routes>
-        <Route path="/login" element={<Login message="" />} />
-        <Route path="/page1" element={<Page1 />} />
-        <Route path="/" element={<Main />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/login" element={<Login message=""/>}/>
+        <Route path="/logout" element={<Logout/>}/>
+
+        <Route
+          path="/"
+          element={
+            <Main
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName"
+          element={
+            <ProjectSummary
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName/backlog"
+          element={
+            <Backlog
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName/board"
+          element={
+            <Board
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
       </Routes>
     </div>
   );
