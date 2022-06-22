@@ -57,6 +57,7 @@ public class TaskService {
         //Edit data
         if (taskDto.getName() != null) task.setName(taskDto.getName());
         if (taskDto.getDescription() != null) task.setDescription(taskDto.getDescription());
+        if (taskDto.getTaskState() != null) task.setTaskState(taskDto.getTaskState());
         if (task.getEnd() != null) task.setEnd(taskDto.getEnd());
         if (assingedTo != null) task.setAssignedTo(assingedTo);
         if (sprint != null) task.setSprint(sprint);

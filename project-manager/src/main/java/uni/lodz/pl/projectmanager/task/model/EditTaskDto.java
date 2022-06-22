@@ -13,4 +13,5 @@ public class EditTaskDto {
     private LocalDate end;
     private Long assignedToId;
     private Long sprintId;
+    private TaskState taskState;
 }

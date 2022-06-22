@@ -29,7 +29,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Edit task")
     public ResponseEntity<Task> editTask(@PathVariable("id") Long id, @RequestBody EditTaskDto task) {
         Task createdTask = taskService.editTask(task, id);
