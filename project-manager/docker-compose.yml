@@ -29,6 +29,24 @@ services:
     networks:
       - netw
 
+  project-manager:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: project-manager:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: 'always'
+    networks:
+      - netw
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/project_manager?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=CET
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
 networks:
   netw:
 
