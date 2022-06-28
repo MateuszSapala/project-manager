@@ -1,13 +1,12 @@
-import {AxiosResponse} from "axios";
 import React, {useEffect, useState} from "react";
 import {Col} from "react-bootstrap";
 import {Task} from "../../model/task/Task";
-import {TaskDto} from "../../model/task/TaskDto";
 import {TaskState, TaskStateTable} from "../../model/task/TaskState";
-import {editTask, getTasksByProjectName} from "../../service/TaskService";
+import {editTask} from "../../service/TaskService";
 import DropWrapper from "./DropWrapper";
 import Item from "./Item";
 import {EditTask} from "../../model/task/EditTask";
+import {getTasks} from "../Common";
 
 interface Props {
   projectName: string | undefined;
@@ -16,19 +15,8 @@ interface Props {
 const TaskBoard = ({projectName}: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   useEffect(() => {
-    if (tasks.length !== 0 || projectName === undefined) return;
-    getTasksByProjectName(projectName).then((response) => {
-      const resp = response as AxiosResponse;
-      if (resp.status !== 200) {
-        console.log("Unable to load task list for project " + projectName);
-        return;
-      }
-      const taskDtoList: Array<TaskDto> = resp.data;
-      const taskList: Array<Task> = taskDtoList.map((item) => new Task(item));
-      console.log({tasks: taskList});
-      setTasks(taskList);
-    });
-  });
+    getTasks(projectName, tasks, setTasks);
+  }, [projectName, tasks]);
 
   const onDrop = (task: Task, monitor: any, status: TaskState) => {
     setTasks((prevState) => {
@@ -48,23 +36,6 @@ const TaskBoard = ({projectName}: Props) => {
       return [...newItems];
     });
   };
-  // editTask(task.id, new EditTask(undefined, undefined, undefined, undefined, undefined, status))
-  //   .then((response) => {
-  //     console.log(response);
-  //     setTasks((prevState) => {
-  //       const newItems = prevState.map((i, index) => {
-  //         if (i.id !== task.id || i.taskState === status) {
-  //           return i;
-  //         }
-  //         i.taskState = status;
-  //         return i;
-  //       });
-  //       return [...newItems];
-  //     });
-  //   })
-  //   .catch(error => {
-  //     console.log(error.response);
-  //   });
 
   return (
     <div className={"row"}>

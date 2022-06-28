@@ -14,6 +14,8 @@ import {getProjects} from "./service/ProjectService";
 import {AxiosResponse} from "axios";
 import {Project} from "./model/Project";
 import Board from "./components/board/Board";
+import Sprints from "./components/Sprints";
+import Users from "./components/Users";
 
 function App() {
   //LOGGING
@@ -99,9 +101,27 @@ function App() {
           }
         />
         <Route
+          path="/projects/:projectName/sprints"
+          element={
+            <Sprints
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
           path="/projects/:projectName/board"
           element={
             <Board
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/projects/:projectName/users"
+          element={
+            <Users
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
             />

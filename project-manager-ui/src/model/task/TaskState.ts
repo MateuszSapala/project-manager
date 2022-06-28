@@ -11,3 +11,7 @@ export const TaskStateTable = [
   TaskState.DONE,
   TaskState.REVIEWED,
 ];
+
+export const capitalizedStatus = (state: TaskState) => {
+  return state.slice(0, 1) + state.toLowerCase().slice(1)
+}
