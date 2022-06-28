@@ -1,6 +1,6 @@
 /* OTHER */
 .accordion-button{
-     
+
     color: white !important;
     font-size: medium !important;
     background-color: transparent !important;
@@ -42,7 +42,7 @@
     font-weight: 700;
     text-align: center;
     font-size: large;
-} 
+}
 
 .nav-link {
     padding: 0rem 1rem !important;
@@ -80,6 +80,8 @@
 .main-content{
     width: 100%;
     padding: 0 10px 0 230px;
+    /*background: transparent;*/
+    background: var(--cyan);
 }
 
 /* BOARD */
@@ -89,6 +91,11 @@ root {
     --text-color: #172b4d;
     --disabled-color: #fad6d6;
     --background-color: #f5eaea;
+}
+
+html {
+    background: var(--cyan);
+    /*background: linear-gradient(90deg, rgba(0,73,191,1) 0%, rgba(190,190,255,1) 46%, rgba(0,212,255,1) 100%);*/
 }
 
 body {

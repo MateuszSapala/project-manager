@@ -50,7 +50,7 @@ function App() {
           window.location.replace(window.location.origin + "/login");
         }
       });
-  }, [loggedUser]);
+  }, [loggedUser, navigate]);
 
   //PROJECTS
   const [projects, setProjects] = useState<Array<Project> | null>(null);

@@ -6,7 +6,7 @@ import {editTask} from "../../service/TaskService";
 import DropWrapper from "./DropWrapper";
 import Item from "./Item";
 import {EditTask} from "../../model/task/EditTask";
-import {getTasks} from "../Common";
+import {stateGetTasks} from "../../service/UseStateService";
 
 interface Props {
   projectName: string | undefined;
@@ -15,7 +15,7 @@ interface Props {
 const TaskBoard = ({projectName}: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   useEffect(() => {
-    getTasks(projectName, tasks, setTasks);
+    stateGetTasks(projectName, tasks, setTasks);
   }, [projectName, tasks]);
 
   const onDrop = (task: Task, monitor: any, status: TaskState) => {
@@ -24,7 +24,7 @@ const TaskBoard = ({projectName}: Props) => {
         if (i.id !== task.id || i.taskState === status) {
           return i;
         }
-        editTask(i.id, new EditTask(undefined, undefined, undefined, undefined, undefined, status))
+        editTask(i.id, new EditTask(null, undefined, undefined, undefined, undefined, status))
           .catch(error => {
             console.error(error);
             alert("Unable to update " + task.name);
