@@ -1,6 +1,6 @@
 /* OTHER */
 .accordion-button{
-     
+
     color: white !important;
     font-size: medium !important;
     background-color: transparent !important;
@@ -12,12 +12,37 @@
     background-color: transparent !important;
 }
 
+.accordion-task{
+    background-color: gray !important;
+    margin-bottom: 10px;
+}
+
+.accordion-task > .accordion-item > .accordion-header > .accordion-button{
+    text-align: start;
+    width: 100%;
+}
+
+.accordion-task-right{
+    float: right;
+    margin-right: 20px;
+}
+
+.accordion-task > .accordion-item > .accordion-collapse > .accordion-body > p{
+    margin-left: 5px;
+    color: white;
+}
+
+.checkbox-backlog{
+    margin: 5px;
+    display: inline;
+}
+
 .sidebar-brand-text{
     color: white;
     font-weight: 700;
     text-align: center;
     font-size: large;
-} 
+}
 
 .nav-link {
     padding: 0rem 1rem !important;
@@ -53,7 +78,10 @@
 }
 
 .main-content{
-    padding-left: 230px;
+    width: 100%;
+    padding: 0 10px 0 230px;
+    /*background: transparent;*/
+    background: var(--cyan);
 }
 
 /* BOARD */
@@ -66,8 +94,8 @@ root {
 }
 
 html {
-    background: rgb(0,73,191);
-    background: linear-gradient(90deg, rgba(0,73,191,1) 0%, rgba(190,190,255,1) 46%, rgba(0,212,255,1) 100%);
+    background: var(--cyan);
+    /*background: linear-gradient(90deg, rgba(0,73,191,1) 0%, rgba(190,190,255,1) 46%, rgba(0,212,255,1) 100%);*/
 }
 
 body {
