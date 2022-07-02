@@ -1,6 +1,5 @@
 package uni.lodz.pl.projectmanager.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +12,6 @@ import uni.lodz.pl.projectmanager.user.model.AddUserDto;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.JsonUtil;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Slf4j
@@ -32,16 +30,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by id")
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
+        log.info("Get user: id={}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
+    }
+
     @PostMapping
     @Operation(summary = "Add new users")
-    public ResponseEntity<User> addUser(@RequestBody AddUserDto user) throws JsonProcessingException {
+    public ResponseEntity<User> addUser(@RequestBody AddUserDto user) {
         log.info("Add user :" + JsonUtil.writeValueAsString(user));
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Edit user")
-    public ResponseEntity<User> editUser(@RequestBody AddUserDto user, @PathParam("id") Long id) throws JsonProcessingException {
+    public ResponseEntity<User> editUser(@RequestBody AddUserDto user, @PathVariable("id") Long id) {
         log.info("Edit user " + id + " :" + JsonUtil.writeValueAsString(user));
         return ResponseEntity.status(HttpStatus.OK).body(userService.editUser(user, id));
     }

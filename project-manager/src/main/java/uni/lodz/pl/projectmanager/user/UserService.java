@@ -36,7 +36,8 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.getById(id);
+        Optional<User> user = userRepository.findById(id);
+        return user.orElseThrow(() -> new NotFoundException("User with id=" + id + " not found"));
     }
 
     public User editUser(AddUserDto update, Long id) {
