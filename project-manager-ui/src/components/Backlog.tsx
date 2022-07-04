@@ -4,16 +4,17 @@ import {Project} from "../model/Project";
 import {User} from "../model/User";
 import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";
-import {useEffect, useState} from "react";
+import {Dispatch, useEffect, useState} from "react";
 import {Task} from "../model/task/Task";
 import {stateGetAccessesByProject, stateGetProject, stateGetTasks} from "../service/UseStateService";
 import {capitalizedStatus, TaskState, TaskStateTable} from "../model/task/TaskState";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {Access} from "../model/Access";
-import {addTask} from "../service/TaskService";
+import {addTask, editTask} from "../service/TaskService";
 import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
+import {EditTask} from "../model/task/EditTask";
 
 interface Props {
   loggedUser: User;
@@ -34,6 +35,13 @@ function Backlog({loggedUser, projects}: Props) {
   const [taskError, setTaskError] = useState<string>("");
   const [taskSuccess, setTaskSuccess] = useState<string>("");
 
+  const [editedTaskId, setEditedTaskId] = useState<number | null>(null);
+  const [editedTaskDate, setEditedTaskDate] = useState<Date | null>(null);
+  const [editedTaskName, setEditedTaskName] = useState<string>("");
+  const [editedTaskDescription, setEditedTaskDescription] = useState<string>("");
+  const [editedTaskAssignedUser, setEditedTaskAssignedUser] = useState<User | undefined>(undefined);
+  const [editedTaskError, setEditedTaskError] = useState<string>("");
+
   useEffect(() => {
     stateGetProject(projectName, project, setProject);
     stateGetTasks(projectName, tasks, setTasks);
@@ -51,7 +59,7 @@ function Backlog({loggedUser, projects}: Props) {
     )
   }
 
-  const displayTask = (task: Task) => {
+  const displayTask = (task: Task, disabled: boolean, setEditedTaskId: Dispatch<number | null>) => {
     return (
       <Accordion defaultActiveKey="1" className="accordion-task" key={task.id}>
         <Accordion.Item eventKey="0">
@@ -67,11 +75,7 @@ function Backlog({loggedUser, projects}: Props) {
             </p>
           </Accordion.Header>
           <Accordion.Body>
-            <p>Description:</p>
-            <p>{task.description}</p>
-            <br/>
-            <p>State: {capitalizedStatus(task.taskState)}</p>
-            <p>Created on: {task.created?.toDateString()}</p>
+            {displayEdit(disabled, task)}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
@@ -99,23 +103,12 @@ function Backlog({loggedUser, projects}: Props) {
             <DatePicker onChange={date => setTaskDate(date)} selected={taskDate} className="form-control text-primary"
                         placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
           </label>
-          {displayUserSelect(accesses)}
-          {displayMessages()}
+          {displayUserSelect(false, accesses, taskAssignedUser, setTaskAssignedUser)}
+          {displayMessages(taskError, taskSuccess)}
           <button className="btn btn-primary btn-block" onClick={handleAddTask}>Add</button>
         </div>
       </div>
     )
-  }
-
-  const displayMessages = () => {
-    return (<div>
-      {taskError === "" ? "" : <div className="alert alert-danger" role="alert">
-        {taskError}
-      </div>}
-      {taskSuccess === "" ? "" : <div className="alert alert-primary" role="alert">
-        {taskSuccess}
-      </div>}
-    </div>)
   }
 
   const handleAddTask = () => {
@@ -128,28 +121,113 @@ function Backlog({loggedUser, projects}: Props) {
       setTaskError("The following data is missing: " + missing);
       return;
     }
-    console.log(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, undefined))
     addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, undefined)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
-        console.log("dassssssss")
         setTaskError("Unable to add task")
         return;
       }
       setTasks([...tasks, new Task(response.data)]);
       setTaskSuccess("Successfully added task");
       return;
-    }).catch(e => console.error(e));
+    });
   }
 
-  const displayUserSelect = (accesses: Array<Access>) => {
+  const displayEdit = (disabled: boolean, task: Task) => {
+    return (
+      <div className="form-group">
+        {disabled ? "" :
+          <label htmlFor="taskName">
+            Task name:
+            <input type="text" className="form-control text-primary" placeholder={task.name} id="taskName"
+                   value={disabled ? "" : editedTaskName} disabled={disabled}
+                   onChange={(event => setEditedTaskName(event.target.value))}/>
+          </label>}
+        <label htmlFor="taskDescription">
+          Description:
+          <textarea className="form-control text-primary" placeholder={task.description} id="taskDescription"
+                    value={disabled ? "" : editedTaskDescription} disabled={disabled}
+                    onChange={(event => setEditedTaskDescription(event.target.value))}/>
+        </label>
+        <label htmlFor="taskEnd">
+          End date:
+          <DatePicker onChange={date => setEditedTaskDate(date)} selected={disabled ? task.end : editedTaskDate}
+                      className={disabled ? "form-control" : "form-control text-primary"} disabled={disabled}
+                      placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+        </label>
+        {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
+        {displayMessages(editedTaskError)}
+        {disabled ? <button className="btn btn-primary btn-block"
+                            onClick={() => editTaskChangeState(task)}>Edit</button> : ""}
+        {!disabled ?
+          <div className="two-buttons-container">
+            <div className="two-buttons float-left">
+              <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
+                Save
+              </button>
+            </div>
+            <div className="two-buttons float-right">
+              <button className="btn btn-primary btn-block" onClick={() => editTaskChangeState()}>
+                Cancel
+              </button>
+            </div>
+          </div>
+          : ""}
+      </div>
+    )
+  }
+
+  const displayMessages = (error: string, success?: string) => {
+    return (<div>
+      {error === "" ? "" : <div className="alert alert-danger" role="alert">
+        {error}
+      </div>}
+      {success === "" || success === undefined ? "" : <div className="alert alert-primary" role="alert">
+        {success}
+      </div>}
+    </div>)
+  }
+
+  const editTaskChangeState = (task?: Task) => {
+    setEditedTaskId(task !== undefined ? task.id : null);
+    setEditedTaskDate(task !== undefined ? task.end : null);
+    setEditedTaskName(task !== undefined ? task.name : "");
+    setEditedTaskDescription(task !== undefined ? task.description : "");
+    setEditedTaskAssignedUser(task !== undefined ? task.assignedTo : undefined);
+    setEditedTaskError("");
+  }
+
+  const handleSaveTask = () => {
+    setEditedTaskError("");
+    const missing: Array<string> = [];
+    if (editedTaskName === "") missing.push("name");
+    if (editedTaskDescription === "") missing.push("description")
+    if (missing.length > 0) {
+      setEditedTaskError("The following data is missing: " + missing);
+      return;
+    }
+    editTask(editedTaskId!, new EditTask(["end", "name", "description", "assignedToId"], editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, undefined, undefined)).then(response => {
+      console.log(response);
+      if ((response as AxiosResponse).status !== 201) {
+        setEditedTaskError("Unable to edit task")
+        return;
+      }
+      setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)]);
+      editTaskChangeState();
+      return;
+    });
+  }
+
+  const displayUserSelect = (disabled: boolean, accesses: Array<Access>, user: User | undefined, setUser?: Dispatch<User | undefined>) => {
     return (
       <label htmlFor="taskUser">
         Assigned user:
-        <select className="form-control text-primary" id="taskUser" value={taskAssignedUser?.id}
-                onChange={event => setTaskAssignedUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user)}>
-          <option value={undefined}></option>
+        <select className={disabled || user === undefined ? "form-control" : "form-control text-primary"} id="taskUser"
+                value={user?.id} disabled={disabled}
+                onChange={event => setUser ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
+          <option value={undefined} disabled={disabled}>Add assigned user</option>
           {accesses.map(access => {
-            return (<option className="text-primary" value={access.user.id} key={access.user.id}>
+            return (<option className="text-primary" value={access.user.id} key={access.user.id}
+                            disabled={disabled}>
               {access.user.name + " " + access.user.surname}
             </option>)
           })}
@@ -165,7 +243,7 @@ function Backlog({loggedUser, projects}: Props) {
         <div className="main-content">
           <h1>Backlog {projectName}</h1>
           {TaskStateTable.map(state => displayCheckbox(state))}
-          {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task))}
+          {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId, setEditedTaskId))}
           {displayAdd()}
         </div>
       </div>

@@ -7,8 +7,10 @@ export class EditTask {
   assignedToId: number | undefined;
   sprintId: number | undefined;
   taskState: TaskState | undefined;
+  editedFields: Array<string>
 
-  constructor(end: Date | null, name?: string, description?: string, assignedToId?: number, sprintId?: number, taskState?: TaskState) {
+  constructor(editedFields: Array<string>, end: Date | null, name?: string, description?: string, assignedToId?: number, sprintId?: number, taskState?: TaskState) {
+    this.editedFields = editedFields
     this.end = end
     this.name = name
     this.description = description
