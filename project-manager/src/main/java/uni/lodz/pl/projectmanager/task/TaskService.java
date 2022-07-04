@@ -50,17 +50,17 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task {\"id\":\"" + id + "\"} not found"));
         validateTaskAccess(task.getProject().getId(), RoleConfig.Option.EDIT);
-        Sprint sprint = taskDto.getSprintId() != null ? sprintService.getSprintById(taskDto.getSprintId()) : null;
-        User assingedTo = taskDto.getAssignedToId() != null
+        Sprint sprint = taskDto.getSprintId() != null && taskDto.getEditedFields().contains("sprintId") ? sprintService.getSprintById(taskDto.getSprintId()) : null;
+        User assingedTo = taskDto.getAssignedToId() != null && taskDto.getEditedFields().contains("assignedToId")
                 ? userService.getUserById(taskDto.getAssignedToId())
                 : null;
         //Edit data
-        if (taskDto.getName() != null) task.setName(taskDto.getName());
-        if (taskDto.getDescription() != null) task.setDescription(taskDto.getDescription());
-        if (taskDto.getTaskState() != null) task.setTaskState(taskDto.getTaskState());
-        if (task.getEnd() != null) task.setEnd(taskDto.getEnd());
-        if (assingedTo != null) task.setAssignedTo(assingedTo);
-        if (sprint != null) task.setSprint(sprint);
+        if (taskDto.getEditedFields().contains("name")) task.setName(taskDto.getName());
+        if (taskDto.getEditedFields().contains("description")) task.setDescription(taskDto.getDescription());
+        if (taskDto.getEditedFields().contains("taskState")) task.setTaskState(taskDto.getTaskState());
+        if (taskDto.getEditedFields().contains("end")) task.setEnd(taskDto.getEnd());
+        if (taskDto.getEditedFields().contains("assignedToId")) task.setAssignedTo(assingedTo);
+        if (taskDto.getEditedFields().contains("sprintId")) task.setSprint(sprint);
         return taskRepository.save(task);
     }
 

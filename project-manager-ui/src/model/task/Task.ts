@@ -23,7 +23,7 @@ export class Task {
     this.created = c !== null ? new Date(c[0], c[1], c[2], c[3], c[4], c[5]) : null;
     this.createdBy = taskDto.createdBy;
     const e = taskDto.end;
-    this.end = e !== null ? new Date(e[0], e[1], e[2], e[3], e[4], e[5]) : null;
+    this.end = e !== null ? new Date(e[0], e[1], e[2]) : null;
     this.assignedTo = taskDto.assignedTo;
     this.taskState = taskDto.taskState;
     this.project = taskDto.project;

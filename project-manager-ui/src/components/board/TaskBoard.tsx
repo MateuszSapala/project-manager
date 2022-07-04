@@ -24,7 +24,7 @@ const TaskBoard = ({projectName}: Props) => {
         if (i.id !== task.id || i.taskState === status) {
           return i;
         }
-        editTask(i.id, new EditTask(null, undefined, undefined, undefined, undefined, status))
+        editTask(i.id, new EditTask(["taskState"], null, undefined, undefined, undefined, undefined, status))
           .catch(error => {
             console.error(error);
             alert("Unable to update " + task.name);

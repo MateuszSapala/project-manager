@@ -84,6 +84,17 @@
     background: var(--cyan);
 }
 
+.two-buttons-container{
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+}
+
+.two-buttons{
+    width: 45%;
+    display: inline-block;
+}
+
 /* BOARD */
 root {
     --primary-color: rgb(62, 100, 255);
