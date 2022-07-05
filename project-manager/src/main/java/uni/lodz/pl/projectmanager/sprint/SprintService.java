@@ -15,6 +15,8 @@ import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -58,5 +60,10 @@ public class SprintService {
             log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " sprints in project {\"id\":" + projectId + "}");
             throw new AuthorizationServiceException("Insufficient access to " + option.name().toLowerCase() + " sprints");
         }
+    }
+
+    public List<Sprint> getSprintByProjectId(Long projectId) {
+        validateSprintAccess(projectId, RoleConfig.Option.VIEW);
+        return sprintRepository.findByProjectId(projectId);
     }
 }
