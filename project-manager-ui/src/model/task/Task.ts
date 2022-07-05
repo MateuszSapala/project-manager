@@ -2,6 +2,7 @@ import {Project} from "../Project";
 import {User} from "../User";
 import {TaskDto} from "./TaskDto";
 import {TaskState} from "./TaskState";
+import {Sprint} from "../Sprint";
 
 export class Task {
   id: number;
@@ -13,7 +14,7 @@ export class Task {
   assignedTo?: User;
   taskState: TaskState;
   project: Project;
-  sprint?: any;
+  sprint?: Sprint;
 
   constructor(taskDto: TaskDto) {
     this.id = taskDto.id;

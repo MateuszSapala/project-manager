@@ -26,7 +26,7 @@ function Backlog({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [accesses, setAccesses] = useState<Array<Access>>([]);
-  const [isStateChecked, setIsStateChecked] = useState(TaskStateTable);
+  const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
   const [taskName, setTaskName] = useState<string>("");
@@ -68,7 +68,7 @@ function Backlog({loggedUser, projects}: Props) {
               {task.name}
               <span className="accordion-task-right">
                 <span
-                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unsigned"}
+                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
                 </span>
                 &#x290B; &#x290A;
               </span>
