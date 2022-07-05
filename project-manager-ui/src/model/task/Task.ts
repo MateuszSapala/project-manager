@@ -2,7 +2,7 @@ import {Project} from "../Project";
 import {User} from "../User";
 import {TaskDto} from "./TaskDto";
 import {TaskState} from "./TaskState";
-import {Sprint} from "../Sprint";
+import {Sprint} from "../sprint/Sprint";
 
 export class Task {
   id: number;

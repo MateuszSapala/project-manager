@@ -1,4 +1,4 @@
-import {Project} from "./Project";
+import {Project} from "../Project";
 
 export interface SprintDto {
   id: number;
@@ -6,4 +6,5 @@ export interface SprintDto {
   start: number[];
   end: number[];
   project: Project;
+  closed: boolean;
 }

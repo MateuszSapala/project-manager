@@ -1,4 +1,4 @@
-import {Project} from "./Project";
+import {Project} from "../Project";
 import {SprintDto} from "./SprintDto";
 
 export class Sprint {
@@ -7,6 +7,7 @@ export class Sprint {
   start: Date | null;
   end: Date | null;
   project: Project;
+  closed: boolean;
 
   constructor(sprintDto: SprintDto) {
     this.id = sprintDto.id;
@@ -16,6 +17,7 @@ export class Sprint {
     const e = sprintDto.end;
     this.end = e !== null ? new Date(e[0], e[1], e[2]) : null;
     this.project = sprintDto.project;
+    this.closed = sprintDto.closed;
     return;
   }
 }

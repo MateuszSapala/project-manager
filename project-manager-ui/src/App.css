@@ -98,13 +98,18 @@
 .card-sprint {
     width: 99%;
     margin: 10px;
-    background: gray;
-    border-color: gray;
+    background: silver;
+    border-color: silver;
+}
+
+.card-sprint-closed {
+    background: darkgray;
+    border-color: darkgray;
 }
 
 .card-sprint-active {
-    background: white;
-    border-color: white;
+    background: darkseagreen;
+    border-color: darkseagreen;
 }
 
 /* BOARD */
