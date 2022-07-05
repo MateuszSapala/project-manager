@@ -7,6 +7,9 @@ import {Project} from "../model/Project";
 import {getProject} from "./ProjectService";
 import {Access} from "../model/Access";
 import {getAccessByProject} from "./AccessService";
+import {Sprint} from "../model/sprint/Sprint";
+import {getActiveSprintByProjectId, getSprintsByProjectId} from "./SprintService";
+import {SprintDto} from "../model/sprint/SprintDto";
 
 
 export const stateGetTasks = (projectName: string | undefined, tasks: Array<Task>, setTasks: Dispatch<SetStateAction<Task[]>>) => {
@@ -49,5 +52,33 @@ export const stateGetAccessesByProject = (projectId: number | undefined, accesse
     const accesses: Array<Access> = resp.data;
     console.log({accesses: accesses});
     setAccesses(accesses);
+  });
+}
+
+export const stateGetSprintsByProject = (projectId: number | undefined, sprints: Array<Sprint>, setSprints: Dispatch<SetStateAction<Array<Sprint>>>) => {
+  if (projectId === undefined || sprints.length !== 0) return;
+  getSprintsByProjectId(projectId!).then((response) => {
+    const resp = response as AxiosResponse;
+    if (resp.status !== 200) {
+      console.log("Unable to load sprints: projectId=" + projectId);
+      return;
+    }
+    const sprints: Array<Sprint> = resp.data.map((dto: SprintDto) => new Sprint(dto))
+    console.log({sprints: sprints});
+    setSprints(sprints);
+  });
+}
+
+export const stateGetActiveSprintByProject = (projectId: number | undefined, sprint: Sprint | null, setSprint: Dispatch<SetStateAction<Sprint | null>>) => {
+  if (projectId === undefined || sprint !== null) return;
+  getActiveSprintByProjectId(projectId!).then((response) => {
+    const resp = response as AxiosResponse;
+    if (resp.status !== 200) {
+      console.log("Unable to load active sprint: projectId=" + projectId);
+      return;
+    }
+    const sprint: Sprint = new Sprint(resp.data);
+    console.log({activeSprint: sprint});
+    setSprint(sprint);
   });
 }

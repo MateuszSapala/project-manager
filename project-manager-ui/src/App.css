@@ -1,5 +1,5 @@
 /* OTHER */
-.accordion-button{
+.accordion-button {
 
     color: white !important;
     font-size: medium !important;
@@ -8,36 +8,36 @@
     font-weight: 500;
 }
 
-.accordion{
+.accordion {
     background-color: transparent !important;
 }
 
-.accordion-task{
+.accordion-task {
     background-color: gray !important;
     margin-bottom: 10px;
 }
 
-.accordion-task > .accordion-item > .accordion-header > .accordion-button{
+.accordion-task > .accordion-item > .accordion-header > .accordion-button {
     text-align: start;
     width: 100%;
 }
 
-.accordion-task-right{
+.accordion-task-right {
     float: right;
     margin-right: 20px;
 }
 
-.accordion-task > .accordion-item > .accordion-collapse > .accordion-body > p{
+.accordion-task > .accordion-item > .accordion-collapse > .accordion-body > p {
     margin-left: 5px;
     color: white;
 }
 
-.checkbox-backlog{
+.checkbox-backlog {
     margin: 5px;
     display: inline;
 }
 
-.sidebar-brand-text{
+.sidebar-brand-text {
     color: white;
     font-weight: 700;
     text-align: center;
@@ -48,7 +48,7 @@
     padding: 0rem 1rem !important;
 }
 
-.bg-gradient-primary{
+.bg-gradient-primary {
     height: 100%;
     position: absolute;
     left: 0;
@@ -56,7 +56,7 @@
     overflow: hidden;
 }
 
-.menu-link{
+.menu-link {
     color: white;
     display: block;
     margin-bottom: 5px;
@@ -67,32 +67,49 @@
     /* pointer-events: none; */
 }
 
-.menu-link:focus{
+.menu-link:focus {
     outline: none;
     background-color: transparent;
 }
 
-.menu-link:hover{
+.menu-link:hover {
     outline: none;
     background-color: transparent;
 }
 
-.main-content{
+.main-content {
     width: 100%;
     padding: 0 10px 0 230px;
     /*background: transparent;*/
     background: var(--cyan);
 }
 
-.two-buttons-container{
+.two-buttons-container {
     display: inline-block;
     overflow: hidden;
     width: 100%;
 }
 
-.two-buttons{
+.two-buttons {
     width: 45%;
     display: inline-block;
+}
+
+.card-sprint {
+    width: 99%;
+    margin: 10px;
+    background: silver;
+    border-color: silver;
+}
+
+.card-sprint-closed {
+    background: darkgray;
+    border-color: darkgray;
+}
+
+.card-sprint-active {
+    background: darkseagreen;
+    border-color: darkseagreen;
 }
 
 /* BOARD */
@@ -172,7 +189,7 @@ select {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    border:rgb(62, 100, 255)
+    border: rgb(62, 100, 255)
 }
 
 .item {
@@ -263,7 +280,7 @@ select {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5);;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .close-btn-ctn {

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/sprints")
@@ -40,5 +42,26 @@ public class SprintController {
     public ResponseEntity<Sprint> getSprintById(@PathVariable("id") Long id) {
         Sprint sprint = sprintService.getSprintById(id);
         return ResponseEntity.status(HttpStatus.OK).body(sprint);
+    }
+
+    @GetMapping("/project/{projectId}")
+    @Operation(summary = "Get sprint by project id")
+    public ResponseEntity<List<Sprint>> getSprintsByProjectId(@PathVariable("projectId") Long projectId) {
+        List<Sprint> sprints = sprintService.getSprintByProjectId(projectId);
+        return ResponseEntity.status(HttpStatus.OK).body(sprints);
+    }
+
+    @GetMapping("/project/{projectId}/active")
+    @Operation(summary = "Get sprint by project id")
+    public ResponseEntity<Sprint> getActiveSprintByProjectId(@PathVariable("projectId") Long projectId) {
+        Sprint sprint = sprintService.getActiveSprintByProjectId(projectId);
+        return ResponseEntity.status(HttpStatus.OK).body(sprint);
+    }
+
+    @PostMapping("/{id}/close")
+    @Operation(summary = "Close sprint by id")
+    public ResponseEntity<Void> closeSprint(@PathVariable("id") Long id) {
+        sprintService.closeSprint(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -1,6 +1,7 @@
 package uni.lodz.pl.projectmanager.sprint;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -58,5 +61,29 @@ public class SprintService {
             log.info("User {\"id\":" + user.getId() + "} doesn't have sufficient access to " + option.name().toLowerCase() + " sprints in project {\"id\":" + projectId + "}");
             throw new AuthorizationServiceException("Insufficient access to " + option.name().toLowerCase() + " sprints");
         }
+    }
+
+    public List<Sprint> getSprintByProjectId(Long projectId) {
+        validateSprintAccess(projectId, RoleConfig.Option.VIEW);
+        return sprintRepository.findByProjectId(projectId);
+    }
+
+    public Sprint getActiveSprintByProjectId(Long projectId) {
+        validateSprintAccess(projectId, RoleConfig.Option.VIEW);
+        return sprintRepository.findByProjectId(projectId).stream()
+                .filter(sprint -> !sprint.isClosed())
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Not found active sprint for project {\"id\":" + projectId + "}"));
+    }
+
+    @SneakyThrows
+    public void closeSprint(Long id) {
+        Sprint sprint = sprintRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + id + "\"} not found"));
+        validateSprintAccess(sprint.getProject().getId(), RoleConfig.Option.EDIT);
+        if (sprint.isClosed()) throw new Exception("Sprint {\"id\":" + id + "} already closed");
+        if(!id.equals(getActiveSprintByProjectId(sprint.getProject().getId()).getId())) throw new Exception("Sprint {\"id\":" + id + "} aren't currently active");
+        sprint.setClosed(true);
+        sprintRepository.save(sprint);
     }
 }

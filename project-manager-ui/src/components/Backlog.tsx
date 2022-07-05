@@ -15,6 +15,7 @@ import {addTask, editTask} from "../service/TaskService";
 import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
 import {EditTask} from "../model/task/EditTask";
+import {displayMessages} from "./Util";
 
 interface Props {
   loggedUser: User;
@@ -26,7 +27,7 @@ function Backlog({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [accesses, setAccesses] = useState<Array<Access>>([]);
-  const [isStateChecked, setIsStateChecked] = useState(TaskStateTable);
+  const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
   const [taskName, setTaskName] = useState<string>("");
@@ -68,7 +69,7 @@ function Backlog({loggedUser, projects}: Props) {
               {task.name}
               <span className="accordion-task-right">
                 <span
-                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unsigned"}
+                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
                 </span>
                 &#x290B; &#x290A;
               </span>
@@ -88,7 +89,7 @@ function Backlog({loggedUser, projects}: Props) {
         <div className="form-group">
           <label htmlFor="taskName">
             Task name:
-            <input type="email" className="form-control text-primary" placeholder="Enter task name" id="taskName"
+            <input type="text" className="form-control text-primary" placeholder="Enter task name" id="taskName"
                    value={taskName}
                    onChange={(event => setTaskName(event.target.value))}/>
           </label>
@@ -174,17 +175,6 @@ function Backlog({loggedUser, projects}: Props) {
           : ""}
       </div>
     )
-  }
-
-  const displayMessages = (error: string, success?: string) => {
-    return (<div>
-      {error === "" ? "" : <div className="alert alert-danger" role="alert">
-        {error}
-      </div>}
-      {success === "" || success === undefined ? "" : <div className="alert alert-primary" role="alert">
-        {success}
-      </div>}
-    </div>)
   }
 
   const editTaskChangeState = (task?: Task) => {
