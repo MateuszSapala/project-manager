@@ -50,4 +50,18 @@ public class SprintController {
         List<Sprint> sprints = sprintService.getSprintByProjectId(projectId);
         return ResponseEntity.status(HttpStatus.OK).body(sprints);
     }
+
+    @GetMapping("/project/{projectId}/active")
+    @Operation(summary = "Get sprint by project id")
+    public ResponseEntity<Sprint> getActiveSprintByProjectId(@PathVariable("projectId") Long projectId) {
+        Sprint sprint = sprintService.getActiveSprintByProjectId(projectId);
+        return ResponseEntity.status(HttpStatus.OK).body(sprint);
+    }
+
+    @PostMapping("/{id}/close")
+    @Operation(summary = "Close sprint by id")
+    public ResponseEntity<Void> closeSprint(@PathVariable("id") Long id) {
+        sprintService.closeSprint(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

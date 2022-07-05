@@ -1,6 +1,7 @@
 package uni.lodz.pl.projectmanager.sprint;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
@@ -65,5 +66,24 @@ public class SprintService {
     public List<Sprint> getSprintByProjectId(Long projectId) {
         validateSprintAccess(projectId, RoleConfig.Option.VIEW);
         return sprintRepository.findByProjectId(projectId);
+    }
+
+    public Sprint getActiveSprintByProjectId(Long projectId) {
+        validateSprintAccess(projectId, RoleConfig.Option.VIEW);
+        return sprintRepository.findByProjectId(projectId).stream()
+                .filter(sprint -> !sprint.isClosed())
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Not found active sprint for project {\"id\":" + projectId + "}"));
+    }
+
+    @SneakyThrows
+    public void closeSprint(Long id) {
+        Sprint sprint = sprintRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + id + "\"} not found"));
+        validateSprintAccess(sprint.getProject().getId(), RoleConfig.Option.EDIT);
+        if (sprint.isClosed()) throw new Exception("Sprint {\"id\":" + id + "} already closed");
+        if(!id.equals(getActiveSprintByProjectId(sprint.getProject().getId()).getId())) throw new Exception("Sprint {\"id\":" + id + "} aren't currently active");
+        sprint.setClosed(true);
+        sprintRepository.save(sprint);
     }
 }
