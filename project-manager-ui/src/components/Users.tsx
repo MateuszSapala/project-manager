@@ -27,6 +27,10 @@ function Users({loggedUser, projects}: Props) {
   const [editedRole, setEditedRole] = useState<ProjectRole | null>(null);
   const [editError, setEditError] = useState<string>("");
 
+  const [addUser, setAddUser] = useState<User | undefined>(undefined);
+  const [addRole, setAddRole] = useState<ProjectRole | null>(null);
+  const [addError, setAddError] = useState<string>("");
+
   useEffect(() => {
     stateGetProject(projectName, project, setProject);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
@@ -39,8 +43,8 @@ function Users({loggedUser, projects}: Props) {
         <div className="card-body">
           <h5 className="card-title">{access.user.name + " " + access.user.surname}</h5>
           <p className="card-text">Email: {access.user.email}</p>
-          <p className="card-text">Role: {projectRoleToString(access.projectRole)}</p>
-          {access.id === editedId ? displayCheckboxes() : ""}
+          <p className="card-text">Role: {projectRoleToString(access?.projectRole)}</p>
+          {access.id === editedId ? displayCheckboxes(editedRole, setEditedRole) : ""}
           {displayMessages(editError)}
           {displayButtons(access.id)}
         </div>
@@ -48,12 +52,12 @@ function Users({loggedUser, projects}: Props) {
     )
   }
 
-  const displayCheckboxes = () => {
+  const displayCheckboxes = (role: ProjectRole | null, setRole: Dispatch<ProjectRole | null>) => {
     return (
       <div>
         {ProjectRoleTable.map(r => <div className="checkbox d-inline mr-3" key={r}>
-          <input type="checkbox" checked={editedRole === r}
-                 onChange={() => setEditedRole(r)}/>{" " + projectRoleToString(r)}
+          <input type="checkbox" checked={role === r}
+                 onChange={() => setRole(r)}/>{" " + projectRoleToString(r)}
         </div>)}
       </div>
     )
@@ -101,6 +105,61 @@ function Users({loggedUser, projects}: Props) {
     )
   }
 
+  const displayAdd = () => {
+    return (
+      <div>
+        {displayUserSelect()}
+        {displayCheckboxes(addRole, setAddRole)}
+        {displayMessages(addError)}
+        <button className="btn btn-primary m-2" onClick={() => {
+          if (addUser === undefined) {
+            setAddError("User not selected");
+            return;
+          }
+          if (addRole === null) {
+            setAddError("Role not selected");
+            return;
+          }
+          editAccess(new EditAccess(addUser.id, project!.id, editedRole!)).then((response: any) => {
+            if ((response as AxiosResponse).status !== 201) {
+              setAddError("Unable to add user access")
+              return;
+            }
+            setAccesses([...accesses, response.data]);
+            setAddRole(null);
+            setAddUser(undefined);
+            setAddError("");
+            return;
+          });
+        }}>
+          Save
+        </button>
+      </div>
+    )
+  }
+
+  const displayUserSelect = () => {
+    return (
+      <label htmlFor="addUser">
+        User:
+        <select className={addUser === undefined ? "form-control" : "form-control text-primary"} id="addUser"
+                value={addUser?.id}
+                onChange={event => {
+                  console.log(event)
+                  console.log(event.target.value)
+                  setAddUser(users.find(user => user.id.toString() === event.target.value))
+                }}>
+          <option value={undefined}>Select user</option>
+          {users.filter(user => accesses.filter(a => a.user.id === user.id).length === 0).map(user => {
+            return (<option className="text-primary" value={user.id} key={user.id}>
+              {user.name + " " + user.surname}
+            </option>)
+          })}
+        </select>
+      </label>
+    )
+  }
+
   return (
     <div id="page-top">
       <div id="wrapper">
@@ -108,6 +167,7 @@ function Users({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content">
           <h1>Users {projectName}</h1>
           {accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
+          {displayAdd()}
         </div>
       </div>
     </div>

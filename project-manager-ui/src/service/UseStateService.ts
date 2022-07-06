@@ -86,7 +86,7 @@ export const stateGetActiveSprintByProject = (projectId: number | undefined, spr
 }
 
 export const stateGetUsers = (users: Array<User>, setUsers: Dispatch<SetStateAction<Array<User>>>) => {
-  if (users !== null) return;
+  if (users.length !== 0) return;
   getUsers().then((response) => {
     const resp = response as AxiosResponse;
     if (resp.status !== 200) {

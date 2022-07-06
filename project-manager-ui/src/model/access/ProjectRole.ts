@@ -13,5 +13,5 @@ export const ProjectRoleTable = [
 ];
 
 export const projectRoleToString = (role: ProjectRole) => {
-  return role.replace("_", " ").toLowerCase();
+  return role?.replace("_", " ")?.toLowerCase();
 }
