@@ -32,11 +32,6 @@
     color: white;
 }
 
-.checkbox-backlog {
-    margin: 5px;
-    display: inline;
-}
-
 .sidebar-brand-text {
     color: white;
     font-weight: 700;
@@ -110,6 +105,21 @@
 .card-sprint-active {
     background: darkseagreen;
     border-color: darkseagreen;
+}
+
+.form-group-sprint {
+    margin: 10px;
+}
+
+.card-user {
+    width: 99%;
+    margin: 10px;
+    background: lightgoldenrodyellow;
+    border-color: lightgoldenrodyellow;
+}
+
+.confirm-box > .confirm-box__content {
+    background-color: sandybrown;
 }
 
 /* BOARD */

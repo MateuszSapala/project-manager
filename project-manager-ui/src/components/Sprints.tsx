@@ -55,31 +55,29 @@ function Sprints({loggedUser, projects}: Props) {
 
   const displayAdd = () => {
     return (
-      <div>
-        <div className="form-group">
-          <label htmlFor="SprintName">
-            Sprint name:
-            <input type="text" className="form-control text-primary" placeholder="Enter sprint name" id="sprintName"
-                   value={sprintName}
-                   onChange={(event => setSprintName(event.target.value))}/>
-          </label>
-          <label htmlFor="sprintStart">
-            Start date:
-            <DatePicker onChange={date => setSprintStartDate(date)} selected={sprintStartDate}
-                        className="form-control text-primary"
-                        minDate={sprints.length === 0 ? undefined : sprints[sprints.length - 1].end}
-                        placeholderText={"Enter Start date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
-          </label>
-          <label htmlFor="SprintEnd">
-            End date:
-            <DatePicker onChange={date => setSprintEndDate(date)} selected={sprintEndDate}
-                        minDate={sprintStartDate === null ? (sprints.length === 0 ? undefined : sprints[sprints.length - 1].end) : sprintStartDate}
-                        className="form-control text-primary"
-                        placeholderText={"Enter end date"} id="SprintEnd" dateFormat='dd-MM-yyyy'/>
-          </label>
-          {displayMessages(sprintError, sprintSuccess)}
-          <button className="btn btn-primary btn-block" onClick={handleAddSprint}>Add</button>
-        </div>
+      <div className="form-group form-group-sprint">
+        <label htmlFor="SprintName">
+          Sprint name:
+          <input type="text" className="form-control text-primary" placeholder="Enter sprint name" id="sprintName"
+                 value={sprintName}
+                 onChange={(event => setSprintName(event.target.value))}/>
+        </label>
+        <label htmlFor="sprintStart">
+          Start date:
+          <DatePicker onChange={date => setSprintStartDate(date)} selected={sprintStartDate}
+                      className="form-control text-primary"
+                      minDate={sprints.length === 0 ? undefined : sprints[sprints.length - 1].end}
+                      placeholderText={"Enter Start date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+        </label>
+        <label htmlFor="SprintEnd">
+          End date:
+          <DatePicker onChange={date => setSprintEndDate(date)} selected={sprintEndDate}
+                      minDate={sprintStartDate === null ? (sprints.length === 0 ? undefined : sprints[sprints.length - 1].end) : sprintStartDate}
+                      className="form-control text-primary"
+                      placeholderText={"Enter end date"} id="SprintEnd" dateFormat='dd-MM-yyyy'/>
+        </label>
+        {displayMessages(sprintError, sprintSuccess)}
+        <button className="btn btn-primary btn-block" onClick={handleAddSprint}>Add</button>
       </div>
     )
   }
