@@ -1,5 +1,5 @@
-import {User} from "./User";
-import {Project} from "./Project";
+import {User} from "../User";
+import {Project} from "../Project";
 import {ProjectRole} from "./ProjectRole";
 
 export interface Access {

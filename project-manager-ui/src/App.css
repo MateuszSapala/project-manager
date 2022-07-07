@@ -37,6 +37,7 @@
     display: inline;
 }
 
+
 .sidebar-brand-text {
     color: white;
     font-weight: 700;
@@ -97,7 +98,7 @@
 
 .card-sprint {
     width: 99%;
-    margin: 10px;
+    margin-bottom: 15px;
     background: silver;
     border-color: silver;
 }
@@ -110,6 +111,18 @@
 .card-sprint-active {
     background: darkseagreen;
     border-color: darkseagreen;
+}
+
+
+.card-user {
+    width: 100%;
+    margin-bottom: 15px;
+    background: lightgoldenrodyellow;
+    border-color: lightgoldenrodyellow;
+}
+
+.confirm-box > .confirm-box__content {
+    background-color: sandybrown;
 }
 
 /* BOARD */

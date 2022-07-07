@@ -10,7 +10,7 @@ import {stateGetAccessesByProject, stateGetProject, stateGetTasks} from "../serv
 import {capitalizedStatus, TaskState, TaskStateTable} from "../model/task/TaskState";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {Access} from "../model/Access";
+import {Access} from "../model/access/Access";
 import {addTask, editTask} from "../service/TaskService";
 import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
@@ -52,7 +52,7 @@ function Backlog({loggedUser, projects}: Props) {
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
     return (
-      <div className="checkbox-backlog" key={state}>
+      <div className="checkbox d-inline mr-3" key={state}>
         <input type="checkbox" checked={checked} onChange={() => {
           setIsStateChecked(checked ? isStateChecked.filter(x => x !== state) : [...isStateChecked, state])
         }}/>{" " + capitalizedStatus(state)}
@@ -60,7 +60,7 @@ function Backlog({loggedUser, projects}: Props) {
     )
   }
 
-  const displayTask = (task: Task, disabled: boolean, setEditedTaskId: Dispatch<number | null>) => {
+  const displayTask = (task: Task, disabled: boolean) => {
     return (
       <Accordion defaultActiveKey="1" className="accordion-task" key={task.id}>
         <Accordion.Item eventKey="0">
@@ -196,12 +196,11 @@ function Backlog({loggedUser, projects}: Props) {
       return;
     }
     editTask(editedTaskId!, new EditTask(["end", "name", "description", "assignedToId"], editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, undefined, undefined)).then(response => {
-      console.log(response);
       if ((response as AxiosResponse).status !== 201) {
         setEditedTaskError("Unable to edit task")
         return;
       }
-      setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)]);
+      setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)].sort((a, b) => b.id - a.id));
       editTaskChangeState();
       return;
     });
@@ -231,10 +230,12 @@ function Backlog({loggedUser, projects}: Props) {
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="main-content">
-          <h1>Backlog {projectName}</h1>
-          {TaskStateTable.map(state => displayCheckbox(state))}
-          {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId, setEditedTaskId))}
-          {displayAdd()}
+          <div className="m-2">
+            <h1>Backlog {projectName}</h1>
+            {TaskStateTable.map(state => displayCheckbox(state))}
+            {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
+            {displayAdd()}
+          </div>
         </div>
       </div>
     </div>
