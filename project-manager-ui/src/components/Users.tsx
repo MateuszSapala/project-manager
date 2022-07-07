@@ -9,8 +9,9 @@ import {stateGetAccessesByProject, stateGetProject, stateGetUsers} from "../serv
 import {ProjectRole, ProjectRoleTable, projectRoleToString} from "../model/access/ProjectRole";
 import {displayMessages} from "./Util";
 import {AxiosResponse} from "axios";
-import {editAccess} from "../service/AccessService";
+import {deleteAccess, editAccess} from "../service/AccessService";
 import {EditAccess} from "../model/access/EditAccess";
+import {confirm} from "react-confirm-box";
 
 interface Props {
   loggedUser: User;
@@ -46,7 +47,7 @@ function Users({loggedUser, projects}: Props) {
           <p className="card-text">Role: {projectRoleToString(access?.projectRole)}</p>
           {access.id === editedId ? displayCheckboxes(editedRole, setEditedRole) : ""}
           {displayMessages(editError)}
-          {displayButtons(access.id)}
+          {displayButtons(access)}
         </div>
       </div>
     )
@@ -63,12 +64,31 @@ function Users({loggedUser, projects}: Props) {
     )
   }
 
-  const displayButtons = (accessId: number) => {
-    if (accessId !== editedId) {
-      return (<button className="btn btn-primary m-2" onClick={() => {
-        setEditedId(accessId);
-        setEditedRole(null);
-      }}>Edit</button>)
+  const displayButtons = (access: Access) => {
+    if (access.id !== editedId) {
+      return (<div>
+        <button className="btn btn-primary m-2" onClick={() => {
+          setEditedId(access.id);
+          setEditedRole(null);
+        }}>Edit
+        </button>
+        <button className="btn btn-primary m-2" onClick={async () => {
+          const result = await confirm("Are you sure you want to revoke " + access.user.name + " " + access.user.surname + "'s access?");
+          if (!result) {
+            console.log("Cancelled");
+            return;
+          }
+          deleteAccess(access.id).then((response) => {
+            const resp = response as AxiosResponse;
+            if (resp.status !== 200) {
+              console.log("Unable to delete access");
+              return;
+            }
+            setAccesses(accesses.filter(a => a.id !== access.id))
+          });
+        }}>Delete
+        </button>
+      </div>)
     }
     return (
       <div>
@@ -120,7 +140,7 @@ function Users({loggedUser, projects}: Props) {
             setAddError("Role not selected");
             return;
           }
-          editAccess(new EditAccess(addUser.id, project!.id, editedRole!)).then((response: any) => {
+          editAccess(new EditAccess(addUser.id, project!.id, addRole!)).then((response: any) => {
             if ((response as AxiosResponse).status !== 201) {
               setAddError("Unable to add user access")
               return;

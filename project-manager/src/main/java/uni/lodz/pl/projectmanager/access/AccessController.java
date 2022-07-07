@@ -12,7 +12,6 @@ import uni.lodz.pl.projectmanager.access.model.Access;
 import uni.lodz.pl.projectmanager.access.model.UpdateAccessDto;
 import uni.lodz.pl.projectmanager.util.JsonUtil;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Slf4j
@@ -40,17 +39,17 @@ public class AccessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accessService.updateOrAddAccess(access));
     }
 
-    @DeleteMapping({"/{userId}/{projectId}" })
+    @DeleteMapping({"/{userId}/{projectId}"})
     @Operation(summary = "Delete access")
-    public ResponseEntity<Void> deleteAccess(@PathParam("userId") Long userId, @PathParam("projectId") Long projectId) {
+    public ResponseEntity<Void> deleteAccess(@PathVariable("userId") Long userId, @PathVariable("projectId") Long projectId) {
         log.info("Delete access by: userId=" + userId + ", projectId=" + projectId);
         accessService.deleteAccess(userId, projectId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping({"/{accessId}" })
+    @DeleteMapping({"/{accessId}"})
     @Operation(summary = "Delete access")
-    public ResponseEntity<Void> deleteAccess(@PathParam("userId") Long accessId) {
+    public ResponseEntity<Void> deleteAccess(@PathVariable("accessId") Long accessId) {
         log.info("Delete access " + accessId);
         accessService.deleteAccess(accessId);
         return ResponseEntity.status(HttpStatus.OK).build();

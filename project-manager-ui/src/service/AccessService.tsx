@@ -19,3 +19,12 @@ export async function editAccess(access: EditAccess): Promise<AxiosResponse> {
     },
   });
 }
+
+export async function deleteAccess(id: number): Promise<AxiosResponse> {
+  const auth: string = window.localStorage.getItem("authorization")!;
+  return axios.delete(AppConfig.BACKEND_URL + "v1/access/" + id, {
+    headers: {
+      authorization: auth,
+    },
+  });
+}
