@@ -32,6 +32,12 @@
     color: white;
 }
 
+.checkbox-backlog {
+    margin: 5px;
+    display: inline;
+}
+
+
 .sidebar-brand-text {
     color: white;
     font-weight: 700;
@@ -106,6 +112,7 @@
     background: darkseagreen;
     border-color: darkseagreen;
 }
+
 
 .card-user {
     width: 100%;
