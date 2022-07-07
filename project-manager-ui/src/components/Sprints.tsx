@@ -55,7 +55,7 @@ function Sprints({loggedUser, projects}: Props) {
 
   const displayAdd = () => {
     return (
-      <div className="form-group form-group-sprint">
+      <div className="form-group">
         <label htmlFor="SprintName">
           Sprint name:
           <input type="text" className="form-control text-primary" placeholder="Enter sprint name" id="sprintName"
@@ -116,10 +116,12 @@ function Sprints({loggedUser, projects}: Props) {
     <div id="page-top">
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
-        <div className="d-flex flex-column main-content">
-          <h1>Sprints {projectName}</h1>
-          {sprints.map(sprint => displaySprint(sprint))}
-          {displayAdd()}
+        <div className="d-flex flex-column main-content ">
+          <div className="m-2">
+            <h1>Sprints {projectName}</h1>
+            {sprints.map(sprint => displaySprint(sprint))}
+            {displayAdd()}
+          </div>
         </div>
       </div>
     </div>

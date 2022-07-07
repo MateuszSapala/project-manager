@@ -92,7 +92,7 @@
 
 .card-sprint {
     width: 99%;
-    margin: 10px;
+    margin-bottom: 15px;
     background: silver;
     border-color: silver;
 }
@@ -107,13 +107,9 @@
     border-color: darkseagreen;
 }
 
-.form-group-sprint {
-    margin: 10px;
-}
-
 .card-user {
-    width: 99%;
-    margin: 10px;
+    width: 100%;
+    margin-bottom: 15px;
     background: lightgoldenrodyellow;
     border-color: lightgoldenrodyellow;
 }

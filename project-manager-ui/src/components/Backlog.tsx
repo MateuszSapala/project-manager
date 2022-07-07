@@ -230,10 +230,12 @@ function Backlog({loggedUser, projects}: Props) {
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="main-content">
-          <h1>Backlog {projectName}</h1>
-          {TaskStateTable.map(state => displayCheckbox(state))}
-          {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
-          {displayAdd()}
+          <div className="m-2">
+            <h1>Backlog {projectName}</h1>
+            {TaskStateTable.map(state => displayCheckbox(state))}
+            {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
+            {displayAdd()}
+          </div>
         </div>
       </div>
     </div>

@@ -165,9 +165,11 @@ function Users({loggedUser, projects}: Props) {
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="d-flex flex-column main-content">
-          <h1>Users {projectName}</h1>
-          {accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
-          {displayAdd()}
+          <div className="m-2">
+            <h1>Users {projectName}</h1>
+            {accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
+            {displayAdd()}
+          </div>
         </div>
       </div>
     </div>

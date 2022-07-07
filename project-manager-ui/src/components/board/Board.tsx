@@ -20,10 +20,12 @@ function Board({loggedUser, projects}: Props) {
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="d-flex flex-column main-content">
-          <h1>Board {projectName}</h1>
-          <DndProvider backend={HTML5Backend}>
-            {<TaskBoard projectName={projectName}/>}
-          </DndProvider>
+          <div className="m-2">
+            <h1>Board {projectName}</h1>
+            <DndProvider backend={HTML5Backend}>
+              {<TaskBoard projectName={projectName}/>}
+            </DndProvider>
+          </div>
         </div>
       </div>
     </div>
