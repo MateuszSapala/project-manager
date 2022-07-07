@@ -6,7 +6,12 @@ import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";
 import {Dispatch, useEffect, useState} from "react";
 import {Task} from "../model/task/Task";
-import {stateGetAccessesByProject, stateGetProject, stateGetTasks} from "../service/UseStateService";
+import {
+  stateGetAccessesByProject,
+  stateGetProject,
+  stateGetSprintsByProject,
+  stateGetTasks
+} from "../service/UseStateService";
 import {capitalizedStatus, TaskState, TaskStateTable} from "../model/task/TaskState";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,6 +21,7 @@ import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
 import {EditTask} from "../model/task/EditTask";
 import {displayMessages} from "./Util";
+import {Sprint} from "../model/sprint/Sprint";
 
 interface Props {
   loggedUser: User;
@@ -28,11 +34,13 @@ function Backlog({loggedUser, projects}: Props) {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [accesses, setAccesses] = useState<Array<Access>>([]);
   const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
+  const [sprints, setSprints] = useState<Array<Sprint>>([]);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
   const [taskName, setTaskName] = useState<string>("");
   const [taskDescription, setTaskDescription] = useState<string>("");
   const [taskAssignedUser, setTaskAssignedUser] = useState<User | undefined>(undefined);
+  const [taskSprint, setTaskSprint] = useState<Sprint | undefined>(undefined);
   const [taskError, setTaskError] = useState<string>("");
   const [taskSuccess, setTaskSuccess] = useState<string>("");
 
@@ -41,13 +49,15 @@ function Backlog({loggedUser, projects}: Props) {
   const [editedTaskName, setEditedTaskName] = useState<string>("");
   const [editedTaskDescription, setEditedTaskDescription] = useState<string>("");
   const [editedTaskAssignedUser, setEditedTaskAssignedUser] = useState<User | undefined>(undefined);
+  const [editedTaskSprint, setEditedTaskSprint] = useState<Sprint | undefined>(undefined);
   const [editedTaskError, setEditedTaskError] = useState<string>("");
 
   useEffect(() => {
     stateGetProject(projectName, project, setProject);
     stateGetTasks(projectName, tasks, setTasks);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
-  }, [accesses, project, projectName, tasks]);
+    stateGetSprintsByProject(project?.id, sprints, setSprints);
+  }, [accesses, project, projectName, sprints, tasks]);
 
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
@@ -105,6 +115,7 @@ function Backlog({loggedUser, projects}: Props) {
                         placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
           </label>
           {displayUserSelect(false, accesses, taskAssignedUser, setTaskAssignedUser)}
+          {displaySprintSelect(false, sprints.filter(s => !s.closed), taskSprint, setTaskSprint)}
           {displayMessages(taskError, taskSuccess)}
           <button className="btn btn-primary btn-block" onClick={handleAddTask}>Add</button>
         </div>
@@ -122,13 +133,18 @@ function Backlog({loggedUser, projects}: Props) {
       setTaskError("The following data is missing: " + missing);
       return;
     }
-    addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, undefined)).then(response => {
+    addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, taskSprint?.id)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setTaskError("Unable to add task")
         return;
       }
       setTasks([...tasks, new Task(response.data)]);
       setTaskSuccess("Successfully added task");
+      setTaskDate(null);
+      setTaskName("");
+      setTaskDescription("");
+      setTaskAssignedUser(undefined);
+      setTaskSprint(undefined);
       return;
     });
   }
@@ -156,6 +172,7 @@ function Backlog({loggedUser, projects}: Props) {
                       placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
+        {displaySprintSelect(disabled, sprints.filter(s => !s.closed), disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
         {displayMessages(editedTaskError)}
         {disabled ? <button className="btn btn-primary btn-block"
                             onClick={() => editTaskChangeState(task)}>Edit</button> : ""}
@@ -195,7 +212,7 @@ function Backlog({loggedUser, projects}: Props) {
       setEditedTaskError("The following data is missing: " + missing);
       return;
     }
-    editTask(editedTaskId!, new EditTask(["end", "name", "description", "assignedToId"], editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, undefined, undefined)).then(response => {
+    editTask(editedTaskId!, new EditTask(["end", "name", "description", "assignedToId"], editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, editedTaskSprint?.id, undefined)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setEditedTaskError("Unable to edit task")
         return;
@@ -219,6 +236,24 @@ function Backlog({loggedUser, projects}: Props) {
                             disabled={disabled}>
               {access.user.name + " " + access.user.surname}
             </option>)
+          })}
+        </select>
+      </label>
+    )
+  }
+
+  const displaySprintSelect = (disabled: boolean, sprints: Array<Sprint>, sprint: Sprint | undefined, setSprint?: Dispatch<Sprint | undefined>) => {
+    const value = sprint !== undefined ? sprint?.id : sprints[1]?.id;
+    return (
+      <label htmlFor="taskUser">
+        Sprint:
+        <select className={disabled || sprint === undefined ? "form-control" : "form-control text-primary"}
+                id="taskUser"
+                value={value} disabled={disabled}
+                onChange={event => setSprint ? setSprint(sprints.find(s => s.id.toString() === event.target.value)) : {}}>
+          <option value={undefined} disabled={disabled}>Add sprint</option>
+          {sprints.map(s => {
+            return (<option className="text-primary" value={s.id} key={s.id} disabled={disabled}>{s.name}</option>)
           })}
         </select>
       </label>

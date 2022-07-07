@@ -9,8 +9,9 @@ import {Sprint} from "../model/sprint/Sprint";
 import DatePicker from "react-datepicker";
 import {displayMessages} from "./Util";
 import {AxiosResponse} from "axios";
-import {addSprint} from "../service/SprintService";
+import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
+import {confirm} from "react-confirm-box";
 
 interface Props {
   loggedUser: User;
@@ -48,6 +49,25 @@ function Sprints({loggedUser, projects}: Props) {
           <p className="card-text">End date: {sprint.end?.toDateString()}</p>
           <p className="card-text">Closed: {sprint.closed ? "yes" : "no"}</p>
           <p className="card-text">Active: {active ? "yes" : "no"}</p>
+          {!active ? "" :
+            <button className="btn btn-primary m-2" onClick={async () => {
+              const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ?");
+              if (!result) {
+                console.log("Cancelled");
+                return;
+              }
+              closeSprint(sprint.id).then((response) => {
+                const resp = response as AxiosResponse;
+                if (resp.status !== 204) {
+                  console.log("Unable to close sprint");
+                  return;
+                }
+                sprint.closed = true;
+                setActiveSprint(null);
+                setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
+              });
+            }}>Close sprint
+            </button>}
         </div>
       </div>
     )
