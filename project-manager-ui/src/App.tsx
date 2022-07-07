@@ -15,7 +15,7 @@ import {AxiosResponse} from "axios";
 import {Project} from "./model/Project";
 import Board from "./components/board/Board";
 import Sprints from "./components/Sprints";
-import Users from "./components/Users";
+import Accesses from "./components/Accesses";
 
 function App() {
   //LOGGING
@@ -119,9 +119,9 @@ function App() {
           }
         />
         <Route
-          path="/projects/:projectName/users"
+          path="/projects/:projectName/accesses"
           element={
-            <Users
+            <Accesses
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
             />

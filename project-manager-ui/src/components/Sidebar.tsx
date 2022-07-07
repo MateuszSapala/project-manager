@@ -62,7 +62,7 @@ function Sidebar({projects, selectedProject}: Props) {
                   {generateButton(projectPath + "/backlog", "Backlog", "backlog")}
                   {generateButton(projectPath + "/sprints", "Sprints", "sprints")}
                   {generateButton(projectPath + "/board", "Board", "board")}
-                  {generateButton(projectPath + "/users", "Users", "users")}
+                  {generateButton(projectPath + "/accesses", "Accesses", "accesses")}
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>

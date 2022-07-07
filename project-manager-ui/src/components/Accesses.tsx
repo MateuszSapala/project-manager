@@ -18,7 +18,7 @@ interface Props {
   projects: Array<Project>;
 }
 
-function Users({loggedUser, projects}: Props) {
+function Accesses({loggedUser, projects}: Props) {
   let {projectName} = useParams();
   const [project, setProject] = useState<Project | null>(null);
   const [accesses, setAccesses] = useState<Array<Access>>([]);
@@ -186,7 +186,7 @@ function Users({loggedUser, projects}: Props) {
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
-            <h1>Users {projectName}</h1>
+            <h1>Accesses {projectName}</h1>
             {accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
             {displayAdd()}
           </div>
@@ -196,4 +196,4 @@ function Users({loggedUser, projects}: Props) {
   );
 }
 
-export default Users;
+export default Accesses;
