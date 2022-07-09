@@ -43,8 +43,8 @@ export const stateGetProject = (projectName: string | undefined, project: Projec
   });
 }
 
-export const stateGetAccessesByProject = (projectId: number | undefined, accesses: Array<Access>, setAccesses: Dispatch<SetStateAction<Array<Access>>>) => {
-  if (projectId === undefined || accesses.length !== 0) return;
+export const stateGetAccessesByProject = (projectId: number | undefined, accesses: Array<Access> | null, setAccesses: Dispatch<SetStateAction<Array<Access> | null>>) => {
+  if (projectId === undefined || accesses !== null) return;
   getAccessByProject(projectId!).then((response) => {
     const resp = response as AxiosResponse;
     if (resp.status !== 200) {
@@ -57,8 +57,8 @@ export const stateGetAccessesByProject = (projectId: number | undefined, accesse
   });
 }
 
-export const stateGetSprintsByProject = (projectId: number | undefined, sprints: Array<Sprint>, setSprints: Dispatch<SetStateAction<Array<Sprint>>>) => {
-  if (projectId === undefined || sprints.length !== 0) return;
+export const stateGetSprintsByProject = (projectId: number | undefined, sprints: Array<Sprint> | null, setSprints: Dispatch<SetStateAction<Array<Sprint> | null>>) => {
+  if (projectId === undefined || sprints !== null) return;
   getSprintsByProjectId(projectId!).then((response) => {
     const resp = response as AxiosResponse;
     if (resp.status !== 200) {
@@ -85,8 +85,8 @@ export const stateGetActiveSprintByProject = (projectId: number | undefined, spr
   });
 }
 
-export const stateGetUsers = (users: Array<User>, setUsers: Dispatch<SetStateAction<Array<User>>>) => {
-  if (users.length !== 0) return;
+export const stateGetUsers = (users: Array<User> | null, setUsers: Dispatch<SetStateAction<Array<User> | null>>) => {
+  if (users !== null) return;
   getUsers().then((response) => {
     const resp = response as AxiosResponse;
     if (resp.status !== 200) {

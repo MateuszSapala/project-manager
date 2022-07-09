@@ -15,12 +15,15 @@ import uni.lodz.pl.projectmanager.sprint.model.Sprint;
 import uni.lodz.pl.projectmanager.task.model.AddTaskDto;
 import uni.lodz.pl.projectmanager.task.model.EditTaskDto;
 import uni.lodz.pl.projectmanager.task.model.Task;
+import uni.lodz.pl.projectmanager.task.model.TaskState;
 import uni.lodz.pl.projectmanager.user.UserService;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -55,12 +58,30 @@ public class TaskService {
                 ? userService.getUserById(taskDto.getAssignedToId())
                 : null;
         //Edit data
-        if (taskDto.getEditedFields().contains("name")) task.setName(taskDto.getName());
-        if (taskDto.getEditedFields().contains("description")) task.setDescription(taskDto.getDescription());
-        if (taskDto.getEditedFields().contains("taskState")) task.setTaskState(taskDto.getTaskState());
-        if (taskDto.getEditedFields().contains("end")) task.setEnd(taskDto.getEnd());
-        if (taskDto.getEditedFields().contains("assignedToId")) task.setAssignedTo(assingedTo);
-        if (taskDto.getEditedFields().contains("sprintId")) task.setSprint(sprint);
+        if (taskDto.getEditedFields().contains("name")) {
+            log.info("Edit task {} set name={}", task.getId(), taskDto.getName());
+            task.setName(taskDto.getName());
+        }
+        if (taskDto.getEditedFields().contains("description")) {
+            log.info("Edit task {} set description={}", task.getId(), taskDto.getDescription());
+            task.setDescription(taskDto.getDescription());
+        }
+        if (taskDto.getEditedFields().contains("taskState")) {
+            log.info("Edit task {} set taskState={}", task.getId(), taskDto.getTaskState());
+            task.setTaskState(taskDto.getTaskState());
+        }
+        if (taskDto.getEditedFields().contains("end")) {
+            log.info("Edit task {} set end={}", task.getId(), taskDto.getEnd());
+            task.setEnd(taskDto.getEnd());
+        }
+        if (taskDto.getEditedFields().contains("assignedToId")) {
+            log.info("Edit task {} set assignedToId={}", task.getId(), assingedTo != null ? assingedTo.getId() : null);
+            task.setAssignedTo(assingedTo);
+        }
+        if (taskDto.getEditedFields().contains("sprintId")) {
+            log.info("Edit task {} set sprintId={}", task.getId(), sprint != null ? sprint.getId() : null);
+            task.setSprint(sprint);
+        }
         return taskRepository.save(task);
     }
 
@@ -92,13 +113,16 @@ public class TaskService {
         }
     }
 
-    public List<Task> getTaskByProjectName(String projectName) {
+    public List<Task> getTaskByProjectName(String projectName, TaskState taskState, Long sprintId) {
         Optional<Project> project = projectService.getProjectByName(projectName);
         if (project.isEmpty()) {
             log.info("Project " + projectName + " not found");
             throw new NotFoundException("Project " + projectName + " not found");
         }
         validateTaskAccess(project.get().getId(), RoleConfig.Option.VIEW);
-        return taskRepository.findByProjectName(projectName);
+        Stream<Task> tasks = taskRepository.findByProjectName(projectName).stream();
+        if (taskState != null) tasks = tasks.filter(t -> t.getTaskState() == taskState);
+        if (sprintId != null) tasks = tasks.filter(t -> t.getSprint().getId().equals(sprintId));
+        return tasks.collect(Collectors.toList());
     }
 }

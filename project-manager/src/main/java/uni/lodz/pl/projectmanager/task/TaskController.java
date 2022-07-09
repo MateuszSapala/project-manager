@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.task.model.AddTaskDto;
 import uni.lodz.pl.projectmanager.task.model.EditTaskDto;
 import uni.lodz.pl.projectmanager.task.model.Task;
+import uni.lodz.pl.projectmanager.task.model.TaskState;
 
 import java.util.List;
 
@@ -52,8 +53,11 @@ public class TaskController {
 
     @GetMapping(value = "/project/{projectName}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get task by project name")
-    public ResponseEntity<List<Task>> getTaskByProjectId(@PathVariable("projectName") String projectName) {
-        List<Task> task = taskService.getTaskByProjectName(projectName);
+    public ResponseEntity<List<Task>> getTaskByProjectId(
+            @PathVariable("projectName") String projectName,
+            @RequestParam(required = false, name = "taskState") TaskState taskState,
+            @RequestParam(required = false, name = "sprintId") Long sprintId) {
+        List<Task> task = taskService.getTaskByProjectName(projectName, taskState, sprintId);
         return ResponseEntity.status(HttpStatus.OK).body(task);
     }
 }

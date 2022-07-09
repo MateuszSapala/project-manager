@@ -21,7 +21,7 @@ interface Props {
 function Sprints({loggedUser, projects}: Props) {
   let {projectName} = useParams();
   const [project, setProject] = useState<Project | null>(null);
-  const [sprints, setSprints] = useState<Array<Sprint>>([]);
+  const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
 
   const [sprintName, setSprintName] = useState<string>("");
@@ -51,7 +51,7 @@ function Sprints({loggedUser, projects}: Props) {
           <p className="card-text">Active: {active ? "yes" : "no"}</p>
           {!active ? "" :
             <button className="btn btn-primary m-2" onClick={async () => {
-              const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ?");
+              const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
               if (!result) {
                 console.log("Cancelled");
                 return;
@@ -64,6 +64,7 @@ function Sprints({loggedUser, projects}: Props) {
                 }
                 sprint.closed = true;
                 setActiveSprint(null);
+                if (sprints === null) return;
                 setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
               });
             }}>Close sprint
@@ -86,13 +87,13 @@ function Sprints({loggedUser, projects}: Props) {
           Start date:
           <DatePicker onChange={date => setSprintStartDate(date)} selected={sprintStartDate}
                       className="form-control text-primary"
-                      minDate={sprints.length === 0 ? undefined : sprints[sprints.length - 1].end}
+                      minDate={sprints === null || sprints.length === 0 ? undefined : sprints[sprints.length - 1].end}
                       placeholderText={"Enter Start date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         <label htmlFor="SprintEnd">
           End date:
           <DatePicker onChange={date => setSprintEndDate(date)} selected={sprintEndDate}
-                      minDate={sprintStartDate === null ? (sprints.length === 0 ? undefined : sprints[sprints.length - 1].end) : sprintStartDate}
+                      minDate={sprintStartDate === null ? (sprints === null || sprints.length === 0 ? undefined : sprints[sprints.length - 1].end) : sprintStartDate}
                       className="form-control text-primary"
                       placeholderText={"Enter end date"} id="SprintEnd" dateFormat='dd-MM-yyyy'/>
         </label>
@@ -123,6 +124,8 @@ function Sprints({loggedUser, projects}: Props) {
         setSprintError("Unable to add sprint")
         return;
       }
+      if (sprints === null) return;
+      if (sprints.length === 0) setActiveSprint(new Sprint(response.data));
       setSprints([...sprints, new Sprint(response.data)]);
       setSprintSuccess("Successfully added Sprint");
       setSprintName("");
@@ -139,7 +142,7 @@ function Sprints({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content ">
           <div className="m-2">
             <h1>Sprints {projectName}</h1>
-            {sprints.map(sprint => displaySprint(sprint))}
+            {sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
             {displayAdd()}
           </div>
         </div>
