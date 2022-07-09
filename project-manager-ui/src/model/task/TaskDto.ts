@@ -1,4 +1,4 @@
-import {Project} from "../Project";
+import {Project} from "../project/Project";
 import {User} from "../User";
 import {TaskState} from "./TaskState";
 

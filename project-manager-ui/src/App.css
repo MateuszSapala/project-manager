@@ -64,7 +64,6 @@
     background-color: transparent;
     border: none;
     outline: none;
-    background-color: transparent;
     /* pointer-events: none; */
 }
 
@@ -76,6 +75,10 @@
 .menu-link:hover {
     outline: none;
     background-color: transparent;
+}
+
+.menu-link-add {
+    color: red;
 }
 
 .main-content {

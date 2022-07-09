@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
-import {Project} from "../model/Project";
+import {Project} from "../model/project/Project";
 import {User} from "../model/User";
 import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";

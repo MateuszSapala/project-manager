@@ -1,4 +1,4 @@
-import {Project} from "../Project";
+import {Project} from "../project/Project";
 import {SprintDto} from "./SprintDto";
 
 export class Sprint {

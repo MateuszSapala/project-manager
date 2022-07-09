@@ -1,7 +1,7 @@
 import {DndProvider} from "react-dnd";
 import {useParams} from "react-router-dom";
 import "../../App.css";
-import {Project} from "../../model/Project";
+import {Project} from "../../model/project/Project";
 import {User} from "../../model/User";
 import Sidebar from "../Sidebar";
 import {HTML5Backend} from "react-dnd-html5-backend";

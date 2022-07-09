@@ -3,7 +3,7 @@ import {AxiosResponse} from "axios";
 import {TaskDto} from "../model/task/TaskDto";
 import {Task} from "../model/task/Task";
 import {Dispatch, SetStateAction} from "react";
-import {Project} from "../model/Project";
+import {Project} from "../model/project/Project";
 import {getProject} from "./ProjectService";
 import {Access} from "../model/access/Access";
 import {getAccessByProject} from "./AccessService";

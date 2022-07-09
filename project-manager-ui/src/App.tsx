@@ -12,10 +12,11 @@ import {User} from "./model/User";
 import ProjectSummary from "./components/ProjectSummary";
 import {getProjects} from "./service/ProjectService";
 import {AxiosResponse} from "axios";
-import {Project} from "./model/Project";
+import {Project} from "./model/project/Project";
 import Board from "./components/board/Board";
 import Sprints from "./components/Sprints";
 import Accesses from "./components/Accesses";
+import AddProjectComponent from "./components/AddProjectComponent";
 
 function App() {
   //LOGGING
@@ -79,6 +80,16 @@ function App() {
             <Main
               loggedUser={loggedUser!}
               projects={projects != null ? projects : []}
+            />
+          }
+        />
+        <Route
+          path="/add/project"
+          element={
+            <AddProjectComponent
+              loggedUser={loggedUser!}
+              projects={projects != null ? projects : []}
+              setProjects={setProjects}
             />
           }
         />

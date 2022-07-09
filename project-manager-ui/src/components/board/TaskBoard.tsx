@@ -7,7 +7,7 @@ import DropWrapper from "./DropWrapper";
 import Item from "./Item";
 import {EditTask} from "../../model/task/EditTask";
 import {stateGetActiveSprintByProject, stateGetProject, stateGetTasks} from "../../service/UseStateService";
-import {Project} from "../../model/Project";
+import {Project} from "../../model/project/Project";
 import {Sprint} from "../../model/sprint/Sprint";
 
 interface Props {
