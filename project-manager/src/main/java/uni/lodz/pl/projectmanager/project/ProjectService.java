@@ -54,7 +54,7 @@ public class ProjectService {
             log.info("User {\"id\":" + user.getId() + "} cannot add project");
             throw new AuthorizationServiceException("No access to adding project");
         }
-        Project project = new Project(projectDto.getName());
+        Project project = new Project(projectDto);
         return projectRepository.save(project);
     }
 

@@ -17,6 +17,9 @@ function ProjectSummary({loggedUser, projects}: Props) {
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="d-flex flex-column main-content">
           <h1>Project {projectName}</h1>
+          {projects.filter(p => p.name === projectName)[0]?.description.split("\n").map(text => {
+            return (<p>{text}</p>)
+          })}
         </div>
       </div>
     </div>
