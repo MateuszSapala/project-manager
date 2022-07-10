@@ -56,7 +56,7 @@ function Sidebar({projects, selectedProject}: Props) {
       </div>
       <hr className="sidebar-divider my-0"/>
       <div className="nav-item" style={{marginLeft: "10px"}}>
-        {generateButton(window.location.origin+"/users", "Users", "users")}
+        {generateButton(window.location.origin + "/users", "Users", "users")}
       </div>
       {selectedProject != null && (
         <>
@@ -76,6 +76,13 @@ function Sidebar({projects, selectedProject}: Props) {
           </div>
         </>
       )}
+      <hr className="sidebar-divider my-0"/>
+      <div className="nav-item" style={{marginLeft: "10px"}}>
+        <Button key={"logout"} className="btn btn-link menu-link" onClick={() => {
+          window.localStorage.removeItem("authorization");
+          window.location.replace("/login");
+        }}>Logout</Button>
+      </div>
     </div>
   );
 }
