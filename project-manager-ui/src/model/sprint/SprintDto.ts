@@ -1,4 +1,4 @@
-import {Project} from "../Project";
+import {Project} from "../project/Project";
 
 export interface SprintDto {
   id: number;

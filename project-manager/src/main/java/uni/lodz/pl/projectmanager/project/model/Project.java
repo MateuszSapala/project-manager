@@ -15,8 +15,11 @@ public class Project {
     private Long id;
     @Column(unique = true)
     private String name;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    public Project(String name) {
-        this.name = name;
+    public Project(AddProjectDto projectDto) {
+        this.name = projectDto.getName();
+        this.description = projectDto.getDescription();
     }
 }

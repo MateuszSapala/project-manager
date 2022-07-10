@@ -1,7 +1,7 @@
 import "../index.css";
 import "../App.css";
 import {Accordion, Button} from "react-bootstrap";
-import {Project} from "../model/Project";
+import {Project} from "../model/project/Project";
 
 interface Props {
   projects: Array<Project>;
@@ -47,9 +47,16 @@ function Sidebar({projects, selectedProject}: Props) {
                   String(p.id)
                 );
               })}
+              <Button key={"Add project"} className="btn btn-link menu-link menu-link-add"
+                      onClick={() => window.location.replace(window.location.origin + "/add/project")}>
+                New project</Button>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
+      </div>
+      <hr className="sidebar-divider my-0"/>
+      <div className="nav-item" style={{marginLeft: "10px"}}>
+        {generateButton(window.location.origin + "/users", "Users", "users")}
       </div>
       {selectedProject != null && (
         <>
@@ -69,6 +76,13 @@ function Sidebar({projects, selectedProject}: Props) {
           </div>
         </>
       )}
+      <hr className="sidebar-divider my-0"/>
+      <div className="nav-item" style={{marginLeft: "10px"}}>
+        <Button key={"logout"} className="btn btn-link menu-link" onClick={() => {
+          window.localStorage.removeItem("authorization");
+          window.location.replace("/login");
+        }}>Logout</Button>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import "../App.css";
-import {User} from "../model/User";
-import {Project} from "../model/Project";
+import {User} from "../model/user/User";
+import {Project} from "../model/project/Project";
 import Sidebar from "./Sidebar";
 
 interface Props {

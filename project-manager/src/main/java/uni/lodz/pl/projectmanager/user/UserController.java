@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.user.model.AddUserDto;
+import uni.lodz.pl.projectmanager.user.model.EditUserDto;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.JsonUtil;
 
@@ -46,7 +47,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Edit user")
-    public ResponseEntity<User> editUser(@RequestBody AddUserDto user, @PathVariable("id") Long id) {
+    public ResponseEntity<User> editUser(@RequestBody EditUserDto user, @PathVariable("id") Long id) {
         log.info("Edit user " + id + " :" + JsonUtil.writeValueAsString(user));
         return ResponseEntity.status(HttpStatus.OK).body(userService.editUser(user, id));
     }

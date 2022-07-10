@@ -1,5 +1,5 @@
-import {Project} from "../Project";
-import {User} from "../User";
+import {Project} from "../project/Project";
+import {User} from "../user/User";
 import {TaskState} from "./TaskState";
 
 export interface TaskDto {

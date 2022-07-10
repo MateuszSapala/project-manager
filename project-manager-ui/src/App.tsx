@@ -8,14 +8,16 @@ import Backlog from "./components/Backlog";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {sendVerify} from "./service/Login";
 import Logout from "./components/Logout";
-import {User} from "./model/User";
+import {User} from "./model/user/User";
 import ProjectSummary from "./components/ProjectSummary";
 import {getProjects} from "./service/ProjectService";
 import {AxiosResponse} from "axios";
-import {Project} from "./model/Project";
+import {Project} from "./model/project/Project";
 import Board from "./components/board/Board";
 import Sprints from "./components/Sprints";
 import Accesses from "./components/Accesses";
+import AddProjectComponent from "./components/AddProjectComponent";
+import Users from "./components/Users";
 
 function App() {
   //LOGGING
@@ -67,66 +69,21 @@ function App() {
     });
   }, [projects, loggedUser]);
 
+  const props = {loggedUser: loggedUser!, projects: projects != null ? projects : []}
+  const projectPath = "/projects/:projectName";
   return (
     <div>
       <Routes>
         <Route path="/login" element={<Login message=""/>}/>
         <Route path="/logout" element={<Logout/>}/>
-
-        <Route
-          path="/"
-          element={
-            <Main
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
-        <Route
-          path="/projects/:projectName"
-          element={
-            <ProjectSummary
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
-        <Route
-          path="/projects/:projectName/backlog"
-          element={
-            <Backlog
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
-        <Route
-          path="/projects/:projectName/sprints"
-          element={
-            <Sprints
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
-        <Route
-          path="/projects/:projectName/board"
-          element={
-            <Board
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
-        <Route
-          path="/projects/:projectName/accesses"
-          element={
-            <Accesses
-              loggedUser={loggedUser!}
-              projects={projects != null ? projects : []}
-            />
-          }
-        />
+        <Route path="/" element={<Main {...props}/>}/>
+        <Route path="/add/project" element={<AddProjectComponent {...props} setProjects={setProjects}/>}/>
+        <Route path="/users" element={<Users {...props}/>}/>
+        <Route path={projectPath} element={<ProjectSummary {...props}/>}/>
+        <Route path={projectPath + "/backlog"} element={<Backlog{...props}/>}/>
+        <Route path={projectPath + "/sprints"} element={<Sprints {...props}/>}/>
+        <Route path={projectPath + "/board"} element={<Board {...props}/>}/>
+        <Route path={projectPath + "/accesses"} element={<Accesses {...props}/>}/>
       </Routes>
     </div>
   );

@@ -6,6 +6,7 @@ import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.user.model.AddUserDto;
+import uni.lodz.pl.projectmanager.user.model.EditUserDto;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
@@ -40,16 +41,16 @@ public class UserService {
         return user.orElseThrow(() -> new NotFoundException("User with id=" + id + " not found"));
     }
 
-    public User editUser(AddUserDto update, Long id) {
-        validateEditUserAuthorization(id, update.getAdmin() != null);
+    public User editUser(EditUserDto update, Long id) {
+        validateEditUserAuthorization(id, update.editedFields().contains("admin"));
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User {\"id\":\"" + id + "\"} not found"));
-        if (update.getUsername() != null) user.setUsername(update.getUsername());
-        if (update.getPassword() != null) user.setPassword(update.getPassword());
-        if (update.getAdmin() != null) user.setAdmin(update.getAdmin());
-        if (update.getEmail() != null) user.setEmail(update.getEmail());
-        if (update.getName() != null) user.setName(update.getName());
-        if (update.getSurname() != null) user.setSurname(update.getSurname());
+        if (update.editedFields().contains("username")) user.setUsername(update.username());
+        if (update.editedFields().contains("password")) user.setPassword(update.password());
+        if (update.editedFields().contains("admin") && update.admin() != null) user.setAdmin(update.admin());
+        if (update.editedFields().contains("email")) user.setEmail(update.email());
+        if (update.editedFields().contains("name")) user.setName(update.name());
+        if (update.editedFields().contains("surname")) user.setSurname(update.surname());
         return userRepository.save(user);
     }
 

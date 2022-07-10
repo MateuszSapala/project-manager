@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
-import {Project} from "../model/Project";
-import {User} from "../model/User";
+import {Project} from "../model/project/Project";
+import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Dispatch, useEffect, useState} from "react";
 import {Access} from "../model/access/Access";
@@ -21,8 +21,8 @@ interface Props {
 function Accesses({loggedUser, projects}: Props) {
   let {projectName} = useParams();
   const [project, setProject] = useState<Project | null>(null);
-  const [accesses, setAccesses] = useState<Array<Access>>([]);
-  const [users, setUsers] = useState<Array<User>>([]);
+  const [accesses, setAccesses] = useState<Array<Access> | null>(null);
+  const [users, setUsers] = useState<Array<User> | null>(null);
 
   const [editedId, setEditedId] = useState<number | null>(null);
   const [editedRole, setEditedRole] = useState<ProjectRole | null>(null);
@@ -84,6 +84,7 @@ function Accesses({loggedUser, projects}: Props) {
               console.log("Unable to delete access");
               return;
             }
+            if (accesses === null) return;
             setAccesses(accesses.filter(a => a.id !== access.id))
           });
         }}>Delete
@@ -97,6 +98,7 @@ function Accesses({loggedUser, projects}: Props) {
             setEditError("Role not selected");
             return;
           }
+          if (accesses === null) return;
           const access = accesses.filter(a => a.id === editedId)[0];
           if (editedRole === access.projectRole) {
             setEditError("User " + access.user.name + " " + access.user.surname + " has already selected role");
@@ -145,6 +147,7 @@ function Accesses({loggedUser, projects}: Props) {
               setAddError("Unable to add user access")
               return;
             }
+            if (accesses === null) return;
             setAccesses([...accesses, response.data]);
             setAddRole(null);
             setAddUser(undefined);
@@ -165,16 +168,16 @@ function Accesses({loggedUser, projects}: Props) {
         <select className={addUser === undefined ? "form-control" : "form-control text-primary"} id="addUser"
                 value={addUser?.id}
                 onChange={event => {
-                  console.log(event)
-                  console.log(event.target.value)
+                  if (users === null) return;
                   setAddUser(users.find(user => user.id.toString() === event.target.value))
                 }}>
           <option value={undefined}>Select user</option>
-          {users.filter(user => accesses.filter(a => a.user.id === user.id).length === 0).map(user => {
-            return (<option className="text-primary" value={user.id} key={user.id}>
-              {user.name + " " + user.surname}
-            </option>)
-          })}
+          {
+            users !== null && accesses !== null ? users.filter(user => accesses.filter(a => a.user.id === user.id).length === 0).map(user => {
+              return (<option className="text-primary" value={user.id} key={user.id}>
+                {user.name + " " + user.surname}
+              </option>)
+            }) : ""}
         </select>
       </label>
     )
@@ -187,7 +190,7 @@ function Accesses({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Accesses {projectName}</h1>
-            {accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
+            {accesses !== null ? accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a)) : ""}
             {displayAdd()}
           </div>
         </div>

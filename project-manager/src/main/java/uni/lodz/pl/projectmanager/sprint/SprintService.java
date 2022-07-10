@@ -13,6 +13,8 @@ import uni.lodz.pl.projectmanager.project.ProjectService;
 import uni.lodz.pl.projectmanager.project.model.Project;
 import uni.lodz.pl.projectmanager.sprint.model.AddSprintDto;
 import uni.lodz.pl.projectmanager.sprint.model.Sprint;
+import uni.lodz.pl.projectmanager.task.TaskRepository;
+import uni.lodz.pl.projectmanager.task.model.TaskState;
 import uni.lodz.pl.projectmanager.user.model.User;
 import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 
@@ -26,6 +28,7 @@ public class SprintService {
     private final ProjectService projectService;
     private final AccessService accessService;
     private final RoleConfig roleConfig;
+    private final TaskRepository taskRepository;
 
     public Sprint createNewSprint(final AddSprintDto addSprintDto) {
         Project project = projectService.getProjectById(addSprintDto.getProjectId())
@@ -72,8 +75,7 @@ public class SprintService {
         validateSprintAccess(projectId, RoleConfig.Option.VIEW);
         return sprintRepository.findByProjectId(projectId).stream()
                 .filter(sprint -> !sprint.isClosed())
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Not found active sprint for project {\"id\":" + projectId + "}"));
+                .findFirst().orElse(null);
     }
 
     @SneakyThrows
@@ -82,8 +84,18 @@ public class SprintService {
                 .orElseThrow(() -> new NotFoundException("Sprint {\"id\":\"" + id + "\"} not found"));
         validateSprintAccess(sprint.getProject().getId(), RoleConfig.Option.EDIT);
         if (sprint.isClosed()) throw new Exception("Sprint {\"id\":" + id + "} already closed");
-        if(!id.equals(getActiveSprintByProjectId(sprint.getProject().getId()).getId())) throw new Exception("Sprint {\"id\":" + id + "} aren't currently active");
+        if (!id.equals(getActiveSprintByProjectId(sprint.getProject().getId()).getId()))
+            throw new Exception("Sprint {\"id\":" + id + "} aren't currently active");
         sprint.setClosed(true);
         sprintRepository.save(sprint);
+        List<Sprint> openSprints = sprintRepository.findByProjectId(sprint.getProject().getId())
+                .stream()
+                .filter(s -> !s.isClosed())
+                .toList();
+        if (openSprints.size() == 0) return;
+        taskRepository.findBySprintId(id).stream().filter(t -> t.getTaskState() != TaskState.REVIEWED).forEach(t -> {
+            t.setSprint(openSprints.get(0));
+            taskRepository.save(t);
+        });
     }
 }

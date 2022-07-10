@@ -1,12 +1,17 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
-import {Project} from "../model/Project";
-import {User} from "../model/User";
+import {Project} from "../model/project/Project";
+import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";
 import {Dispatch, useEffect, useState} from "react";
 import {Task} from "../model/task/Task";
-import {stateGetAccessesByProject, stateGetProject, stateGetTasks} from "../service/UseStateService";
+import {
+  stateGetAccessesByProject,
+  stateGetProject,
+  stateGetSprintsByProject,
+  stateGetTasks
+} from "../service/UseStateService";
 import {capitalizedStatus, TaskState, TaskStateTable} from "../model/task/TaskState";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,6 +21,7 @@ import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
 import {EditTask} from "../model/task/EditTask";
 import {displayMessages} from "./Util";
+import {Sprint} from "../model/sprint/Sprint";
 
 interface Props {
   loggedUser: User;
@@ -26,13 +32,15 @@ function Backlog({loggedUser, projects}: Props) {
   let {projectName} = useParams();
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<Array<Task>>([]);
-  const [accesses, setAccesses] = useState<Array<Access>>([]);
+  const [accesses, setAccesses] = useState<Array<Access> | null>(null);
   const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
+  const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
   const [taskName, setTaskName] = useState<string>("");
   const [taskDescription, setTaskDescription] = useState<string>("");
   const [taskAssignedUser, setTaskAssignedUser] = useState<User | undefined>(undefined);
+  const [taskSprint, setTaskSprint] = useState<Sprint | undefined>(undefined);
   const [taskError, setTaskError] = useState<string>("");
   const [taskSuccess, setTaskSuccess] = useState<string>("");
 
@@ -41,13 +49,15 @@ function Backlog({loggedUser, projects}: Props) {
   const [editedTaskName, setEditedTaskName] = useState<string>("");
   const [editedTaskDescription, setEditedTaskDescription] = useState<string>("");
   const [editedTaskAssignedUser, setEditedTaskAssignedUser] = useState<User | undefined>(undefined);
+  const [editedTaskSprint, setEditedTaskSprint] = useState<Sprint | undefined>(undefined);
   const [editedTaskError, setEditedTaskError] = useState<string>("");
 
   useEffect(() => {
     stateGetProject(projectName, project, setProject);
     stateGetTasks(projectName, tasks, setTasks);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
-  }, [accesses, project, projectName, tasks]);
+    stateGetSprintsByProject(project?.id, sprints, setSprints);
+  }, [accesses, project, projectName, sprints, tasks]);
 
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
@@ -64,12 +74,12 @@ function Backlog({loggedUser, projects}: Props) {
     return (
       <Accordion defaultActiveKey="1" className="accordion-task" key={task.id}>
         <Accordion.Item eventKey="0">
-          <Accordion.Header>
+          <Accordion.Header className="m-3">
             <p style={{fontSize: "large"}}>
               {task.name}
               <span className="accordion-task-right">
                 <span
-                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
+                  style={{marginRight: "20px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
                 </span>
                 &#x290B; &#x290A;
               </span>
@@ -105,6 +115,7 @@ function Backlog({loggedUser, projects}: Props) {
                         placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
           </label>
           {displayUserSelect(false, accesses, taskAssignedUser, setTaskAssignedUser)}
+          {displaySprintSelect(false, sprints !== null ? sprints.filter(s => !s.closed) : [], taskSprint, setTaskSprint)}
           {displayMessages(taskError, taskSuccess)}
           <button className="btn btn-primary btn-block" onClick={handleAddTask}>Add</button>
         </div>
@@ -122,20 +133,25 @@ function Backlog({loggedUser, projects}: Props) {
       setTaskError("The following data is missing: " + missing);
       return;
     }
-    addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, undefined)).then(response => {
+    addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, taskSprint?.id)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setTaskError("Unable to add task")
         return;
       }
       setTasks([...tasks, new Task(response.data)]);
       setTaskSuccess("Successfully added task");
+      setTaskDate(null);
+      setTaskName("");
+      setTaskDescription("");
+      setTaskAssignedUser(undefined);
+      setTaskSprint(undefined);
       return;
     });
   }
 
   const displayEdit = (disabled: boolean, task: Task) => {
     return (
-      <div className="form-group">
+      <div className="form-group m-3">
         {disabled ? "" :
           <label htmlFor="taskName">
             Task name:
@@ -156,11 +172,16 @@ function Backlog({loggedUser, projects}: Props) {
                       placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
+        {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
         {displayMessages(editedTaskError)}
-        {disabled ? <button className="btn btn-primary btn-block"
-                            onClick={() => editTaskChangeState(task)}>Edit</button> : ""}
+        {disabled ?
+          <div className="accordion-buttons-container">
+            <button className="btn btn-primary btn-block"
+                    onClick={() => editTaskChangeState(task)}>Edit
+            </button>
+          </div> : ""}
         {!disabled ?
-          <div className="two-buttons-container">
+          <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
                 Save
@@ -173,6 +194,7 @@ function Backlog({loggedUser, projects}: Props) {
             </div>
           </div>
           : ""}
+        {/*<br/>*/}
       </div>
     )
   }
@@ -195,31 +217,56 @@ function Backlog({loggedUser, projects}: Props) {
       setEditedTaskError("The following data is missing: " + missing);
       return;
     }
-    editTask(editedTaskId!, new EditTask(["end", "name", "description", "assignedToId"], editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, undefined, undefined)).then(response => {
+    const oldTask = tasks.filter(t => t.id === editedTaskId)[0];
+    const editedFields = [];
+    if (editedTaskDate !== oldTask.end) editedFields.push("end");
+    if (editedTaskName !== oldTask.name) editedFields.push("name");
+    if (editedTaskDescription !== oldTask.description) editedFields.push("description");
+    if (editedTaskAssignedUser?.id !== oldTask.assignedTo?.id) editedFields.push("assignedToId");
+    if (editedTaskSprint?.id !== oldTask.sprint?.id) editedFields.push("sprintId");
+    editTask(editedTaskId!, new EditTask(editedFields, editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, editedTaskSprint?.id, undefined)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setEditedTaskError("Unable to edit task")
         return;
       }
-      setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)].sort((a, b) => b.id - a.id));
+      setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)].sort((a, b) => a.id - b.id));
       editTaskChangeState();
       return;
     });
   }
 
-  const displayUserSelect = (disabled: boolean, accesses: Array<Access>, user: User | undefined, setUser?: Dispatch<User | undefined>) => {
+  const displayUserSelect = (disabled: boolean, accesses: Array<Access> | null, user: User | undefined, setUser?: Dispatch<User | undefined>) => {
     return (
       <label htmlFor="taskUser">
         Assigned user:
         <select className={disabled || user === undefined ? "form-control" : "form-control text-primary"} id="taskUser"
                 value={user?.id} disabled={disabled}
-                onChange={event => setUser ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
+                onChange={event => setUser && accesses !== null ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
           <option value={undefined} disabled={disabled}>Add assigned user</option>
-          {accesses.map(access => {
+          {accesses !== null ? accesses.map(access => {
             return (<option className="text-primary" value={access.user.id} key={access.user.id}
                             disabled={disabled}>
               {access.user.name + " " + access.user.surname}
             </option>)
-          })}
+          }) : ""}
+        </select>
+      </label>
+    )
+  }
+
+  const displaySprintSelect = (disabled: boolean, sprints: Array<Sprint> | null, sprint: Sprint | undefined, setSprint?: Dispatch<Sprint | undefined>) => {
+    const value = sprint !== undefined ? sprint?.id : undefined;
+    return (
+      <label htmlFor="taskUser">
+        Sprint:
+        <select className={disabled || sprint === undefined ? "form-control" : "form-control text-primary"}
+                id="taskUser"
+                value={value} disabled={disabled}
+                onChange={event => setSprint && sprints !== null ? setSprint(sprints.find(s => s.id.toString() === event.target.value)) : {}}>
+          <option value={undefined} disabled={disabled}>Add sprint</option>
+          {sprints !== null ? sprints.map(s => {
+            return (<option className="text-primary" value={s.id} key={s.id} disabled={disabled}>{s.name}</option>)
+          }) : ""}
         </select>
       </label>
     )

@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
-import {Project} from "../model/Project";
-import {User} from "../model/User";
+import {Project} from "../model/project/Project";
+import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 
 interface Props {
@@ -16,7 +16,12 @@ function ProjectSummary({loggedUser, projects}: Props) {
       <div id="wrapper">
         <Sidebar projects={projects} selectedProject={projectName}/>
         <div className="d-flex flex-column main-content">
-          <h1>Project {projectName}</h1>
+          <div className="m-2">
+            <h1>Project {projectName}</h1>
+            {projects.filter(p => p.name === projectName)[0]?.description.split("\n").map(text => {
+              return (<p>{text}</p>)
+            })}
+          </div>
         </div>
       </div>
     </div>

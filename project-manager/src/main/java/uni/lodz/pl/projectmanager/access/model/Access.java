@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"project_id", "user_id" })})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"project_id", "user_id"})})
 public class Access {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
