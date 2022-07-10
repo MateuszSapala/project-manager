@@ -26,7 +26,7 @@ function Users({loggedUser, projects}: Props) {
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
 
   useEffect(() => {
-    if (loggedUser != null && !loggedUser.admin) {
+    if (loggedUser !== null && loggedUser !== undefined && !loggedUser.admin) {
       window.location.replace(window.location.origin);
     }
     stateGetProject(projectName, project, setProject);

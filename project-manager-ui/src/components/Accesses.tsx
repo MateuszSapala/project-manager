@@ -56,8 +56,8 @@ function Accesses({loggedUser, projects}: Props) {
           <h5 className="card-title">{access.user.name + " " + access.user.surname}</h5>
           <p className="card-text">Email: {access.user.email}</p>
           <p className="card-text">Role: {projectRoleToString(access?.projectRole)}</p>
-          {access.id === editedId ? displayCheckboxes(editedRole, setEditedRole) : ""}
-          {access.id === editedId ? displayMessages(editError) : ""}
+          {access.id === editedId && displayCheckboxes(editedRole, setEditedRole)}
+          {access.id === editedId && displayMessages(editError)}
           {loggedUser?.admin && displayButtons(access)}
         </div>
       </div>

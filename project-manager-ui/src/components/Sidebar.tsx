@@ -42,14 +42,13 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
           </Accordion.Item>
         </Accordion>
       </div>
-      {loggedUser?.admin ? <>
-        <hr className="sidebar-divider my-0"/>
-        <div className="nav-item" style={{marginLeft: "10px"}}>
-          {generateButton(window.location.origin + "/users", "Users", "users")}
-        </div>
-      </> : ""}
-      {console.log(selectedProject)}
-      {selectedProject != null &&
+      {loggedUser?.admin && <>
+          <hr className="sidebar-divider my-0"/>
+          <div className="nav-item" style={{marginLeft: "10px"}}>
+            {generateButton(window.location.origin + "/users", "Users", "users")}
+          </div>
+      </>}
+      {selectedProject !== null && selectedProject !== undefined &&
           <>
               <hr className="sidebar-divider my-0"/>
               <div className="nav-item">

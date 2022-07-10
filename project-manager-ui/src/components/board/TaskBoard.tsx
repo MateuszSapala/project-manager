@@ -19,15 +19,12 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
-  // const [sprints, setSprints] = useState<Array<Sprint>>([]);
-  // const [sprint, setSprint] = useState<Sprint | null>(null);
 
   useEffect(() => {
     stateGetTasks(projectName, tasks, setTasks);
     stateGetProject(projectName, project, setProject);
-    // stateGetSprintsByProject(project?.id, sprints, setSprints);
     stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint)
-  }, [activeSprint, project, projectName, /*sprints,*/ tasks]);
+  }, [activeSprint, project, projectName, tasks]);
 
   const onDrop = (task: Task, monitor: any, status: TaskState) => {
     setTasks((prevState) => {
@@ -54,7 +51,6 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
 
   return (
     <div>
-      {/*{displaySprintSelect()}*/}
       <div className={"row"}>
         {TaskStateTable.map((state) => {
           return (
