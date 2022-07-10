@@ -10,7 +10,7 @@ import {getAccessByProject} from "./AccessService";
 import {Sprint} from "../model/sprint/Sprint";
 import {getActiveSprintByProjectId, getSprintsByProjectId} from "./SprintService";
 import {SprintDto} from "../model/sprint/SprintDto";
-import {User} from "../model/User";
+import {User} from "../model/user/User";
 import {getUsers} from "./UserService";
 
 

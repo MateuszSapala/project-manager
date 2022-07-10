@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
 import {Project} from "../model/project/Project";
-import {User} from "../model/User";
+import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";
 import {Dispatch, useEffect, useState} from "react";
@@ -74,12 +74,12 @@ function Backlog({loggedUser, projects}: Props) {
     return (
       <Accordion defaultActiveKey="1" className="accordion-task" key={task.id}>
         <Accordion.Item eventKey="0">
-          <Accordion.Header>
+          <Accordion.Header className="m-3">
             <p style={{fontSize: "large"}}>
               {task.name}
               <span className="accordion-task-right">
                 <span
-                  style={{marginRight: "30px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
+                  style={{marginRight: "20px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
                 </span>
                 &#x290B; &#x290A;
               </span>
@@ -151,7 +151,7 @@ function Backlog({loggedUser, projects}: Props) {
 
   const displayEdit = (disabled: boolean, task: Task) => {
     return (
-      <div className="form-group">
+      <div className="form-group m-3">
         {disabled ? "" :
           <label htmlFor="taskName">
             Task name:
@@ -174,10 +174,14 @@ function Backlog({loggedUser, projects}: Props) {
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
         {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
         {displayMessages(editedTaskError)}
-        {disabled ? <button className="btn btn-primary btn-block"
-                            onClick={() => editTaskChangeState(task)}>Edit</button> : ""}
+        {disabled ?
+          <div className="accordion-buttons-container">
+            <button className="btn btn-primary btn-block"
+                    onClick={() => editTaskChangeState(task)}>Edit
+            </button>
+          </div>: ""}
         {!disabled ?
-          <div className="two-buttons-container">
+          <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
                 Save
@@ -190,6 +194,7 @@ function Backlog({loggedUser, projects}: Props) {
             </div>
           </div>
           : ""}
+        {/*<br/>*/}
       </div>
     )
   }

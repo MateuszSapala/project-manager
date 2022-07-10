@@ -24,7 +24,7 @@
 
 .accordion-task-right {
     float: right;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .accordion-task > .accordion-item > .accordion-collapse > .accordion-body > p {
@@ -88,7 +88,7 @@
     background: var(--cyan);
 }
 
-.two-buttons-container {
+.accordion-buttons-container {
     display: inline-block;
     overflow: hidden;
     width: 100%;

@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import "../App.css";
 import {Project} from "../model/project/Project";
-import {User} from "../model/User";
+import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Dispatch, useEffect, useState} from "react";
 import {Access} from "../model/access/Access";

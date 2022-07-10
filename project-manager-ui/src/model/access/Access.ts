@@ -1,4 +1,4 @@
-import {User} from "../User";
+import {User} from "../user/User";
 import {Project} from "../project/Project";
 import {ProjectRole} from "./ProjectRole";
 

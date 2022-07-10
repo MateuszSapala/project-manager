@@ -54,6 +54,10 @@ function Sidebar({projects, selectedProject}: Props) {
           </Accordion.Item>
         </Accordion>
       </div>
+      <hr className="sidebar-divider my-0"/>
+      <div className="nav-item" style={{marginLeft: "10px"}}>
+        {generateButton(window.location.origin+"/users", "Users", "users")}
+      </div>
       {selectedProject != null && (
         <>
           <hr className="sidebar-divider my-0"/>

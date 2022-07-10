@@ -1,5 +1,5 @@
 import "../App.css";
-import {User} from "../model/User";
+import {User} from "../model/user/User";
 import {Project} from "../model/project/Project";
 import Sidebar from "./Sidebar";
 import {Dispatch, useState} from "react";

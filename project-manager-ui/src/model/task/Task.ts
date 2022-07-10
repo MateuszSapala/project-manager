@@ -1,5 +1,5 @@
 import {Project} from "../project/Project";
-import {User} from "../User";
+import {User} from "../user/User";
 import {TaskDto} from "./TaskDto";
 import {TaskState} from "./TaskState";
 import {Sprint} from "../sprint/Sprint";
