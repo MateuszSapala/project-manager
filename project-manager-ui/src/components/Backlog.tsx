@@ -56,6 +56,9 @@ function Backlog({loggedUser, projects}: Props) {
   const [editedTaskError, setEditedTaskError] = useState<string>("");
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.taskViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetTasks(projectName, tasks, setTasks);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
@@ -178,13 +181,14 @@ function Backlog({loggedUser, projects}: Props) {
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
         {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
         {displayMessages(editedTaskError)}
-        {disabled ?
+        {!entitlements?.taskEditing && <br/>}
+        {entitlements?.taskEditing && disabled ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
                     onClick={() => editTaskChangeState(task)}>Edit
             </button>
           </div> : ""}
-        {!disabled ?
+        {entitlements?.taskEditing && !disabled ?
           <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
@@ -198,7 +202,6 @@ function Backlog({loggedUser, projects}: Props) {
             </div>
           </div>
           : ""}
-        {/*<br/>*/}
       </div>
     )
   }
@@ -285,7 +288,7 @@ function Backlog({loggedUser, projects}: Props) {
             <h1>Backlog {projectName}</h1>
             {TaskStateTable.map(state => displayCheckbox(state))}
             {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
-            {displayAdd()}
+            {entitlements?.taskEditing && displayAdd()}
           </div>
         </div>
       </div>

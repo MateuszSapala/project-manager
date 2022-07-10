@@ -38,6 +38,9 @@ function Sprints({loggedUser, projects}: Props) {
   const [sprintSuccess, setSprintSuccess] = useState<string>("");
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.sprintViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetSprintsByProject(project?.id, sprints, setSprints);
     stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
@@ -57,26 +60,26 @@ function Sprints({loggedUser, projects}: Props) {
           <p className="card-text">End date: {sprint.end?.toDateString()}</p>
           <p className="card-text">Closed: {sprint.closed ? "yes" : "no"}</p>
           <p className="card-text">Active: {active ? "yes" : "no"}</p>
-          {!active ? "" :
-            <button className="btn btn-primary m-2" onClick={async () => {
-              const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
-              if (!result) {
-                console.log("Cancelled");
-                return;
-              }
-              closeSprint(sprint.id).then((response) => {
-                const resp = response as AxiosResponse;
-                if (resp.status !== 204) {
-                  console.log("Unable to close sprint");
+          {entitlements?.sprintEditing && active &&
+              <button className="btn btn-primary m-2" onClick={async () => {
+                const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
+                if (!result) {
+                  console.log("Cancelled");
                   return;
                 }
-                sprint.closed = true;
-                setActiveSprint(null);
-                if (sprints === null) return;
-                setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
-              });
-            }}>Close sprint
-            </button>}
+                closeSprint(sprint.id).then((response) => {
+                  const resp = response as AxiosResponse;
+                  if (resp.status !== 204) {
+                    console.log("Unable to close sprint");
+                    return;
+                  }
+                  sprint.closed = true;
+                  setActiveSprint(null);
+                  if (sprints === null) return;
+                  setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
+                });
+              }}>Close sprint
+              </button>}
         </div>
       </div>
     )
@@ -151,7 +154,7 @@ function Sprints({loggedUser, projects}: Props) {
           <div className="m-2">
             <h1>Sprints {projectName}</h1>
             {sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
-            {displayAdd()}
+            {entitlements?.sprintEditing && displayAdd()}
           </div>
         </div>
       </div>

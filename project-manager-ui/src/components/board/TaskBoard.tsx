@@ -12,9 +12,10 @@ import {Sprint} from "../../model/sprint/Sprint";
 
 interface Props {
   projectName: string | undefined;
+  canEdit: boolean;
 }
 
-const TaskBoard = ({projectName}: Props) => {
+const TaskBoard = ({projectName, canEdit}: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
@@ -47,23 +48,9 @@ const TaskBoard = ({projectName}: Props) => {
     });
   };
 
-  // const displaySprintSelect = () => {
-  //   return (
-  //     <label htmlFor="sprint">
-  //       Board for sprint:
-  //       <select className="form-control text-primary" id="sprint"
-  //               value={sprint !== null ? sprint.id : activeSprint?.id}
-  //               onChange={event => setSprint(sprints.filter(s => s.id.toString() === event.target.value)[0])}>
-  //         <option value={undefined} disabled={true}>No sprint selected</option>
-  //         {sprints.map(sprint => {
-  //           return (<option className="text-primary" value={sprint.id} key={sprint.id}>
-  //             {sprint.name}
-  //           </option>)
-  //         })}
-  //       </select>
-  //     </label>
-  //   )
-  // }
+  const onDropDisabled = (task: Task, monitor: any, status: TaskState) => {
+    alert("Not enough rights to edit task");
+  };
 
   return (
     <div>
@@ -73,7 +60,7 @@ const TaskBoard = ({projectName}: Props) => {
           return (
             <div key={state} className={"col-wrapper"}>
               <h2 className={"col-header"}>{state}</h2>
-              <DropWrapper onDrop={onDrop} status={state}>
+              <DropWrapper onDrop={canEdit ? onDrop : onDropDisabled} status={state}>
                 <Col>
                   {tasks
                     ?.filter((i: Task) => i?.taskState === state && activeSprint !== null && i.sprint?.id === (/*sprint !== null ? sprint.id : */activeSprint?.id))

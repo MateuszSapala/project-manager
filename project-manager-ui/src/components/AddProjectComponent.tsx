@@ -16,6 +16,9 @@ interface Props {
 }
 
 function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
+  if (loggedUser != undefined && !loggedUser.admin) {
+    window.location.replace(window.location.origin);
+  }
   let navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");

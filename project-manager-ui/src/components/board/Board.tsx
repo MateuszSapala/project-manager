@@ -21,6 +21,9 @@ function Board({loggedUser, projects}: Props) {
   const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.taskViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
   }, [entitlements, project, projectName]);
@@ -33,7 +36,7 @@ function Board({loggedUser, projects}: Props) {
           <div className="m-2">
             <h1>Board {projectName}</h1>
             <DndProvider backend={HTML5Backend}>
-              {<TaskBoard projectName={projectName}/>}
+              {<TaskBoard projectName={projectName} canEdit={entitlements?.taskEditing === true}/>}
             </DndProvider>
           </div>
         </div>

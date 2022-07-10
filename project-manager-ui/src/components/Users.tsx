@@ -26,10 +26,13 @@ function Users({loggedUser, projects}: Props) {
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
 
   useEffect(() => {
+    if (loggedUser != null && !loggedUser.admin) {
+      window.location.replace(window.location.origin);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetUsers(users, setUsers);
-  }, [accesses, project, projectName, users]);
+  }, [accesses, loggedUser, project, projectName, users]);
 
   const [addUsername, setAddUsername] = useState<string>("");
   const [addPassword, setAddPassword] = useState<string>("");
@@ -245,7 +248,6 @@ function Users({loggedUser, projects}: Props) {
     });
   }
 
-  // console.log({editedId, editUsername, editEmail, editName, editSurname, editAdmin, editError});
   return (
     <div id="page-top">
       <div id="wrapper">

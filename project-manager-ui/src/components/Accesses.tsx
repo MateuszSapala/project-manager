@@ -40,6 +40,9 @@ function Accesses({loggedUser, projects}: Props) {
   const [addError, setAddError] = useState<string>("");
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.accessViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetUsers(users, setUsers);
@@ -55,7 +58,7 @@ function Accesses({loggedUser, projects}: Props) {
           <p className="card-text">Role: {projectRoleToString(access?.projectRole)}</p>
           {access.id === editedId ? displayCheckboxes(editedRole, setEditedRole) : ""}
           {access.id === editedId ? displayMessages(editError) : ""}
-          {displayButtons(access)}
+          {loggedUser?.admin && displayButtons(access)}
         </div>
       </div>
     )
@@ -198,8 +201,8 @@ function Accesses({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Accesses {projectName}</h1>
-            {accesses !== null ? accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a)) : ""}
-            {displayAdd()}
+            {accesses !== null && accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
+            {loggedUser?.admin && displayAdd()}
           </div>
         </div>
       </div>
