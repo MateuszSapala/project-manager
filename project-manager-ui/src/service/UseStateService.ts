@@ -6,12 +6,13 @@ import {Dispatch, SetStateAction} from "react";
 import {Project} from "../model/project/Project";
 import {getProject} from "./ProjectService";
 import {Access} from "../model/access/Access";
-import {getAccessByProject} from "./AccessService";
+import {getAccessByProject, getEntitlements} from "./AccessService";
 import {Sprint} from "../model/sprint/Sprint";
 import {getActiveSprintByProjectId, getSprintsByProjectId} from "./SprintService";
 import {SprintDto} from "../model/sprint/SprintDto";
 import {User} from "../model/user/User";
 import {getUsers} from "./UserService";
+import {Entitlements} from "../model/access/Entitlements";
 
 
 export const stateGetTasks = (projectName: string | undefined, tasks: Array<Task>, setTasks: Dispatch<SetStateAction<Task[]>>) => {
@@ -96,5 +97,18 @@ export const stateGetUsers = (users: Array<User> | null, setUsers: Dispatch<SetS
     const users: Array<User> = resp.data;
     console.log({users: users});
     setUsers(users);
+  });
+}
+
+export const stateGetEntitlements = (projectId: number | undefined, entitlements: Entitlements | undefined, setEntitlements: Dispatch<SetStateAction<Entitlements | undefined>>) => {
+  if (projectId === undefined || entitlements !== undefined) return;
+  getEntitlements(projectId!).then((response) => {
+    const resp = response as AxiosResponse;
+    if (resp.status !== 200) {
+      console.log("Unable to load entitlements: projectId=" + projectId);
+      return;
+    }
+    console.log({entitlements: resp.data});
+    setEntitlements(resp.data);
   });
 }

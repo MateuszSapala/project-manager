@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.lodz.pl.projectmanager.access.model.Access;
+import uni.lodz.pl.projectmanager.access.model.Entitlements;
 import uni.lodz.pl.projectmanager.access.model.UpdateAccessDto;
+import uni.lodz.pl.projectmanager.util.AuthorizationUtil;
 import uni.lodz.pl.projectmanager.util.JsonUtil;
 
 import java.util.List;
@@ -53,5 +55,13 @@ public class AccessController {
         log.info("Delete access " + accessId);
         accessService.deleteAccess(accessId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @GetMapping("entitlements/{projectId}")
+    @Operation(summary = "Get user entitlements")
+    public ResponseEntity<Entitlements> getUserEntitlements(@PathVariable("projectId") Long projectId) {
+        log.info("Get users entitlements for userId=" + AuthorizationUtil.getLoggedUser().getId() + ", projectId=" + projectId);
+        return ResponseEntity.status(HttpStatus.OK).body(accessService.getEntitlements(projectId));
     }
 }

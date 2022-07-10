@@ -5,13 +5,19 @@ import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Dispatch, useEffect, useState} from "react";
 import {Access} from "../model/access/Access";
-import {stateGetAccessesByProject, stateGetProject, stateGetUsers} from "../service/UseStateService";
+import {
+  stateGetAccessesByProject,
+  stateGetEntitlements,
+  stateGetProject,
+  stateGetUsers
+} from "../service/UseStateService";
 import {ProjectRole, ProjectRoleTable, projectRoleToString} from "../model/access/ProjectRole";
 import {displayMessages} from "./Util";
 import {AxiosResponse} from "axios";
 import {deleteAccess, editAccess} from "../service/AccessService";
 import {EditAccess} from "../model/access/EditAccess";
 import {confirm} from "react-confirm-box";
+import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
   loggedUser: User;
@@ -23,6 +29,7 @@ function Accesses({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
   const [users, setUsers] = useState<Array<User> | null>(null);
+  const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   const [editedId, setEditedId] = useState<number | null>(null);
   const [editedRole, setEditedRole] = useState<ProjectRole | null>(null);
@@ -36,7 +43,8 @@ function Accesses({loggedUser, projects}: Props) {
     stateGetProject(projectName, project, setProject);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetUsers(users, setUsers);
-  }, [accesses, project, projectName, users]);
+    stateGetEntitlements(project?.id, entitlements, setEntitlements);
+  }, [accesses, entitlements, project, projectName, users]);
 
   const displayAccess = (access: Access) => {
     return (
@@ -46,7 +54,7 @@ function Accesses({loggedUser, projects}: Props) {
           <p className="card-text">Email: {access.user.email}</p>
           <p className="card-text">Role: {projectRoleToString(access?.projectRole)}</p>
           {access.id === editedId ? displayCheckboxes(editedRole, setEditedRole) : ""}
-          {displayMessages(editError)}
+          {access.id === editedId ? displayMessages(editError) : ""}
           {displayButtons(access)}
         </div>
       </div>
@@ -186,7 +194,7 @@ function Accesses({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Accesses {projectName}</h1>

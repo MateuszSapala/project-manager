@@ -112,7 +112,7 @@ function Users({loggedUser, projects}: Props) {
                    setEditAdmin(!editAdmin)
                  }}/> admin
         </label>
-        {displayMessages(editError)}
+        {edited ? displayMessages(editError) : ""}
         {!edited ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
@@ -249,7 +249,7 @@ function Users({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects}/>
+        <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Users</h1>

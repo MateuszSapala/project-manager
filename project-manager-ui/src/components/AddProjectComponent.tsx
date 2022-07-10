@@ -44,7 +44,7 @@ function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects}/>
+        <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Add project</h1>

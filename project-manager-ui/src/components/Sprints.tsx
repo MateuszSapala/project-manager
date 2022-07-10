@@ -4,7 +4,12 @@ import {Project} from "../model/project/Project";
 import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {useEffect, useState} from "react";
-import {stateGetActiveSprintByProject, stateGetProject, stateGetSprintsByProject} from "../service/UseStateService";
+import {
+  stateGetActiveSprintByProject,
+  stateGetEntitlements,
+  stateGetProject,
+  stateGetSprintsByProject
+} from "../service/UseStateService";
 import {Sprint} from "../model/sprint/Sprint";
 import DatePicker from "react-datepicker";
 import {displayMessages} from "./Util";
@@ -12,6 +17,7 @@ import {AxiosResponse} from "axios";
 import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
 import {confirm} from "react-confirm-box";
+import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
   loggedUser: User;
@@ -23,6 +29,7 @@ function Sprints({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
+  const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   const [sprintName, setSprintName] = useState<string>("");
   const [sprintStartDate, setSprintStartDate] = useState<Date | null>(null);
@@ -33,8 +40,9 @@ function Sprints({loggedUser, projects}: Props) {
   useEffect(() => {
     stateGetProject(projectName, project, setProject);
     stateGetSprintsByProject(project?.id, sprints, setSprints);
-    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint)
-  }, [activeSprint, project, projectName, sprints]);
+    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
+    stateGetEntitlements(project?.id, entitlements, setEntitlements);
+  }, [activeSprint, entitlements, project, projectName, sprints]);
 
   const displaySprint = (sprint: Sprint) => {
     const active = sprint.id === activeSprint?.id;
@@ -138,7 +146,7 @@ function Sprints({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="d-flex flex-column main-content ">
           <div className="m-2">
             <h1>Sprints {projectName}</h1>
