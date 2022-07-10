@@ -179,7 +179,7 @@ function Backlog({loggedUser, projects}: Props) {
             <button className="btn btn-primary btn-block"
                     onClick={() => editTaskChangeState(task)}>Edit
             </button>
-          </div>: ""}
+          </div> : ""}
         {!disabled ?
           <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
