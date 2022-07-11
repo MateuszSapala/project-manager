@@ -6,10 +6,11 @@ import Sidebar from "./Sidebar";
 import {useEffect, useState} from "react";
 import {Entitlements} from "../model/access/Entitlements";
 import {stateGetEntitlements, stateGetProject} from "../service/UseStateService";
+import {loader} from "./Util";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function ProjectSummary({loggedUser, projects}: Props) {
@@ -21,6 +22,8 @@ function ProjectSummary({loggedUser, projects}: Props) {
     stateGetProject(projectName, project, setProject);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
   }, [entitlements, project, projectName]);
+
+  const isLoading = () => project == null || entitlements == null;
   return (
     <div id="page-top">
       <div id="wrapper">
@@ -28,7 +31,8 @@ function ProjectSummary({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Project {projectName}</h1>
-            {projects.filter(p => p.name === projectName)[0]?.description.split("\n").map((text, index) => {
+            {isLoading() && loader()}
+            {!isLoading() && projects !== null && projects.filter(p => p.name === projectName)[0]?.description.split("\n").map((text, index) => {
               return (<p key={index}>{text}</p>)
             })}
           </div>

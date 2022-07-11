@@ -1,3 +1,6 @@
+import {Circles} from "react-loader-spinner";
+import React from "react";
+
 export const displayMessages = (error: string, success?: string) => {
   return (<div>
     {error === "" ? "" : <div className="alert alert-danger" role="alert">
@@ -8,3 +11,7 @@ export const displayMessages = (error: string, success?: string) => {
     </div>}
   </div>)
 }
+
+export const loader = () => <div className="w-100 h-100 d-flex justify-content-center" style={{background: "#36b9cc"}}>
+  <Circles color="#00BFFF" height={500} width={500}/>
+</div>

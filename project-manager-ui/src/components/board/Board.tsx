@@ -11,8 +11,8 @@ import {stateGetEntitlements, stateGetProject} from "../../service/UseStateServi
 import {Entitlements} from "../../model/access/Entitlements";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Board({loggedUser, projects}: Props) {

@@ -15,16 +15,15 @@ import {getUsers} from "./UserService";
 import {Entitlements} from "../model/access/Entitlements";
 
 
-export const stateGetTasks = (projectName: string | undefined, tasks: Array<Task>, setTasks: Dispatch<SetStateAction<Task[]>>) => {
-  if (tasks.length !== 0 || projectName === undefined) return;
+export const stateGetTasks = (projectName: string | undefined, tasks: Array<Task> | null, setTasks: Dispatch<SetStateAction<Task[] | null>>) => {
+  if (tasks !== null || projectName === undefined) return;
   getTasksByProjectName(projectName).then((response) => {
     const resp = response as AxiosResponse;
     if (resp.status !== 200) {
       console.log("Unable to load task list for project: projectName=" + projectName);
       return;
     }
-    const taskDtoList: Array<TaskDto> = resp.data;
-    const taskList: Array<Task> = taskDtoList.map((item) => new Task(item));
+    const taskList: Array<Task> = resp.data.map((item: TaskDto) => new Task(item));
     console.log({tasks: taskList});
     setTasks(taskList);
   });

@@ -12,7 +12,7 @@ import {
   stateGetUsers
 } from "../service/UseStateService";
 import {ProjectRole, ProjectRoleTable, projectRoleToString} from "../model/access/ProjectRole";
-import {displayMessages} from "./Util";
+import {displayMessages, loader} from "./Util";
 import {AxiosResponse} from "axios";
 import {deleteAccess, editAccess} from "../service/AccessService";
 import {EditAccess} from "../model/access/EditAccess";
@@ -20,8 +20,8 @@ import {confirm} from "react-confirm-box";
 import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Accesses({loggedUser, projects}: Props) {
@@ -48,6 +48,8 @@ function Accesses({loggedUser, projects}: Props) {
     stateGetUsers(users, setUsers);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
   }, [accesses, entitlements, project, projectName, users]);
+
+  const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || users === null;
 
   const displayAccess = (access: Access) => {
     return (
@@ -197,12 +199,14 @@ function Accesses({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser}
+                 entitlements={entitlements}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Accesses {projectName}</h1>
-            {accesses !== null && accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
-            {loggedUser?.admin && displayAdd()}
+            {isLoading() && loader()}
+            {!isLoading() && accesses !== null && loggedUser !== null && accesses.filter(a => a.user.id !== loggedUser.id).map(a => displayAccess(a))}
+            {!isLoading() && loggedUser?.admin && displayAdd()}
           </div>
         </div>
       </div>

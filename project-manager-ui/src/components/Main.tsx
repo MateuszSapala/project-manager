@@ -4,8 +4,8 @@ import {Project} from "../model/project/Project";
 import Sidebar from "./Sidebar";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Main({loggedUser, projects}: Props) {
