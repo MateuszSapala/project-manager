@@ -57,7 +57,7 @@ function App() {
   //PROJECTS
   const [projects, setProjects] = useState<Array<Project> | null>(null);
   useEffect(() => {
-    if (loggedUser == null || projects != null) return;
+    if (loggedUser == null || projects !== null) return;
     getProjects().then((response) => {
       const resp = response as AxiosResponse;
       if (resp.status !== 200) {
@@ -69,7 +69,7 @@ function App() {
     });
   }, [projects, loggedUser]);
 
-  const props = {loggedUser: loggedUser!, projects: projects != null ? projects : []}
+  const props = {loggedUser: loggedUser!, projects: projects !== null && projects !== undefined ? projects : []}
   const projectPath = "/projects/:projectName";
   return (
     <div>

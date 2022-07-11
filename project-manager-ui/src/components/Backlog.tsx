@@ -8,6 +8,7 @@ import {Dispatch, useEffect, useState} from "react";
 import {Task} from "../model/task/Task";
 import {
   stateGetAccessesByProject,
+  stateGetEntitlements,
   stateGetProject,
   stateGetSprintsByProject,
   stateGetTasks
@@ -22,6 +23,7 @@ import {AddTask} from "../model/task/AddTask";
 import {EditTask} from "../model/task/EditTask";
 import {displayMessages} from "./Util";
 import {Sprint} from "../model/sprint/Sprint";
+import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
   loggedUser: User;
@@ -35,6 +37,7 @@ function Backlog({loggedUser, projects}: Props) {
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
   const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
   const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
+  const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
   const [taskName, setTaskName] = useState<string>("");
@@ -53,11 +56,15 @@ function Backlog({loggedUser, projects}: Props) {
   const [editedTaskError, setEditedTaskError] = useState<string>("");
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.taskViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetTasks(projectName, tasks, setTasks);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetSprintsByProject(project?.id, sprints, setSprints);
-  }, [accesses, project, projectName, sprints, tasks]);
+    stateGetEntitlements(project?.id, entitlements, setEntitlements);
+  }, [accesses, entitlements, project, projectName, sprints, tasks]);
 
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
@@ -174,13 +181,14 @@ function Backlog({loggedUser, projects}: Props) {
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
         {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
         {displayMessages(editedTaskError)}
-        {disabled ?
+        {!entitlements?.taskEditing && <br/>}
+        {entitlements?.taskEditing && disabled ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
                     onClick={() => editTaskChangeState(task)}>Edit
             </button>
           </div> : ""}
-        {!disabled ?
+        {entitlements?.taskEditing && !disabled ?
           <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
@@ -194,7 +202,6 @@ function Backlog({loggedUser, projects}: Props) {
             </div>
           </div>
           : ""}
-        {/*<br/>*/}
       </div>
     )
   }
@@ -275,13 +282,13 @@ function Backlog({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="main-content">
           <div className="m-2">
             <h1>Backlog {projectName}</h1>
             {TaskStateTable.map(state => displayCheckbox(state))}
             {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
-            {displayAdd()}
+            {entitlements?.taskEditing && displayAdd()}
           </div>
         </div>
       </div>

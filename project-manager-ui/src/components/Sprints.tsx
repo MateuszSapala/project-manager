@@ -4,7 +4,12 @@ import {Project} from "../model/project/Project";
 import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {useEffect, useState} from "react";
-import {stateGetActiveSprintByProject, stateGetProject, stateGetSprintsByProject} from "../service/UseStateService";
+import {
+  stateGetActiveSprintByProject,
+  stateGetEntitlements,
+  stateGetProject,
+  stateGetSprintsByProject
+} from "../service/UseStateService";
 import {Sprint} from "../model/sprint/Sprint";
 import DatePicker from "react-datepicker";
 import {displayMessages} from "./Util";
@@ -12,6 +17,7 @@ import {AxiosResponse} from "axios";
 import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
 import {confirm} from "react-confirm-box";
+import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
   loggedUser: User;
@@ -23,6 +29,7 @@ function Sprints({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
+  const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   const [sprintName, setSprintName] = useState<string>("");
   const [sprintStartDate, setSprintStartDate] = useState<Date | null>(null);
@@ -31,10 +38,14 @@ function Sprints({loggedUser, projects}: Props) {
   const [sprintSuccess, setSprintSuccess] = useState<string>("");
 
   useEffect(() => {
+    if (entitlements !== undefined && !entitlements.sprintViewing) {
+      window.location.replace(window.location.origin + "/projects/" + projectName);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetSprintsByProject(project?.id, sprints, setSprints);
-    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint)
-  }, [activeSprint, project, projectName, sprints]);
+    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
+    stateGetEntitlements(project?.id, entitlements, setEntitlements);
+  }, [activeSprint, entitlements, project, projectName, sprints]);
 
   const displaySprint = (sprint: Sprint) => {
     const active = sprint.id === activeSprint?.id;
@@ -49,26 +60,26 @@ function Sprints({loggedUser, projects}: Props) {
           <p className="card-text">End date: {sprint.end?.toDateString()}</p>
           <p className="card-text">Closed: {sprint.closed ? "yes" : "no"}</p>
           <p className="card-text">Active: {active ? "yes" : "no"}</p>
-          {!active ? "" :
-            <button className="btn btn-primary m-2" onClick={async () => {
-              const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
-              if (!result) {
-                console.log("Cancelled");
-                return;
-              }
-              closeSprint(sprint.id).then((response) => {
-                const resp = response as AxiosResponse;
-                if (resp.status !== 204) {
-                  console.log("Unable to close sprint");
+          {entitlements?.sprintEditing && active &&
+              <button className="btn btn-primary m-2" onClick={async () => {
+                const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
+                if (!result) {
+                  console.log("Cancelled");
                   return;
                 }
-                sprint.closed = true;
-                setActiveSprint(null);
-                if (sprints === null) return;
-                setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
-              });
-            }}>Close sprint
-            </button>}
+                closeSprint(sprint.id).then((response) => {
+                  const resp = response as AxiosResponse;
+                  if (resp.status !== 204) {
+                    console.log("Unable to close sprint");
+                    return;
+                  }
+                  sprint.closed = true;
+                  setActiveSprint(null);
+                  if (sprints === null) return;
+                  setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
+                });
+              }}>Close sprint
+              </button>}
         </div>
       </div>
     )
@@ -138,12 +149,12 @@ function Sprints({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="d-flex flex-column main-content ">
           <div className="m-2">
             <h1>Sprints {projectName}</h1>
             {sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
-            {displayAdd()}
+            {entitlements?.sprintEditing && displayAdd()}
           </div>
         </div>
       </div>

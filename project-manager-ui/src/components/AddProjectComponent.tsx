@@ -16,6 +16,9 @@ interface Props {
 }
 
 function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
+  if (loggedUser !== undefined && loggedUser !== null && !loggedUser.admin) {
+    window.location.replace(window.location.origin);
+  }
   let navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -44,7 +47,7 @@ function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects}/>
+        <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Add project</h1>

@@ -7,6 +7,7 @@ import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.access.model.Access;
+import uni.lodz.pl.projectmanager.access.model.Entitlements;
 import uni.lodz.pl.projectmanager.access.model.ProjectRole;
 import uni.lodz.pl.projectmanager.access.model.UpdateAccessDto;
 import uni.lodz.pl.projectmanager.config.RoleConfig;
@@ -131,5 +132,12 @@ public class AccessService {
     private Access editAccess(Access access, UpdateAccessDto update) {
         access.setProjectRole(update.getProjectRole());
         return access;
+    }
+
+    public Entitlements getEntitlements(Long projectId) {
+        User user = AuthorizationUtil.getLoggedUser();
+        if (user.isAdmin()) return new Entitlements(true);
+        ProjectRole role = getAccess(user.getId(), projectId).getProjectRole();
+        return new Entitlements(role, roleConfig);
     }
 }

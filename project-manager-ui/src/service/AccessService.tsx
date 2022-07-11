@@ -28,3 +28,12 @@ export async function deleteAccess(id: number): Promise<AxiosResponse> {
     },
   });
 }
+
+export async function getEntitlements(projectId: number): Promise<AxiosResponse> {
+  const auth: string = window.localStorage.getItem("authorization")!;
+  return axios.get(AppConfig.BACKEND_URL + "v1/access/entitlements/" + projectId, {
+    headers: {
+      authorization: auth,
+    },
+  });
+}

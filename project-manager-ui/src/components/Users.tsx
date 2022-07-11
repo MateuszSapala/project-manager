@@ -26,10 +26,13 @@ function Users({loggedUser, projects}: Props) {
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
 
   useEffect(() => {
+    if (loggedUser !== null && loggedUser !== undefined && !loggedUser.admin) {
+      window.location.replace(window.location.origin);
+    }
     stateGetProject(projectName, project, setProject);
     stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetUsers(users, setUsers);
-  }, [accesses, project, projectName, users]);
+  }, [accesses, loggedUser, project, projectName, users]);
 
   const [addUsername, setAddUsername] = useState<string>("");
   const [addPassword, setAddPassword] = useState<string>("");
@@ -112,7 +115,7 @@ function Users({loggedUser, projects}: Props) {
                    setEditAdmin(!editAdmin)
                  }}/> admin
         </label>
-        {displayMessages(editError)}
+        {edited ? displayMessages(editError) : ""}
         {!edited ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
@@ -245,11 +248,10 @@ function Users({loggedUser, projects}: Props) {
     });
   }
 
-  // console.log({editedId, editUsername, editEmail, editName, editSurname, editAdmin, editError});
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects}/>
+        <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Users</h1>
