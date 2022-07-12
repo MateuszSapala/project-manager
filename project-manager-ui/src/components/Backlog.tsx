@@ -21,19 +21,19 @@ import {addTask, editTask} from "../service/TaskService";
 import {AxiosResponse} from "axios";
 import {AddTask} from "../model/task/AddTask";
 import {EditTask} from "../model/task/EditTask";
-import {displayMessages} from "./Util";
+import {displayMessages, loader} from "./Util";
 import {Sprint} from "../model/sprint/Sprint";
 import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Backlog({loggedUser, projects}: Props) {
   let {projectName} = useParams();
   const [project, setProject] = useState<Project | null>(null);
-  const [tasks, setTasks] = useState<Array<Task>>([]);
+  const [tasks, setTasks] = useState<Array<Task> | null>(null);
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
   const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
   const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
@@ -65,6 +65,8 @@ function Backlog({loggedUser, projects}: Props) {
     stateGetSprintsByProject(project?.id, sprints, setSprints);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
   }, [accesses, entitlements, project, projectName, sprints, tasks]);
+
+  const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || sprints === null || tasks === null;
 
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
@@ -140,6 +142,7 @@ function Backlog({loggedUser, projects}: Props) {
       setTaskError("The following data is missing: " + missing);
       return;
     }
+    if (tasks === null) return;
     addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, taskSprint?.id)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setTaskError("Unable to add task")
@@ -224,6 +227,7 @@ function Backlog({loggedUser, projects}: Props) {
       setEditedTaskError("The following data is missing: " + missing);
       return;
     }
+    if (tasks === null) return;
     const oldTask = tasks.filter(t => t.id === editedTaskId)[0];
     const editedFields = [];
     if (editedTaskDate !== oldTask.end) editedFields.push("end");
@@ -282,13 +286,15 @@ function Backlog({loggedUser, projects}: Props) {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
+        <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser}
+                 entitlements={entitlements}/>
         <div className="main-content">
           <div className="m-2">
             <h1>Backlog {projectName}</h1>
-            {TaskStateTable.map(state => displayCheckbox(state))}
-            {tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
-            {entitlements?.taskEditing && displayAdd()}
+            {isLoading() && loader()}
+            {!isLoading() && TaskStateTable.map(state => displayCheckbox(state))}
+            {!isLoading() && tasks !== null && tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
+            {!isLoading() && entitlements?.taskEditing && displayAdd()}
           </div>
         </div>
       </div>

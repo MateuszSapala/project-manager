@@ -9,6 +9,7 @@ import {EditTask} from "../../model/task/EditTask";
 import {stateGetActiveSprintByProject, stateGetProject, stateGetTasks} from "../../service/UseStateService";
 import {Project} from "../../model/project/Project";
 import {Sprint} from "../../model/sprint/Sprint";
+import {loader} from "../Util";
 
 interface Props {
   projectName: string | undefined;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const TaskBoard = ({projectName, canEdit}: Props) => {
-  const [tasks, setTasks] = useState<Array<Task>>([]);
+  const [tasks, setTasks] = useState<Array<Task> | null>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
 
@@ -26,8 +27,11 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
     stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint)
   }, [activeSprint, project, projectName, tasks]);
 
+  const isLoading = () => tasks === null || project === null || activeSprint === null;
+
   const onDrop = (task: Task, monitor: any, status: TaskState) => {
     setTasks((prevState) => {
+      if (prevState === null || tasks === null) return prevState;
       const newItems = prevState.map((i, index) => {
         if (i.id !== task.id || i.taskState === status) {
           return i;
@@ -48,10 +52,11 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
   const onDropDisabled = (task: Task, monitor: any, status: TaskState) => {
     alert("Not enough rights to edit task");
   };
-
+  console.log({tasks, project, activeSprint})
   return (
     <div>
-      <div className={"row"}>
+      {isLoading() && loader()}
+      {!isLoading() && <div className={"row"}>
         {TaskStateTable.map((state) => {
           return (
             <div key={state} className={"col-wrapper"}>
@@ -77,7 +82,7 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
   );
 };

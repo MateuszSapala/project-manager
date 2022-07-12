@@ -10,8 +10,8 @@ import {displayMessages} from "./Util";
 import {useNavigate} from "react-router-dom";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
   setProjects: Dispatch<Array<Project>>;
 }
 
@@ -33,6 +33,7 @@ function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
       setError("The following data is missing: " + missing);
       return;
     }
+    if (projects === null) return;
     addProject(new AddProject(name, description)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
         setError("Unable to add project")

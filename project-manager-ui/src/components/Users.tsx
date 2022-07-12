@@ -4,9 +4,8 @@ import {Project} from "../model/project/Project";
 import Sidebar from "./Sidebar";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {stateGetAccessesByProject, stateGetProject, stateGetUsers} from "../service/UseStateService";
-import {Access} from "../model/access/Access";
-import {displayMessages} from "./Util";
+import {stateGetUsers} from "../service/UseStateService";
+import {displayMessages, loader} from "./Util";
 import {confirm} from "react-confirm-box";
 import {AxiosResponse} from "axios";
 import {addUser, editUser} from "../service/UserService";
@@ -15,24 +14,20 @@ import {EditUser} from "../model/user/EditUser";
 import {Accordion} from "react-bootstrap";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Users({loggedUser, projects}: Props) {
   let {projectName} = useParams();
-  const [project, setProject] = useState<Project | null>(null);
   const [users, setUsers] = useState<Array<User> | null>(null);
-  const [accesses, setAccesses] = useState<Array<Access> | null>(null);
 
   useEffect(() => {
     if (loggedUser !== null && loggedUser !== undefined && !loggedUser.admin) {
       window.location.replace(window.location.origin);
     }
-    stateGetProject(projectName, project, setProject);
-    stateGetAccessesByProject(project?.id, accesses, setAccesses);
     stateGetUsers(users, setUsers);
-  }, [accesses, loggedUser, project, projectName, users]);
+  }, [loggedUser, projectName, users]);
 
   const [addUsername, setAddUsername] = useState<string>("");
   const [addPassword, setAddPassword] = useState<string>("");
@@ -60,6 +55,8 @@ function Users({loggedUser, projects}: Props) {
     setEditAdmin(user !== undefined ? user.admin : false);
     setEditError(error !== undefined ? error : "");
   }
+
+  const isLoading = () => projects === null || users === null || !loggedUser?.admin;
 
   const displayUser = (user: User) => {
     return (
@@ -255,8 +252,9 @@ function Users({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content">
           <div className="m-2">
             <h1>Users</h1>
-            {users?.map(u => displayUser(u))}
-            {displayAdd()}
+            {isLoading() && loader()}
+            {!isLoading() && users?.map(u => displayUser(u))}
+            {!isLoading() && displayAdd()}
           </div>
         </div>
       </div>

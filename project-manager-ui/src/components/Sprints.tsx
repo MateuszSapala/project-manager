@@ -12,7 +12,7 @@ import {
 } from "../service/UseStateService";
 import {Sprint} from "../model/sprint/Sprint";
 import DatePicker from "react-datepicker";
-import {displayMessages} from "./Util";
+import {displayMessages, loader} from "./Util";
 import {AxiosResponse} from "axios";
 import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
@@ -20,8 +20,8 @@ import {confirm} from "react-confirm-box";
 import {Entitlements} from "../model/access/Entitlements";
 
 interface Props {
-  loggedUser: User;
-  projects: Array<Project>;
+  loggedUser: User | null;
+  projects: Array<Project> | null;
 }
 
 function Sprints({loggedUser, projects}: Props) {
@@ -46,6 +46,8 @@ function Sprints({loggedUser, projects}: Props) {
     stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
   }, [activeSprint, entitlements, project, projectName, sprints]);
+
+  const isLoading = () => project === null || sprints === null || activeSprint === null || entitlements === null;
 
   const displaySprint = (sprint: Sprint) => {
     const active = sprint.id === activeSprint?.id;
@@ -153,8 +155,9 @@ function Sprints({loggedUser, projects}: Props) {
         <div className="d-flex flex-column main-content ">
           <div className="m-2">
             <h1>Sprints {projectName}</h1>
-            {sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
-            {entitlements?.sprintEditing && displayAdd()}
+            {isLoading() && loader()}
+            {!isLoading() && sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
+            {!isLoading() && entitlements?.sprintEditing && displayAdd()}
           </div>
         </div>
       </div>

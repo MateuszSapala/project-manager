@@ -7,7 +7,6 @@ import Main from "./components/Main";
 import Backlog from "./components/Backlog";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {sendVerify} from "./service/Login";
-import Logout from "./components/Logout";
 import {User} from "./model/user/User";
 import ProjectSummary from "./components/ProjectSummary";
 import {getProjects} from "./service/ProjectService";
@@ -75,7 +74,6 @@ function App() {
     <div>
       <Routes>
         <Route path="/login" element={<Login message=""/>}/>
-        <Route path="/logout" element={<Logout/>}/>
         <Route path="/" element={<Main {...props}/>}/>
         <Route path="/add/project" element={<AddProjectComponent {...props} setProjects={setProjects}/>}/>
         <Route path="/users" element={<Users {...props}/>}/>
