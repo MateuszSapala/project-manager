@@ -19,9 +19,8 @@ import AddProjectComponent from "./components/AddProjectComponent";
 import Users from "./components/Users";
 
 function App() {
-  //LOGGING
-  // const [loaddingUser, setLoaddingUser] = useState<Boolean>(false);
-  const [loggedUser, setloggedUser] = useState<User | null>(null);
+  const [loadingUser, setLoadingUser] = useState<Boolean>(true);
+  const [loggedUser, setLoggedUser] = useState<User | null>(null);
   let navigate = useNavigate();
   useEffect(() => {
     if (loggedUser !== null) {
@@ -35,15 +34,15 @@ function App() {
     if (!auth) {
       navigate("/login");
     }
-    // setLoaddingUser(true);
+    setLoadingUser(true);
     sendVerify(window.localStorage.getItem("authorization") as string)
       .then((response) => {
         console.log({verify: response.data});
         if (window.location.pathname === "/login") {
           navigate("/");
         }
-        setloggedUser(response.data);
-        // setLoaddingUser(false);
+        setLoggedUser(response.data);
+        setLoadingUser(false);
       })
       .catch((error) => {
         console.log(error.response);
@@ -70,18 +69,21 @@ function App() {
 
   const props = {loggedUser: loggedUser!, projects: projects !== null && projects !== undefined ? projects : []}
   const projectPath = "/projects/:projectName";
+  console.warn(process.env);
   return (
     <div>
       <Routes>
         <Route path="/login" element={<Login message=""/>}/>
-        <Route path="/" element={<Main {...props}/>}/>
-        <Route path="/add/project" element={<AddProjectComponent {...props} setProjects={setProjects}/>}/>
-        <Route path="/users" element={<Users {...props}/>}/>
-        <Route path={projectPath} element={<ProjectSummary {...props}/>}/>
-        <Route path={projectPath + "/backlog"} element={<Backlog{...props}/>}/>
-        <Route path={projectPath + "/sprints"} element={<Sprints {...props}/>}/>
-        <Route path={projectPath + "/board"} element={<Board {...props}/>}/>
-        <Route path={projectPath + "/accesses"} element={<Accesses {...props}/>}/>
+        {!loadingUser && loggedUser !== null && <>
+            <Route path="/" element={<Main {...props}/>}/>
+            <Route path="/add/project" element={<AddProjectComponent {...props} setProjects={setProjects}/>}/>
+            <Route path="/users" element={<Users {...props}/>}/>
+            <Route path={projectPath} element={<ProjectSummary {...props}/>}/>
+            <Route path={projectPath + "/backlog"} element={<Backlog{...props}/>}/>
+            <Route path={projectPath + "/sprints"} element={<Sprints {...props}/>}/>
+            <Route path={projectPath + "/board"} element={<Board {...props}/>}/>
+            <Route path={projectPath + "/accesses"} element={<Accesses {...props}/>}/>
+        </>}
       </Routes>
     </div>
   );
