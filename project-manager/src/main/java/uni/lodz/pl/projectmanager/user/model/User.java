@@ -16,13 +16,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String username;
+    @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    @Column(nullable = false, length = 30)
     private String email;
+    @Column(nullable = false, length = 30)
     private String name;
+    @Column(nullable = false, length = 30)
     private String surname;
+    @Column(nullable = false)
     private boolean admin;
 
     public User(String username, String password, String email, String name, String surname, Boolean admin) {

@@ -13,9 +13,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String name;
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     public Project(AddProjectDto projectDto) {

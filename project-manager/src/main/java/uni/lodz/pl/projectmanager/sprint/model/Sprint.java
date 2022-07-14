@@ -17,11 +17,15 @@ public class Sprint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private LocalDate start;
+    @Column(nullable = false)
     private LocalDate end;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Project project;
+    @Column(nullable = false)
     private boolean closed;
 
     public Sprint(String name, LocalDate start, LocalDate end, Project project) {
