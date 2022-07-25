@@ -13,6 +13,8 @@ import {SprintDto} from "../model/sprint/SprintDto";
 import {User} from "../model/user/User";
 import {getUsers} from "./UserService";
 import {Entitlements} from "../model/access/Entitlements";
+import {RetroNote} from "../model/retro/RetroNote";
+import {getRetroNotesBySprintId} from "./RetroService";
 
 
 export const stateGetTasks = (projectName: string | undefined, tasks: Array<Task> | null, setTasks: Dispatch<SetStateAction<Task[] | null>>) => {
@@ -109,5 +111,18 @@ export const stateGetEntitlements = (projectId: number | undefined, entitlements
     }
     console.log({entitlements: resp.data});
     setEntitlements(resp.data);
+  });
+}
+
+export const stateGetRetroNotesBySprintId = (sprintId: number, setRetroNotes: Dispatch<SetStateAction<RetroNote[] | null>>) => {
+  getRetroNotesBySprintId(sprintId).then((response) => {
+    const resp = response as AxiosResponse;
+    if (resp.status !== 200) {
+      console.log("Unable to load retro notes: sprintId=" + sprintId);
+      return;
+    }
+    const notes: RetroNote[] = resp.data;
+    console.log({retroNotes: notes});
+    setRetroNotes(notes);
   });
 }

@@ -67,6 +67,7 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
                             {entitlements?.taskViewing && generateButton(projectPath + "/board", "Board", "board")}
                             {entitlements?.sprintViewing && generateButton(projectPath + "/sprints", "Sprints", "sprints")}
                             {entitlements?.accessViewing && generateButton(projectPath + "/accesses", "Accesses", "accesses")}
+                            {entitlements?.retroNoteViewing && generateButton(projectPath + "/retro", "Retro", "retro")}
                           </Accordion.Body>
                       </Accordion.Item>
                   </Accordion>
