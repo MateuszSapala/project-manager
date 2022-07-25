@@ -4,10 +4,11 @@ import {Project} from "../model/project/Project";
 import {User} from "../model/user/User";
 import Sidebar from "./Sidebar";
 import {Accordion} from "react-bootstrap";
-import {Dispatch, useEffect, useState} from "react";
+import React, {Dispatch, useEffect, useState} from "react";
 import {Task} from "../model/task/Task";
 import {
   stateGetAccessesByProject,
+  stateGetActiveSprintByProject,
   stateGetEntitlements,
   stateGetProject,
   stateGetSprintsByProject,
@@ -24,6 +25,7 @@ import {EditTask} from "../model/task/EditTask";
 import {displayMessages, loader} from "./Util";
 import {Sprint} from "../model/sprint/Sprint";
 import {Entitlements} from "../model/access/Entitlements";
+import {capitalizedOption, SprintCheckboxOption, SprintCheckboxOptionTable} from "../model/sprint/SprintCheckboxOption";
 
 interface Props {
   loggedUser: User | null;
@@ -35,8 +37,10 @@ function Backlog({loggedUser, projects}: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<Array<Task> | null>(null);
   const [accesses, setAccesses] = useState<Array<Access> | null>(null);
-  const [isStateChecked, setIsStateChecked] = useState([TaskState.TODO, TaskState.DOING, TaskState.DONE]);
+  const [isStateChecked, setIsStateChecked] = useState(TaskStateTable);
+  const [sprintState, setSprintState] = useState([SprintCheckboxOption.CURRENT, SprintCheckboxOption.FUTURE, SprintCheckboxOption.NOT_ASSIGNED]);
   const [sprints, setSprints] = useState<Array<Sprint> | null>(null);
+  const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
   const [entitlements, setEntitlements] = useState<Entitlements | undefined>(undefined);
 
   const [taskDate, setTaskDate] = useState<Date | null>(null);
@@ -56,17 +60,28 @@ function Backlog({loggedUser, projects}: Props) {
   const [editedTaskError, setEditedTaskError] = useState<string>("");
 
   useEffect(() => {
+    stateGetProject(projectName, project, setProject);
+  }, [projectName, project]);
+  useEffect(() => {
+    stateGetTasks(projectName, tasks, setTasks);
+  }, [projectName, tasks]);
+  useEffect(() => {
+    stateGetAccessesByProject(project?.id, accesses, setAccesses);
+  }, [project?.id, accesses]);
+  useEffect(() => {
+    stateGetSprintsByProject(project?.id, sprints, setSprints);
+  }, [project?.id, sprints]);
+  useEffect(() => {
+    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
+  }, [project?.id, activeSprint]);
+  useEffect(() => {
     if (entitlements !== undefined && !entitlements.taskViewing) {
       window.location.replace(window.location.origin + "/projects/" + projectName);
     }
-    stateGetProject(projectName, project, setProject);
-    stateGetTasks(projectName, tasks, setTasks);
-    stateGetAccessesByProject(project?.id, accesses, setAccesses);
-    stateGetSprintsByProject(project?.id, sprints, setSprints);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
-  }, [accesses, entitlements, project, projectName, sprints, tasks]);
+  }, [project?.id, entitlements, projectName]);
 
-  const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || sprints === null || tasks === null;
+  const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || sprints === null || activeSprint === null || tasks === null;
 
   const displayCheckbox = (state: TaskState) => {
     const checked = isStateChecked.includes(state);
@@ -75,6 +90,17 @@ function Backlog({loggedUser, projects}: Props) {
         <input type="checkbox" checked={checked} onChange={() => {
           setIsStateChecked(checked ? isStateChecked.filter(x => x !== state) : [...isStateChecked, state])
         }}/>{" " + capitalizedStatus(state)}
+      </div>
+    )
+  }
+
+  const displaySprintCheckbox = (option: SprintCheckboxOption) => {
+    const checked = sprintState.includes(option);
+    return (
+      <div className="checkbox d-inline mr-3" key={option}>
+        <input type="checkbox" checked={checked}
+               onChange={() => setSprintState(checked ? sprintState.filter(x => x !== option) : [...sprintState, option])}/>
+        {" " + capitalizedOption(option)}
       </div>
     )
   }
@@ -250,11 +276,12 @@ function Backlog({loggedUser, projects}: Props) {
     return (
       <label htmlFor="taskUser">
         Assigned user:
-        <select className={disabled || user === undefined ? "form-control" : "form-control text-primary"} id="taskUser"
-                value={user?.id} disabled={disabled}
-                onChange={event => setUser && accesses !== null ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
-          <option value={undefined} disabled={disabled}>Add assigned user</option>
-          {accesses !== null ? accesses.map(access => {
+        <select
+          className={disabled || !user ? "form-control" : "form-control text-primary"}
+          id="taskUser" value={user ? user.id : ""} disabled={disabled}
+          onChange={event => setUser && accesses !== null ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
+          <option value="" disabled={disabled}>Add assigned user</option>
+          {accesses ? accesses.map(access => {
             return (<option className="text-primary" value={access.user.id} key={access.user.id}
                             disabled={disabled}>
               {access.user.name + " " + access.user.surname}
@@ -266,21 +293,38 @@ function Backlog({loggedUser, projects}: Props) {
   }
 
   const displaySprintSelect = (disabled: boolean, sprints: Array<Sprint> | null, sprint: Sprint | undefined, setSprint?: Dispatch<Sprint | undefined>) => {
-    const value = sprint !== undefined ? sprint?.id : undefined;
+    const value = sprint ? sprint.id : "";
+    console.log(sprint)
     return (
       <label htmlFor="taskUser">
         Sprint:
-        <select className={disabled || sprint === undefined ? "form-control" : "form-control text-primary"}
-                id="taskUser"
-                value={value} disabled={disabled}
-                onChange={event => setSprint && sprints !== null ? setSprint(sprints.find(s => s.id.toString() === event.target.value)) : {}}>
-          <option value={undefined} disabled={disabled}>Add sprint</option>
-          {sprints !== null ? sprints.map(s => {
+        <select
+          className={disabled || !sprint ? "form-control" : "form-control text-primary"}
+          id="taskUser" value={value} disabled={disabled} placeholder={value === "" ? undefined : sprint?.name}
+          onChange={event => setSprint && sprints !== null ? setSprint(sprints.find(s => s.id.toString() === event.target.value)) : {}}>
+          <option value="" disabled={disabled}>Add sprint</option>
+          {sprints ? sprints.map(s => {
             return (<option className="text-primary" value={s.id} key={s.id} disabled={disabled}>{s.name}</option>)
           }) : ""}
+          {value !== "" && sprints?.filter(s => s.id === sprint?.id).length! < 1 &&
+              <option className="text-primary" value={value} key={value} disabled={true}>{sprint?.name}</option>}
         </select>
       </label>
     )
+  }
+
+  const filter = (task: Task) => {
+    if (task.sprint === null || task.sprint === undefined) {
+      return sprintState.includes(SprintCheckboxOption.NOT_ASSIGNED);
+    }
+    const activeSprintId: number = activeSprint && activeSprint.id ? activeSprint.id : (sprints && sprints?.length > 0 ? sprints[sprints?.length - 1].id + 1 : 0);
+    if (!sprintState.includes(SprintCheckboxOption.PREVIOUS) && task.sprint?.id < activeSprintId) {
+      return false;
+    }
+    if (!sprintState.includes(SprintCheckboxOption.CURRENT) && task.sprint?.id === activeSprintId) {
+      return false;
+    }
+    return !(!sprintState.includes(SprintCheckboxOption.FUTURE) && task.sprint?.id > activeSprintId);
   }
 
   return (
@@ -292,8 +336,25 @@ function Backlog({loggedUser, projects}: Props) {
           <div className="m-2">
             <h1>Backlog {projectName}</h1>
             {isLoading() && loader()}
-            {!isLoading() && TaskStateTable.map(state => displayCheckbox(state))}
-            {!isLoading() && tasks !== null && tasks.filter(task => isStateChecked.includes(task.taskState)).map(task => displayTask(task, task.id !== editedTaskId))}
+            {!isLoading() &&
+                <>
+                    <hr className="sidebar-divider my-0"/>
+                    <div className="d-inline-block mr-5">
+                        <p className="h4 text-center">State</p>
+                      {TaskStateTable.map(state => displayCheckbox(state))}
+                    </div>
+
+                    <div className="d-inline-block">
+                        <p className="h4 text-center">Sprint</p>
+                      {SprintCheckboxOptionTable.map(option => displaySprintCheckbox(option))}
+                    </div>
+                    <hr className="sidebar-divider my-0"/>
+                </>
+            }
+            {!isLoading() && tasks !== null && tasks.filter(task => isStateChecked
+              .includes(task.taskState))
+              .filter(task => filter(task))
+              .map(task => displayTask(task, task.id !== editedTaskId))}
             {!isLoading() && entitlements?.taskEditing && displayAdd()}
           </div>
         </div>
