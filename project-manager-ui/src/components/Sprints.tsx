@@ -38,14 +38,20 @@ function Sprints({loggedUser, projects}: Props) {
   const [sprintSuccess, setSprintSuccess] = useState<string>("");
 
   useEffect(() => {
+    stateGetProject(projectName, project, setProject);
+  }, [project, projectName]);
+  useEffect(() => {
+    stateGetSprintsByProject(project?.id, sprints, setSprints);
+  }, [project, sprints]);
+  useEffect(() => {
+    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
+  }, [activeSprint, project]);
+  useEffect(() => {
     if (entitlements !== undefined && !entitlements.sprintViewing) {
       window.location.replace(window.location.origin + "/projects/" + projectName);
     }
-    stateGetProject(projectName, project, setProject);
-    stateGetSprintsByProject(project?.id, sprints, setSprints);
-    stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
-  }, [activeSprint, entitlements, project, projectName, sprints]);
+  }, [entitlements, project, projectName]);
 
   const isLoading = () => project === null || sprints === null || activeSprint === null || entitlements === null;
 
