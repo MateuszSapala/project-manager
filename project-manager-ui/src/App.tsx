@@ -69,21 +69,20 @@ function App() {
 
   const props = {loggedUser: loggedUser!, projects: projects !== null && projects !== undefined ? projects : []}
   const projectPath = "/projects/:projectName";
-  console.warn(process.env);
+  const loaded = !loadingUser && loggedUser !== null;
   return (
     <div>
       <Routes>
         <Route path="/login" element={<Login message=""/>}/>
-        {!loadingUser && loggedUser !== null && <>
-            <Route path="/" element={<Main {...props}/>}/>
-            <Route path="/add/project" element={<AddProjectComponent {...props} setProjects={setProjects}/>}/>
-            <Route path="/users" element={<Users {...props}/>}/>
-            <Route path={projectPath} element={<ProjectSummary {...props}/>}/>
-            <Route path={projectPath + "/backlog"} element={<Backlog{...props}/>}/>
-            <Route path={projectPath + "/sprints"} element={<Sprints {...props}/>}/>
-            <Route path={projectPath + "/board"} element={<Board {...props}/>}/>
-            <Route path={projectPath + "/accesses"} element={<Accesses {...props}/>}/>
-        </>}
+        <Route path="/" element={!loaded ? <div/> : <Main {...props}/>}/>
+        <Route path="/add/project" element={!loaded ? <div/> :
+          <AddProjectComponent {...props} setProjects={setProjects}/>}/>
+        <Route path="/users" element={!loaded ? <div/> : <Users {...props}/>}/>
+        <Route path={projectPath} element={!loaded ? <div/> : <ProjectSummary {...props}/>}/>
+        <Route path={projectPath + "/backlog"} element={!loaded ? <div/> : <Backlog{...props}/>}/>
+        <Route path={projectPath + "/sprints"} element={!loaded ? <div/> : <Sprints {...props}/>}/>
+        <Route path={projectPath + "/board"} element={!loaded ? <div/> : <Board {...props}/>}/>
+        <Route path={projectPath + "/accesses"} element={!loaded ? <div/> : <Accesses {...props}/>}/>
       </Routes>
     </div>
   );
