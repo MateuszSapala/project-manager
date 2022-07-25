@@ -23,16 +23,20 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+    @Column(nullable = false)
     private LocalDateTime created;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User createdBy;
     private LocalDate end;
     @ManyToOne
     private User assignedTo;
+    @Column(nullable = false)
     private TaskState taskState;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Project project;
     @ManyToOne
     private Sprint sprint;

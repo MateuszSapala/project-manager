@@ -18,10 +18,11 @@ public class Access {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne
+    @ManyToOne(optional = false)
     User user;
-    @ManyToOne
+    @ManyToOne(optional = false)
     Project project;
+    @Column(nullable = false)
     ProjectRole projectRole;
 
     public Access(User user, Project project, ProjectRole projectRole) {

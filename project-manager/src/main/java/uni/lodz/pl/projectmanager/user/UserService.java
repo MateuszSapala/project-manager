@@ -3,6 +3,7 @@ package uni.lodz.pl.projectmanager.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import uni.lodz.pl.projectmanager.user.model.AddUserDto;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     public User addUser(AddUserDto user) {
@@ -25,7 +27,7 @@ public class UserService {
             log.info("Only admin can add new users");
             throw new AuthorizationServiceException("Only admin can add new users");
         }
-        return userRepository.save(new User(user));
+        return userRepository.save(new User(user, passwordEncoder));
     }
 
     public List<User> getUsers() {
@@ -46,7 +48,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User {\"id\":\"" + id + "\"} not found"));
         if (update.editedFields().contains("username")) user.setUsername(update.username());
-        if (update.editedFields().contains("password")) user.setPassword(update.password());
+        if (update.editedFields().contains("password")) user.setPassword(passwordEncoder.encode(update.password()));
         if (update.editedFields().contains("admin") && update.admin() != null) user.setAdmin(update.admin());
         if (update.editedFields().contains("email")) user.setEmail(update.email());
         if (update.editedFields().contains("name")) user.setName(update.name());

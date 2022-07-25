@@ -40,14 +40,20 @@ function Accesses({loggedUser, projects}: Props) {
   const [addError, setAddError] = useState<string>("");
 
   useEffect(() => {
+    stateGetProject(projectName, project, setProject);
+  }, [project, projectName]);
+  useEffect(() => {
+    stateGetAccessesByProject(project?.id, accesses, setAccesses);
+  }, [accesses, project]);
+  useEffect(() => {
+    stateGetUsers(users, setUsers);
+  }, [project, users]);
+  useEffect(() => {
     if (entitlements !== undefined && !entitlements.accessViewing) {
       window.location.replace(window.location.origin + "/projects/" + projectName);
     }
-    stateGetProject(projectName, project, setProject);
-    stateGetAccessesByProject(project?.id, accesses, setAccesses);
-    stateGetUsers(users, setUsers);
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
-  }, [accesses, entitlements, project, projectName, users]);
+  }, [entitlements, project]);
 
   const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || users === null;
 
