@@ -20,6 +20,16 @@ CREATE TABLE `project`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
+CREATE TABLE `retro_note`
+(
+    `id`        bigint       NOT NULL,
+    `note`      varchar(255) NOT NULL,
+    `sprint_id` bigint       NOT NULL,
+    `note_type` int          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
 CREATE TABLE `sprint`
 (
     `id`         bigint       NOT NULL,
@@ -71,6 +81,10 @@ ALTER TABLE `project`
     ADD PRIMARY KEY (`id`),
     ADD UNIQUE KEY `UK_3k75vvu7mevyvvb5may5lj8k7` (`name`);
 
+ALTER TABLE `retro_note`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `FKestehypctb4xdsr6mggkuleb5` (`sprint_id`);
+
 ALTER TABLE `sprint`
     ADD PRIMARY KEY (`id`),
     ADD KEY `FKerwve0blrvfhqm1coxo69f0xr` (`project_id`);
@@ -93,6 +107,9 @@ ALTER TABLE `access`
 ALTER TABLE `project`
     MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `retro_note`
+    MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `sprint`
     MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
@@ -106,6 +123,9 @@ ALTER TABLE `user`
 ALTER TABLE `access`
     ADD CONSTRAINT `FKalqx3el9datlm9v1p72g5bkm5` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
     ADD CONSTRAINT `FKtqbjbrm8i7rsswxtksqw9f369` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+ALTER TABLE `retro_note`
+    ADD CONSTRAINT `FKestehypctb4xdsr6mggkuleb5` FOREIGN KEY (`sprint_id`) REFERENCES `sprint` (`id`);
 
 ALTER TABLE `sprint`
     ADD CONSTRAINT `FKerwve0blrvfhqm1coxo69f0xr` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`);
