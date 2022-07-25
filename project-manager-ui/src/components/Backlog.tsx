@@ -294,7 +294,6 @@ function Backlog({loggedUser, projects}: Props) {
 
   const displaySprintSelect = (disabled: boolean, sprints: Array<Sprint> | null, sprint: Sprint | undefined, setSprint?: Dispatch<Sprint | undefined>) => {
     const value = sprint ? sprint.id : "";
-    console.log(sprint)
     return (
       <label htmlFor="taskUser">
         Sprint:

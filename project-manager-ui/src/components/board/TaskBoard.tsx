@@ -23,9 +23,13 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
 
   useEffect(() => {
     stateGetTasks(projectName, tasks, setTasks);
+  }, [projectName, tasks]);
+  useEffect(() => {
     stateGetProject(projectName, project, setProject);
+  }, [project, projectName]);
+  useEffect(() => {
     stateGetActiveSprintByProject(project?.id, activeSprint, setActiveSprint)
-  }, [activeSprint, project, projectName, tasks]);
+  }, [activeSprint, project]);
 
   const isLoading = () => tasks === null || project === null || activeSprint === null;
 
@@ -52,7 +56,6 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
   const onDropDisabled = (task: Task, monitor: any, status: TaskState) => {
     alert("Not enough rights to edit task");
   };
-  console.log({tasks, project, activeSprint})
   return (
     <div>
       {isLoading() && loader()}

@@ -53,7 +53,7 @@ function Accesses({loggedUser, projects}: Props) {
       window.location.replace(window.location.origin + "/projects/" + projectName);
     }
     stateGetEntitlements(project?.id, entitlements, setEntitlements);
-  }, [entitlements, project]);
+  }, [entitlements, project, projectName]);
 
   const isLoading = () => accesses === null || entitlements === null || project === null || projectName === null || users === null;
 
