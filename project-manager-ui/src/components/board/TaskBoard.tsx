@@ -9,7 +9,7 @@ import {EditTask} from "../../model/task/EditTask";
 import {stateGetActiveSprintByProject, stateGetProject, stateGetTasks} from "../../service/UseStateService";
 import {Project} from "../../model/project/Project";
 import {Sprint} from "../../model/sprint/Sprint";
-import {loader} from "../Util";
+import {displayMessages, loader} from "../Util";
 
 interface Props {
   projectName: string | undefined;
@@ -59,7 +59,8 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
   return (
     <div>
       {isLoading() && loader()}
-      {!isLoading() && <div className={"row"}>
+      {!isLoading() && !activeSprint?.id && displayMessages("No active sprint")}
+      {!isLoading() && activeSprint?.id && <div className={"row"}>
         {TaskStateTable.map((state) => {
           return (
             <div key={state} className={"col-wrapper"}>

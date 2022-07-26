@@ -140,7 +140,7 @@ function Retro({loggedUser, projects}: Props) {
             {!isLoading() && retroNotes &&
                 <>
                   {displaySprintSelect()}
-                  {selectedSprintId === activeSprint?.id && displayAddRetroNote()}
+                  {selectedSprintId === activeSprint?.id && entitlements?.retroNoteEditing && displayAddRetroNote()}
                     <div className="container-fluid">
                         <div className="row">
                           {RetroNoteTypeTable.map(type => {

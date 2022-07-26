@@ -242,6 +242,7 @@ function Backlog({loggedUser, projects}: Props) {
     setEditedTaskName(task !== undefined ? task.name : "");
     setEditedTaskDescription(task !== undefined ? task.description : "");
     setEditedTaskAssignedUser(task !== undefined ? task.assignedTo : undefined);
+    setEditedTaskSprint(task !== undefined ? task.sprint : undefined);
     setEditedTaskError("");
   }
 

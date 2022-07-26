@@ -144,7 +144,7 @@ function Sprints({loggedUser, projects}: Props) {
         return;
       }
       if (sprints === null) return;
-      if (sprints.length === 0) setActiveSprint(new Sprint(response.data));
+      if (sprints.length === 0 || !activeSprint?.id) setActiveSprint(new Sprint(response.data));
       setSprints([...sprints, new Sprint(response.data)]);
       setSprintSuccess("Successfully added Sprint");
       setSprintName("");
