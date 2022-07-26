@@ -1,7 +1,8 @@
 cd ../project-manager-ui || exit
-npm i
-npm run build
+rm -rf build || exit
+npm i || exit
+npm run build || exit
 cd ../project-manager || exit
-mvn clean package
-docker build -t project-manager .
+mvn clean package || exit
+docker build -t project-manager . || exit
 docker compose up -d

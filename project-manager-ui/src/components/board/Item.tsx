@@ -2,9 +2,10 @@ import React, {Fragment, useRef, useState} from "react";
 import {DragSourceMonitor, useDrag, useDrop} from "react-dnd";
 import Window from "./Window";
 import ITEM_TYPE from "../../model/task/Types";
+import {Task} from "../../model/task/Task";
 
 interface Props {
-  item: any;
+  item: Task;
   index: any;
   moveItem: any;
   status: any;
@@ -74,7 +75,8 @@ const Item = ({item, index, moveItem, status}: Props) => {
           style={{backgroundColor: status.color}}
         />
         <p className={"item-title"}>{item.name}</p>
-        <p className={"item-status"}>{item.taskState}</p>
+        <p
+          className={"item-status"}>{item.assignedTo ? `${item.assignedTo.name} ${item.assignedTo.surname}` : "Unassigned"}</p>
       </div>
       <Window item={item} onClose={onClose} show={show}/>
     </Fragment>

@@ -7,4 +7,6 @@ export interface Entitlements {
   accessViewing: boolean;
   accessEditingDeveloperOrViewer: boolean;
   projectViewing: boolean;
+  retroNoteViewing: boolean;
+  retroNoteEditing: boolean;
 }

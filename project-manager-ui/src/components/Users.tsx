@@ -2,7 +2,7 @@ import "../App.css";
 import {User} from "../model/user/User";
 import {Project} from "../model/project/Project";
 import Sidebar from "./Sidebar";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {stateGetUsers} from "../service/UseStateService";
 import {displayMessages, loader} from "./Util";
@@ -63,7 +63,12 @@ function Users({loggedUser, projects}: Props) {
       <Accordion defaultActiveKey="1" className="accordion-task" key={user.id}>
         <Accordion.Item eventKey="0">
           <Accordion.Header className="m-3">
-            <p style={{fontSize: "large"}}>{user.name + " " + user.surname}</p>
+            <p style={{fontSize: "large"}}>
+              {user.name + " " + user.surname}
+              <span className="accordion-task-right">
+                &#x290B; &#x290A;
+              </span>
+            </p>
           </Accordion.Header>
           <Accordion.Body>
             {displayEdit(user)}

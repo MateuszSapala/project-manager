@@ -57,4 +57,17 @@ public class RoleConfig {
     public boolean canViewProject(ProjectRole role) {
         return projectViewing.contains(role.string());
     }
+
+    @Value("${retro-note.viewing}")
+    private List<String> retroNoteViewing;
+
+    @Value("${retro-note.editing}")
+    private List<String> retroNoteEditing;
+
+    public boolean canRetroNote(ProjectRole role, Option option) {
+        return switch (option) {
+            case VIEW -> retroNoteViewing.contains(role.string());
+            case EDIT -> retroNoteEditing.contains(role.string());
+        };
+    }
 }

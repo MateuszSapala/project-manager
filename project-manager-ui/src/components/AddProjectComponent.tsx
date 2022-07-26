@@ -51,7 +51,7 @@ function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
         <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
-            <h1>Add project</h1>
+            <h1>New project</h1>
             <div>
               <div className="form-group">
                 <label htmlFor="taskName">

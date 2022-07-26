@@ -188,6 +188,7 @@ function Backlog({loggedUser, projects}: Props) {
   const displayEdit = (disabled: boolean, task: Task) => {
     return (
       <div className="form-group m-3">
+        <p>State: {capitalizedStatus(task.taskState)}</p>
         {disabled ? "" :
           <label htmlFor="taskName">
             Task name:
@@ -241,6 +242,7 @@ function Backlog({loggedUser, projects}: Props) {
     setEditedTaskName(task !== undefined ? task.name : "");
     setEditedTaskDescription(task !== undefined ? task.description : "");
     setEditedTaskAssignedUser(task !== undefined ? task.assignedTo : undefined);
+    setEditedTaskSprint(task !== undefined ? task.sprint : undefined);
     setEditedTaskError("");
   }
 
@@ -294,7 +296,6 @@ function Backlog({loggedUser, projects}: Props) {
 
   const displaySprintSelect = (disabled: boolean, sprints: Array<Sprint> | null, sprint: Sprint | undefined, setSprint?: Dispatch<Sprint | undefined>) => {
     const value = sprint ? sprint.id : "";
-    console.log(sprint)
     return (
       <label htmlFor="taskUser">
         Sprint:

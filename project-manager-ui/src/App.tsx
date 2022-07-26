@@ -17,6 +17,7 @@ import Sprints from "./components/Sprints";
 import Accesses from "./components/Accesses";
 import AddProjectComponent from "./components/AddProjectComponent";
 import Users from "./components/Users";
+import Retro from "./components/retro/Retro";
 
 function App() {
   const [loadingUser, setLoadingUser] = useState<Boolean>(true);
@@ -83,6 +84,7 @@ function App() {
         <Route path={projectPath + "/sprints"} element={!loaded ? <div/> : <Sprints {...props}/>}/>
         <Route path={projectPath + "/board"} element={!loaded ? <div/> : <Board {...props}/>}/>
         <Route path={projectPath + "/accesses"} element={!loaded ? <div/> : <Accesses {...props}/>}/>
+        <Route path={projectPath + "/retro"} element={!loaded ? <div/> : <Retro {...props}/>}/>
       </Routes>
     </div>
   );
