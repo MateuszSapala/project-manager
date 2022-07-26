@@ -188,6 +188,7 @@ function Backlog({loggedUser, projects}: Props) {
   const displayEdit = (disabled: boolean, task: Task) => {
     return (
       <div className="form-group m-3">
+        <p>State: {capitalizedStatus(task.taskState)}</p>
         {disabled ? "" :
           <label htmlFor="taskName">
             Task name:
