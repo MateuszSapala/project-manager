@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import "./css/sb-admin-2.min.css";
-import "./css/sb-admin-2.css";
+import "startbootstrap-sb-admin-2/css/sb-admin-2.min.css"
+import "startbootstrap-sb-admin-2/css/sb-admin-2.css"
 import "./App.css";
 import Login from "./components/Login";
 import Main from "./components/Main";

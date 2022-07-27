@@ -9,7 +9,7 @@ VALUES (2, b'0', 'user1@gmail.com', 'Adam', /*'pass' encoded in Bcrypt*/
         'user2'),
        (4, b'0', 'user3@gmail.com', 'Sebastian', /*'pass' encoded in Bcrypt*/
         '$2a$10$yAZ73PncTV.Qchan9BHFoOerT3YkOl5Q0CNJpYIHkiqLhZrzREzaS',
-        'Szymański', 'user3'),
+        'Lewandowski', 'user3'),
        (5, b'0', 'user4@gmail.com', 'Artur', /*'pass' encoded in Bcrypt*/
         '$2a$10$hal9EXyA80J42jkDQBh/FuFjY9aTXlh52VUb9YOFIqkDIFoLtNuwm', 'Rewicz',
         'user4'),
