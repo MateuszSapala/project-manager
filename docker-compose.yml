@@ -8,6 +8,7 @@ services:
     volumes:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.sql
       - ./sql/admin.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/3.sql
     restart: always
     environment:
       MYSQL_DATABASE: project_manager
@@ -34,7 +35,7 @@ services:
     container_name: project-manager
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: ./project-manager/Dockerfile
     image: project-manager:latest
     ports:
       - "8080:8080"
@@ -54,7 +55,7 @@ services:
     restart: 'always'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ../project-manager-ui/build:/usr/share/nginx/html
+      - ./project-manager-ui/build:/usr/share/nginx/html
     ports:
       - "80:80"
       - "443:443"
