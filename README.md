@@ -35,7 +35,7 @@ implementation easier and faster.
 
 ## Run
 
-Run project-manager/run.sh file to run database, backend and nginex with built-in frontend. And
+Run run.sh file to run database, backend and nginex with built-in frontend. And
 open [localhost:443](http://localhost:443) (login: admin, password: pass).
 
 Prerequisites:
@@ -46,8 +46,8 @@ Prerequisites:
 ## Run development
 
 - database: run project-manager/run-db.sh file ([phpMyAdmin](http://localhost:8000), username: root, password: password)
-  or run MySQL locally and execute sql commands from files in project-manager/sql directory
-- backend: start project-manager application by running
-  ProjectManagerApplication.java. [Swagger UI](http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs)
+  or run MySQL locally and execute sql commands from files in sql directory
+- backend: start project-manager application by running ProjectManagerApplication.java. in project-manager
+  directory [Swagger UI](http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs)
 - frontend: start project-manager-ui application by running project-manager-ui/run-ui.sh
   file. [UI](http://localhost:3000)
