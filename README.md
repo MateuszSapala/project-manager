@@ -43,6 +43,8 @@ Prerequisites:
 - Installed: Java, Maven, Docker, Npm
 - Configured environment variables: JAVA_HOME and MAVEN_HOME
 
+To not load test data into the database, comment out line 11 in docker-compose.yml
+
 ## Run development
 
 - database: run project-manager/run-db.sh file ([phpMyAdmin](http://localhost:8000), username: root, password: password)
