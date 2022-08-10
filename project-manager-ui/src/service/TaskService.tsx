@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import {EditTask} from "../model/task/EditTask";
 import {AddTask} from "../model/task/AddTask";
 

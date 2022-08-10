@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
 
 export async function getSprintsByProjectId(projectId: number): Promise<AxiosResponse> {

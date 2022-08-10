@@ -1,3 +1,5 @@
+import {translateDoing, translateDone, translateReviewed, translateTodo} from "../../service/LanguageService";
+
 export enum TaskState {
   TODO = "TODO",
   DOING = "DOING",
@@ -13,5 +15,14 @@ export const TaskStateTable = [
 ];
 
 export const capitalizedStatus = (state: TaskState) => {
-  return state.slice(0, 1) + state.toLowerCase().slice(1)
+  switch (state) {
+    case TaskState.TODO:
+      return translateTodo();
+    case TaskState.DOING:
+      return translateDoing();
+    case TaskState.DONE:
+      return translateDone();
+    case TaskState.REVIEWED:
+      return translateReviewed();
+  }
 }

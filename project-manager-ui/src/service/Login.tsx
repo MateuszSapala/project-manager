@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import Credentials from "../model/Credentials";
 
 export async function sendLogin(
