@@ -146,7 +146,7 @@ function Retro({loggedUser, projects}: Props) {
           <div className="m-2">
             <h1>{translateRetro()} {projectName}</h1>
             {isLoading() && !retroNotes && loader()}
-            {!isLoading() && !retroNotes && sprints && sprints?.length === 0 && displayMessages("No sprint available")}
+            {!isLoading() && !retroNotes && sprints && sprints?.length === 0 && displayMessages(translateNoSprintAvailable())}
             {!isLoading() && retroNotes &&
                 <>
                   {displaySprintSelect()}

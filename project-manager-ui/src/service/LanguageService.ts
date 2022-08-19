@@ -99,6 +99,11 @@ export const translateUnableToUpdate = (name: string) => translate(`Unable to up
 export const translateNotEnoughRightsToEditTask = () => translate(`Not enough rights to edit task`, `Nie wystarczające uprawnienia do edycji zadania`);
 export const translateNoActiveSprint = () => translate(`No active sprint`, `Brak aktywnego sprintu`);
 export const translateLoginButton = () => translate(`Login`, `Zaloguj`);
+export const translateMainPage = () => translate(`Main page`, `Strona główna`);
+export const translateClosed = () => translate(`Closed`, `Zamknięty`);
+export const translateActive = () => translate(`Active`, `Aktywny`);
+export const translateYes = () => translate(`Yes`, `Tak`);
+export const translateNo = () => translate(`No`, `Nie`);
 
 
 

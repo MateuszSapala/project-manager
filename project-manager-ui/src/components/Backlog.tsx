@@ -230,7 +230,7 @@ function Backlog({loggedUser, projects}: Props) {
           {translateEndDate()}:
           <DatePicker onChange={date => setEditedTaskDate(date)} selected={disabled ? task.end : editedTaskDate}
                       className={disabled ? "form-control" : "form-control text-primary"} disabled={disabled}
-                      placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+                      placeholderText={translateEnterEndDate()} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
         {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}

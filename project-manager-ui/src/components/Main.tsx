@@ -13,7 +13,7 @@ function Main({loggedUser, projects}: Props) {
   const pl = () => {
     return (
       <>
-        <h3>About</h3>
+        <h3>O projekcie</h3>
         <p>Project manager to aplikacja przeznaczona do zarządzania pracą w procesie tworzenia oprogramowania w zwinnej
           metodologii Scrum. Oprogramowanie umożliwia tworzenie projektów, które umożliwiają tworzenie i edycję zadań,
           których postęp można śledzić na tablicy scrum. Dla każdego projektu możliwe jest również tworzenie i zarządzać

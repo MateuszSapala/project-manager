@@ -11,6 +11,7 @@ import {
   translateBacklog,
   translateBoard,
   translateLogout,
+  translateMainPage,
   translateNewProject,
   translateProjects,
   translateRetro,
@@ -40,7 +41,7 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
       <div className="sidebar-brand-text mx-3">Project manager</div>
       <hr className="sidebar-divider my-0"/>
       <div className="nav-item" style={{marginLeft: "10px"}}>
-        {generateButton(window.location.origin, "Main page", "main_page")}
+        {generateButton(window.location.origin, translateMainPage(), "main_page")}
       </div>
       <hr className="sidebar-divider my-0"/>
       {isLoading() && <div className={"w-50 d-flex justify-content-center"} style={{background: "transparent"}}>

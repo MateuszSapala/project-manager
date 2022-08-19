@@ -12,28 +12,32 @@ import {
 } from "../service/UseStateService";
 import {Sprint} from "../model/sprint/Sprint";
 import DatePicker from "react-datepicker";
-import {displayMessages, loader} from "./Util";
+import {displayMessages, loader, yesNoOption} from "./Util";
 import {AxiosResponse} from "axios";
 import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
 import {confirm} from "react-confirm-box";
 import {Entitlements} from "../model/access/Entitlements";
 import {
+  translateActive,
   translateAdd,
   translateAreYouSureYouWantToCloseSprint,
+  translateClosed,
   translateCloseSprint,
   translateEndDate,
   translateEnterEndDate,
   translateEnterName,
   translateEnterStartDate,
   translateName,
+  translateNo,
   translateSprintHaveTo7Days,
   translateSprintName,
   translateSprints,
   translateStartDate,
   translateSuccessfullyAddedSprint,
   translateTheFollowingDataIsMissing,
-  translateUnableToAddSprint
+  translateUnableToAddSprint,
+  translateYes
 } from "../service/LanguageService";
 
 interface Props {
@@ -81,13 +85,13 @@ function Sprints({loggedUser, projects}: Props) {
       <div className={className} key={sprint.id}>
         <div className="card-body">
           <h5 className="card-title">{sprint.name}</h5>
-          <p className="card-text">Start date: {sprint.start?.toDateString()}</p>
-          <p className="card-text">End date: {sprint.end?.toDateString()}</p>
-          <p className="card-text">Closed: {sprint.closed ? "yes" : "no"}</p>
-          <p className="card-text">Active: {active ? "yes" : "no"}</p>
+          <p className="card-text">{translateStartDate()}: {sprint.start?.toDateString()}</p>
+          <p className="card-text">{translateEndDate()}: {sprint.end?.toDateString()}</p>
+          <p className="card-text">{translateClosed()}: {sprint.closed ? translateYes() : translateNo()}</p>
+          <p className="card-text">{translateActive()}: {active ? translateYes() : translateNo()}</p>
           {entitlements?.sprintEditing && active &&
               <button className="btn btn-primary m-2" onClick={async () => {
-                const result = await confirm(translateAreYouSureYouWantToCloseSprint(sprintName));
+                const result = await confirm(translateAreYouSureYouWantToCloseSprint(sprintName), yesNoOption);
                 if (!result) {
                   console.log("Cancelled");
                   return;

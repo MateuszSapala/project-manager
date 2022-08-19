@@ -12,7 +12,7 @@ import {
   stateGetUsers
 } from "../service/UseStateService";
 import {ProjectRole, ProjectRoleTable, projectRoleToString} from "../model/access/ProjectRole";
-import {displayMessages, loader} from "./Util";
+import {displayMessages, loader, yesNoOption} from "./Util";
 import {AxiosResponse} from "axios";
 import {deleteAccess, editAccess} from "../service/AccessService";
 import {EditAccess} from "../model/access/EditAccess";
@@ -109,7 +109,7 @@ function Accesses({loggedUser, projects}: Props) {
         }}>{translateEdit()}
         </button>
         <button className="btn btn-primary m-2" onClick={async () => {
-          const result = await confirm(translateRevokeAccess(access.user.name, access.user.surname));
+          const result = await confirm(translateRevokeAccess(access.user.name, access.user.surname), yesNoOption);
           if (!result) {
             console.log("Cancelled");
             return;

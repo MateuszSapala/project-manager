@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Col} from "react-bootstrap";
 import {Task} from "../../model/task/Task";
-import {TaskState, TaskStateTable} from "../../model/task/TaskState";
+import {capitalizedStatus, TaskState, TaskStateTable} from "../../model/task/TaskState";
 import {editTask} from "../../service/TaskService";
 import DropWrapper from "./DropWrapper";
 import Item from "./Item";
@@ -69,7 +69,7 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
         {TaskStateTable.map((state) => {
           return (
             <div key={state} className={"col-wrapper"}>
-              <h2 className={"col-header"}>{state}</h2>
+              <h2 className={"col-header"}>{capitalizedStatus(state)}</h2>
               <DropWrapper onDrop={canEdit ? onDrop : onDropDisabled} status={state}>
                 <Col>
                   {tasks

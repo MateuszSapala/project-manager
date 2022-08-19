@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {stateGetUsers} from "../service/UseStateService";
-import {displayMessages, loader} from "./Util";
+import {displayMessages, loader, yesNoOption} from "./Util";
 import {confirm} from "react-confirm-box";
 import {AxiosResponse} from "axios";
 import {addUser, editUser} from "../service/UserService";
@@ -131,7 +131,7 @@ function Users({loggedUser, projects}: Props) {
                      setEditAdmin(!editAdmin);
                      return;
                    }
-                   const result = await confirm(translateAreYouSureAdminRights());
+                   const result = await confirm(translateAreYouSureAdminRights(), yesNoOption);
                    if (!result) {
                      console.log("Cancelled");
                      return;
@@ -234,7 +234,7 @@ function Users({loggedUser, projects}: Props) {
                      setAddAdmin(!addAdmin);
                      return;
                    }
-                   const result = await confirm(translateAreYouSureAdminRights());
+                   const result = await confirm(translateAreYouSureAdminRights(), yesNoOption);
                    if (!result) {
                      console.log("Cancelled");
                      return;
