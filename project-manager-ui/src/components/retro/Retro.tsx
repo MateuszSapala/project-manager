@@ -25,6 +25,12 @@ import {RetroNote} from "../../model/retro/RetroNote";
 import {AxiosResponse} from "axios";
 import {addRetroNote} from "../../service/RetroService";
 import {AddRetroNote} from "../../model/retro/AddRetroNote";
+import {
+  translateEnterRetroNote,
+  translateNoSprintAvailable,
+  translateNoteCantBeEmpty, translateRetro,
+  translateSprint, translateUnableToAddNote
+} from "../../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -79,12 +85,12 @@ function Retro({loggedUser, projects}: Props) {
     const value = selectedSprintId ? selectedSprintId : "";
     return (
       <label htmlFor="taskUser">
-        Sprint:
+        {translateSprint()}:
         <select
           className="form-control text-primary"
           id="taskUser" value={value}
           onChange={event => sprints ? setSelectedSprintId(Number(event.target.value)) : {}}>
-          {((sprints && sprints.length === 0) || value === "") && <option value="">No sprint available</option>}
+          {((sprints && sprints.length === 0) || value === "") && <option value="">{translateNoSprintAvailable()}</option>}
           {sprints ? sprints.map(s => {
             return (<option className="text-primary" value={s.id} key={s.id}>{s.name}</option>)
           }) : ""}
@@ -96,7 +102,7 @@ function Retro({loggedUser, projects}: Props) {
   const displayAddRetroNote = () => {
     return (
       <div className="input-group mb-3">
-        <input type="text" className="form-control text-primary mt-1" placeholder="Enter retro note" id="retroNote"
+        <input type="text" className="form-control text-primary mt-1" placeholder={translateEnterRetroNote()} id="retroNote"
                value={note} onChange={(event => setNote(event.target.value))}/>
         <div className="input-group-prepend">
           {RetroNoteTypeTable.map(type =>
@@ -112,12 +118,12 @@ function Retro({loggedUser, projects}: Props) {
   const addNote = (type: RetroNoteType) => {
     if (!selectedSprintId) return;
     if (!note) {
-      alert("Note can't be empty");
+      alert(translateNoteCantBeEmpty());
       return;
     }
     addRetroNote(new AddRetroNote(note, type, selectedSprintId)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
-        alert("Unable to add note");
+        alert(translateUnableToAddNote());
         return;
       }
       setNote("")
@@ -134,7 +140,7 @@ function Retro({loggedUser, projects}: Props) {
                  entitlements={entitlements}/>
         <div className="main-content">
           <div className="m-2">
-            <h1>Retro {projectName}</h1>
+            <h1>{translateRetro()} {projectName}</h1>
             {isLoading() && !retroNotes && loader()}
             {!isLoading() && !retroNotes && sprints && sprints?.length === 0 && displayMessages("No sprint available")}
             {!isLoading() && retroNotes &&

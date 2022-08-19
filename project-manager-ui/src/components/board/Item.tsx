@@ -3,6 +3,7 @@ import {DragSourceMonitor, useDrag, useDrop} from "react-dnd";
 import Window from "./Window";
 import ITEM_TYPE from "../../model/task/Types";
 import {Task} from "../../model/task/Task";
+import {translateUnassigned} from "../../service/LanguageService";
 
 interface Props {
   item: Task;
@@ -76,7 +77,7 @@ const Item = ({item, index, moveItem, status}: Props) => {
         />
         <p className={"item-title"}>{item.name}</p>
         <p
-          className={"item-status"}>{item.assignedTo ? `${item.assignedTo.name} ${item.assignedTo.surname}` : "Unassigned"}</p>
+          className={"item-status"}>{item.assignedTo ? `${item.assignedTo.name} ${item.assignedTo.surname}` : translateUnassigned()}</p>
       </div>
       <Window item={item} onClose={onClose} show={show}/>
     </Fragment>

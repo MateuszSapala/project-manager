@@ -29,17 +29,20 @@ import {capitalizedOption, SprintCheckboxOption, SprintCheckboxOptionTable} from
 import {
   translateAdd,
   translateAssignedUser,
-  translateBacklog,
+  translateBacklogProject,
   translateCancel,
   translateDescription,
   translateEdit,
-  translateEndDate, translateEnterAssignedUser,
+  translateEndDate,
+  translateEnterAssignedUser,
   translateEnterDescription,
   translateEnterEndDate,
-  translateEnterName, translateEnterSprint,
+  translateEnterName,
+  translateEnterSprint,
   translateName,
   translateSave,
-  translateSprint, translateState,
+  translateSprint,
+  translateState,
   translateSuccessfullyAddedTask,
   translateTheFollowingDataIsMissing,
   translateUnableToAddTask,
@@ -356,7 +359,7 @@ function Backlog({loggedUser, projects}: Props) {
                  entitlements={entitlements}/>
         <div className="main-content">
           <div className="m-2">
-            <h1>{translateBacklog(projectName ? projectName : "")}</h1>
+            <h1>{translateBacklogProject(projectName ? projectName : "")}</h1>
             {isLoading() && loader()}
             {!isLoading() &&
                 <>

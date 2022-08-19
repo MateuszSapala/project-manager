@@ -18,6 +18,23 @@ import {addSprint, closeSprint} from "../service/SprintService";
 import {AddSprintDto} from "../model/sprint/AddSprintDto";
 import {confirm} from "react-confirm-box";
 import {Entitlements} from "../model/access/Entitlements";
+import {
+  translateAdd,
+  translateAreYouSureYouWantToCloseSprint,
+  translateCloseSprint,
+  translateEndDate,
+  translateEnterEndDate,
+  translateEnterName,
+  translateEnterStartDate,
+  translateName,
+  translateSprintHaveTo7Days,
+  translateSprintName,
+  translateSprints,
+  translateStartDate,
+  translateSuccessfullyAddedSprint,
+  translateTheFollowingDataIsMissing,
+  translateUnableToAddSprint
+} from "../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -70,7 +87,7 @@ function Sprints({loggedUser, projects}: Props) {
           <p className="card-text">Active: {active ? "yes" : "no"}</p>
           {entitlements?.sprintEditing && active &&
               <button className="btn btn-primary m-2" onClick={async () => {
-                const result = await confirm("Are you sure you want to close sprint " + sprint.name + " ? This action will carry any unfinished tasks to the next sprint");
+                const result = await confirm(translateAreYouSureYouWantToCloseSprint(sprintName));
                 if (!result) {
                   console.log("Cancelled");
                   return;
@@ -86,7 +103,7 @@ function Sprints({loggedUser, projects}: Props) {
                   if (sprints === null) return;
                   setSprints([...(sprints.filter(s => s.id !== sprint.id)), sprint].sort((a, b) => a.id - b.id))
                 });
-              }}>Close sprint
+              }}>{translateCloseSprint()}
               </button>}
         </div>
       </div>
@@ -97,27 +114,27 @@ function Sprints({loggedUser, projects}: Props) {
     return (
       <div className="form-group">
         <label htmlFor="SprintName">
-          Sprint name:
-          <input type="text" className="form-control text-primary" placeholder="Enter sprint name" id="sprintName"
+          {translateSprintName()}:
+          <input type="text" className="form-control text-primary" placeholder={translateEnterName()} id="sprintName"
                  value={sprintName}
                  onChange={(event => setSprintName(event.target.value))}/>
         </label>
         <label htmlFor="sprintStart">
-          Start date:
+          {translateStartDate()}:
           <DatePicker onChange={date => setSprintStartDate(date)} selected={sprintStartDate}
                       className="form-control text-primary"
                       minDate={sprints === null || sprints.length === 0 ? undefined : sprints[sprints.length - 1].end}
-                      placeholderText={"Enter Start date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+                      placeholderText={translateEnterStartDate()} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         <label htmlFor="SprintEnd">
-          End date:
+          {translateEndDate()}:
           <DatePicker onChange={date => setSprintEndDate(date)} selected={sprintEndDate}
                       minDate={sprintStartDate === null ? (sprints === null || sprints.length === 0 ? undefined : sprints[sprints.length - 1].end) : sprintStartDate}
                       className="form-control text-primary"
-                      placeholderText={"Enter end date"} id="SprintEnd" dateFormat='dd-MM-yyyy'/>
+                      placeholderText={translateEnterEndDate()} id="SprintEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         {displayMessages(sprintError, sprintSuccess)}
-        <button className="btn btn-primary btn-block" onClick={handleAddSprint}>Add</button>
+        <button className="btn btn-primary btn-block" onClick={handleAddSprint}>{translateAdd()}</button>
       </div>
     )
   }
@@ -126,27 +143,27 @@ function Sprints({loggedUser, projects}: Props) {
     setSprintError("");
     setSprintSuccess("");
     const missing: Array<string> = [];
-    if (sprintName === "") missing.push("name");
-    if (sprintStartDate === null) missing.push("start date")
-    if (sprintEndDate === null) missing.push("end date")
+    if (sprintName === "") missing.push(translateName());
+    if (sprintStartDate === null) missing.push(translateStartDate())
+    if (sprintEndDate === null) missing.push(translateEndDate())
     if (missing.length > 0) {
-      setSprintError("The following data is missing: " + missing);
+      setSprintError(translateTheFollowingDataIsMissing(missing));
       return;
     }
     const diffDays = Math.ceil((sprintEndDate!.getTime() - sprintStartDate!.getTime()) / (1000 * 60 * 60 * 24));
     if (diffDays < 7) {
-      setSprintError("Sprint have to last at least 7 days");
+      setSprintError(translateSprintHaveTo7Days);
       return;
     }
     addSprint(new AddSprintDto(sprintName, sprintStartDate!, sprintEndDate!, project!.id)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
-        setSprintError("Unable to add sprint")
+        setSprintError(translateUnableToAddSprint)
         return;
       }
       if (sprints === null) return;
       if (sprints.length === 0 || !activeSprint?.id) setActiveSprint(new Sprint(response.data));
       setSprints([...sprints, new Sprint(response.data)]);
-      setSprintSuccess("Successfully added Sprint");
+      setSprintSuccess(translateSuccessfullyAddedSprint);
       setSprintName("");
       setSprintStartDate(null);
       setSprintEndDate(null);
@@ -160,7 +177,7 @@ function Sprints({loggedUser, projects}: Props) {
         <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="d-flex flex-column main-content ">
           <div className="m-2">
-            <h1>Sprints {projectName}</h1>
+            <h1>{translateSprints()} {projectName}</h1>
             {isLoading() && loader()}
             {!isLoading() && sprints !== null ? sprints.map(sprint => displaySprint(sprint)) : ""}
             {!isLoading() && entitlements?.sprintEditing && displayAdd()}

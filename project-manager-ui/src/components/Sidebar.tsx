@@ -6,6 +6,17 @@ import {User} from "../model/user/User";
 import {Entitlements} from "../model/access/Entitlements";
 import {Circles} from "react-loader-spinner";
 import React from "react";
+import {
+  translateAccesses,
+  translateBacklog,
+  translateBoard,
+  translateLogout,
+  translateNewProject,
+  translateProjects,
+  translateRetro,
+  translateSprints,
+  translateUsers
+} from "../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -38,13 +49,13 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
       {!isLoading() && <div className="nav-item">
           <Accordion defaultActiveKey={!selectedProject ? "0" : "1"} className="nav-link">
               <Accordion.Item eventKey="0">
-                  <Accordion.Header>Projects</Accordion.Header>
+                  <Accordion.Header>{translateProjects()}</Accordion.Header>
                   <Accordion.Body>
                     {projects !== null && projects.map(p => generateButton(window.location.origin + "/projects/" + p.name, p.name, String(p.id)))}
                     {loggedUser?.admin ?
                       <Button key={"Add project"} className="btn btn-link menu-link menu-link-add"
                               onClick={() => window.location.replace(window.location.origin + "/add/project")}>
-                        New project</Button> : ""}
+                        {translateNewProject()}</Button> : ""}
                   </Accordion.Body>
               </Accordion.Item>
           </Accordion>
@@ -52,7 +63,7 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
       {!isLoading() && loggedUser?.admin && <>
           <hr className="sidebar-divider my-0"/>
           <div className="nav-item" style={{marginLeft: "10px"}}>
-            {generateButton(window.location.origin + "/users", "Users", "users")}
+            {generateButton(window.location.origin + "/users", translateUsers(), "users")}
           </div>
       </>}
       {!isLoading() && selectedProject !== null && selectedProject !== undefined &&
@@ -63,11 +74,11 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
                       <Accordion.Item eventKey="0">
                           <Accordion.Header>Dashboard</Accordion.Header>
                           <Accordion.Body>
-                            {entitlements?.taskViewing && generateButton(projectPath + "/backlog", "Backlog", "backlog")}
-                            {entitlements?.taskViewing && generateButton(projectPath + "/board", "Board", "board")}
-                            {entitlements?.sprintViewing && generateButton(projectPath + "/sprints", "Sprints", "sprints")}
-                            {entitlements?.accessViewing && generateButton(projectPath + "/accesses", "Accesses", "accesses")}
-                            {entitlements?.retroNoteViewing && generateButton(projectPath + "/retro", "Retro", "retro")}
+                            {entitlements?.taskViewing && generateButton(projectPath + "/backlog", translateBacklog(), "backlog")}
+                            {entitlements?.taskViewing && generateButton(projectPath + "/board", translateBoard(), "board")}
+                            {entitlements?.sprintViewing && generateButton(projectPath + "/sprints", translateSprints(), "sprints")}
+                            {entitlements?.accessViewing && generateButton(projectPath + "/accesses", translateAccesses(), "accesses")}
+                            {entitlements?.retroNoteViewing && generateButton(projectPath + "/retro", translateRetro(), "retro")}
                           </Accordion.Body>
                       </Accordion.Item>
                   </Accordion>
@@ -79,7 +90,7 @@ function Sidebar({projects, selectedProject, loggedUser, entitlements}: Props) {
         <Button key={"logout"} className="btn btn-link menu-link" onClick={() => {
           window.localStorage.removeItem("authorization");
           window.location.replace("/login");
-        }}>Logout</Button>
+        }}>{translateLogout()}</Button>
       </div>
     </div>
   );

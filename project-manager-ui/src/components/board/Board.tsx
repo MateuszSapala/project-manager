@@ -9,6 +9,7 @@ import TaskBoard from "./TaskBoard";
 import {useEffect, useState} from "react";
 import {stateGetEntitlements, stateGetProject} from "../../service/UseStateService";
 import {Entitlements} from "../../model/access/Entitlements";
+import {translateBoard} from "../../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -34,7 +35,7 @@ function Board({loggedUser, projects}: Props) {
         <Sidebar projects={projects} selectedProject={projectName} loggedUser={loggedUser} entitlements={entitlements}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
-            <h1>Board {projectName}</h1>
+            <h1>{translateBoard()} {projectName}</h1>
             <DndProvider backend={HTML5Backend}>
               {<TaskBoard projectName={projectName} canEdit={entitlements?.taskEditing === true}/>}
             </DndProvider>

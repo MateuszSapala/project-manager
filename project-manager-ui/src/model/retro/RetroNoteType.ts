@@ -1,3 +1,11 @@
+import {
+  translateDone,
+  translateGood,
+  translateIdeas,
+  translateImprove,
+  translateQuestions
+} from "../../service/LanguageService";
+
 export enum RetroNoteType {
   GOOD = "GOOD",
   IMPROVE = "IMPROVE",
@@ -26,5 +34,14 @@ export const retroNoteTypeColor = (type: RetroNoteType) => {
 }
 
 export const capitalizedNoteType = (note: RetroNoteType) => {
-  return note.slice(0, 1) + note.toLowerCase().slice(1)
+  switch (note) {
+    case RetroNoteType.GOOD:
+      return translateGood();
+    case RetroNoteType.IMPROVE:
+      return translateImprove();
+    case RetroNoteType.IDEAS:
+      return translateIdeas();
+    case RetroNoteType.QUESTIONS:
+      return translateQuestions();
+  }
 }
