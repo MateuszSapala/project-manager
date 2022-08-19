@@ -28,8 +28,10 @@ import {AddRetroNote} from "../../model/retro/AddRetroNote";
 import {
   translateEnterRetroNote,
   translateNoSprintAvailable,
-  translateNoteCantBeEmpty, translateRetro,
-  translateSprint, translateUnableToAddNote
+  translateNoteCantBeEmpty,
+  translateRetro,
+  translateSprint,
+  translateUnableToAddNote
 } from "../../service/LanguageService";
 
 interface Props {
@@ -90,7 +92,8 @@ function Retro({loggedUser, projects}: Props) {
           className="form-control text-primary"
           id="taskUser" value={value}
           onChange={event => sprints ? setSelectedSprintId(Number(event.target.value)) : {}}>
-          {((sprints && sprints.length === 0) || value === "") && <option value="">{translateNoSprintAvailable()}</option>}
+          {((sprints && sprints.length === 0) || value === "") &&
+              <option value="">{translateNoSprintAvailable()}</option>}
           {sprints ? sprints.map(s => {
             return (<option className="text-primary" value={s.id} key={s.id}>{s.name}</option>)
           }) : ""}
@@ -102,7 +105,8 @@ function Retro({loggedUser, projects}: Props) {
   const displayAddRetroNote = () => {
     return (
       <div className="input-group mb-3">
-        <input type="text" className="form-control text-primary mt-1" placeholder={translateEnterRetroNote()} id="retroNote"
+        <input type="text" className="form-control text-primary mt-1" placeholder={translateEnterRetroNote()}
+               id="retroNote"
                value={note} onChange={(event => setNote(event.target.value))}/>
         <div className="input-group-prepend">
           {RetroNoteTypeTable.map(type =>

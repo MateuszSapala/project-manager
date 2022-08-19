@@ -19,15 +19,19 @@ import {EditAccess} from "../model/access/EditAccess";
 import {confirm} from "react-confirm-box";
 import {Entitlements} from "../model/access/Entitlements";
 import {
-  translateAccessesProjectName, translateCancel,
-  translateDelete, translateEdit,
+  translateAccessesProjectName,
+  translateCancel,
+  translateDelete,
+  translateEdit,
   translateEmail,
   translateRevokeAccess,
   translateRole,
-  translateRoleNotSelected, translateSave,
+  translateRoleNotSelected,
+  translateSave,
   translateSelectUser,
   translateUnableToAddUserAccess,
-  translateUnableToEditUserAccess, translateUser,
+  translateUnableToEditUserAccess,
+  translateUser,
   translateUserHasAlreadyRole,
   translateUserNotSelected
 } from "../service/LanguageService";

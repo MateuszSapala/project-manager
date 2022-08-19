@@ -6,7 +6,12 @@ import {AxiosResponse} from "axios";
 import Credentials from "../model/Credentials";
 import {sendLogin} from "../service/Login";
 import Message from "../model/Message";
-import {translateLogin, translatePassword, translateWelcomeAgain} from "../service/LanguageService";
+import {
+  translateLogin,
+  translateLoginButton,
+  translatePassword,
+  translateWelcomeAgain
+} from "../service/LanguageService";
 
 function Login(props: Message) {
   let navigate = useNavigate();
@@ -71,7 +76,7 @@ function Login(props: Message) {
                           className="btn btn-primary btn-user btn-block"
                           onClick={handleSubmit}
                         >
-                          {translateLogin()}
+                          {translateLoginButton()}
                         </button>
                       </form>
                     </div>

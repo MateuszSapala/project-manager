@@ -28,11 +28,11 @@ import {
   translatePassword,
   translateSave,
   translateSurname,
-  translateTheFollowingDataIsMissing, translateUnableToEditUser,
+  translateTheFollowingDataIsMissing,
   translateUnableToAddUser,
-  translateUnableToEditTask,
-  translateUnableToEditUserAccess,
-  translateUsername, translateUsers
+  translateUnableToEditUser,
+  translateUsername,
+  translateUsers
 } from "../service/LanguageService";
 
 interface Props {
@@ -205,11 +205,13 @@ function Users({loggedUser, projects}: Props) {
     return (<div>
       <div className="form-group">
         <label>{translateUsername()}:
-          <input type="text" className="form-control text-primary" placeholder={translateEnterUsername()} value={addUsername}
+          <input type="text" className="form-control text-primary" placeholder={translateEnterUsername()}
+                 value={addUsername}
                  onChange={(event => setAddUsername(event.target.value))}/>
         </label>
         <label>{translatePassword()}:
-          <input type="password" className="form-control text-primary" placeholder={translateEnterPassword()} value={addPassword}
+          <input type="password" className="form-control text-primary" placeholder={translateEnterPassword()}
+                 value={addPassword}
                  onChange={(event => setAddPassword(event.target.value))}/>
         </label>
         <label>{translateEmail()}:
@@ -221,7 +223,8 @@ function Users({loggedUser, projects}: Props) {
                  onChange={(event => setAddName(event.target.value))}/>
         </label>
         <label>{translateSurname()}:
-          <input type="text" className="form-control text-primary" placeholder={translateEnterSurname()} value={addSurname}
+          <input type="text" className="form-control text-primary" placeholder={translateEnterSurname()}
+                 value={addSurname}
                  onChange={event => setAddSurname(event.target.value)}/>
         </label>
         <label>

@@ -1,10 +1,4 @@
-import {
-  translateDone,
-  translateGood,
-  translateIdeas,
-  translateImprove,
-  translateQuestions
-} from "../../service/LanguageService";
+import {translateGood, translateIdeas, translateImprove, translateQuestions} from "../../service/LanguageService";
 
 export enum RetroNoteType {
   GOOD = "GOOD",

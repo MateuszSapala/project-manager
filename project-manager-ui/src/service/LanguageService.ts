@@ -97,7 +97,8 @@ export const translateNoteCantBeEmpty = () => translate(`Note can't be empty`, `
 export const translateUnableToAddNote = () => translate(`Unable to add note`, `Nie udało się dodać notatki`);
 export const translateUnableToUpdate = (name: string) => translate(`Unable to update ${name}`, `Nie udało się zaktualizować ${name}`);
 export const translateNotEnoughRightsToEditTask = () => translate(`Not enough rights to edit task`, `Nie wystarczające uprawnienia do edycji zadania`);
-export const translateNoActiveSprint= () => translate(`No active sprint`, `Brak aktywnego sprintu`);
+export const translateNoActiveSprint = () => translate(`No active sprint`, `Brak aktywnego sprintu`);
+export const translateLoginButton = () => translate(`Login`, `Zaloguj`);
 
 
 

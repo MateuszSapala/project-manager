@@ -10,8 +10,11 @@ import {displayMessages} from "./Util";
 import {useNavigate} from "react-router-dom";
 import {
   translateAdd,
-  translateDescription, translateEnterDescription, translateEnterName,
-  translateName, translateNewProject,
+  translateDescription,
+  translateEnterDescription,
+  translateEnterName,
+  translateName,
+  translateNewProject,
   translateTheFollowingDataIsMissing,
   translateUnableToAddProject
 } from "../service/LanguageService";
@@ -63,13 +66,15 @@ function AddProjectComponent({loggedUser, projects, setProjects}: Props) {
               <div className="form-group">
                 <label htmlFor="taskName">
                   {translateName()}:
-                  <input type="text" className="form-control text-primary" placeholder={translateEnterName()} id="projectName"
+                  <input type="text" className="form-control text-primary" placeholder={translateEnterName()}
+                         id="projectName"
                          value={name}
                          onChange={(event => setName(event.target.value))}/>
                 </label>
                 <label htmlFor="taskDescription">
                   {translateDescription()}:
-                  <textarea className="form-control text-primary" placeholder={translateEnterDescription()} id="projectDescription"
+                  <textarea className="form-control text-primary" placeholder={translateEnterDescription()}
+                            id="projectDescription"
                             value={description} rows={10}
                             onChange={(event => setDescription(event.target.value))}/>
                 </label>
