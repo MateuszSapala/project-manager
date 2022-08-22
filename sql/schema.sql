@@ -9,7 +9,7 @@ CREATE TABLE `access`
     `user_id`      bigint NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci ;
 
 CREATE TABLE `project`
 (
@@ -18,7 +18,7 @@ CREATE TABLE `project`
     `name`        varchar(30) NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci;
 
 CREATE TABLE `retro_note`
 (
@@ -28,7 +28,7 @@ CREATE TABLE `retro_note`
     `note_type` int          NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci;
 
 CREATE TABLE `sprint`
 (
@@ -40,7 +40,7 @@ CREATE TABLE `sprint`
     `project_id` bigint       NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci;
 
 CREATE TABLE `task`
 (
@@ -56,7 +56,7 @@ CREATE TABLE `task`
     `sprint_id`      bigint DEFAULT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci;
 
 CREATE TABLE `user`
 (
@@ -69,7 +69,7 @@ CREATE TABLE `user`
     `username` varchar(30)  NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  COLLATE = utf8mb4_polish_ci;
 
 
 ALTER TABLE `access`

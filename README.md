@@ -53,3 +53,8 @@ To not load test data into the database, comment out line 11 in docker-compose.y
   directory [Swagger UI](http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs)
 - frontend: start project-manager-ui application by running project-manager-ui/run-ui.sh
   file. [UI](http://localhost:3000)
+
+## Polish language
+
+To make the user interface available in Polish, change the variable "REACT_APP_LANGUAGE" in the file project-manager-ui/.env to "PL". 
+To load test data in Polish, comment out line 11 in docker-compose.yml and uncomment line 12.
