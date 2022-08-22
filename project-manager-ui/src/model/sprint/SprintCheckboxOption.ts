@@ -1,3 +1,10 @@
+import {
+  translateCurrent,
+  translateFuture,
+  translateNotAssigned,
+  translatePrevious
+} from "../../service/LanguageService";
+
 export enum SprintCheckboxOption {
   PREVIOUS = "PREVIOUS",
   CURRENT = "CURRENT",
@@ -13,5 +20,14 @@ export const SprintCheckboxOptionTable = [
 ];
 
 export const capitalizedOption = (state: SprintCheckboxOption) => {
-  return state.slice(0, 1) + state.toLowerCase().replaceAll("_", " ").slice(1)
+  switch (state) {
+    case SprintCheckboxOption.PREVIOUS:
+      return translatePrevious()
+    case SprintCheckboxOption.CURRENT:
+      return translateCurrent()
+    case SprintCheckboxOption.FUTURE:
+      return translateFuture()
+    case SprintCheckboxOption.NOT_ASSIGNED:
+      return translateNotAssigned()
+  }
 }

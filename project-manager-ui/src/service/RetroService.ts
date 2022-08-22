@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import {AddRetroNote} from "../model/retro/AddRetroNote";
 
 export async function getRetroNotesBySprintId(sprintId: number): Promise<AxiosResponse> {

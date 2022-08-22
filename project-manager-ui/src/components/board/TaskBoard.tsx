@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Col} from "react-bootstrap";
 import {Task} from "../../model/task/Task";
-import {TaskState, TaskStateTable} from "../../model/task/TaskState";
+import {capitalizedStatus, TaskState, TaskStateTable} from "../../model/task/TaskState";
 import {editTask} from "../../service/TaskService";
 import DropWrapper from "./DropWrapper";
 import Item from "./Item";
@@ -10,6 +10,11 @@ import {stateGetActiveSprintByProject, stateGetProject, stateGetTasks} from "../
 import {Project} from "../../model/project/Project";
 import {Sprint} from "../../model/sprint/Sprint";
 import {displayMessages, loader} from "../Util";
+import {
+  translateNoActiveSprint,
+  translateNotEnoughRightsToEditTask,
+  translateUnableToUpdate
+} from "../../service/LanguageService";
 
 interface Props {
   projectName: string | undefined;
@@ -43,7 +48,7 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
         editTask(i.id, new EditTask(["taskState"], null, undefined, undefined, undefined, undefined, status))
           .catch(error => {
             console.error(error);
-            alert("Unable to update " + task.name);
+            alert(translateUnableToUpdate(task.name));
             setTasks([...tasks.filter(x => x.id !== task.id), task]);
           });
         i.taskState = status;
@@ -54,17 +59,17 @@ const TaskBoard = ({projectName, canEdit}: Props) => {
   };
 
   const onDropDisabled = (task: Task, monitor: any, status: TaskState) => {
-    alert("Not enough rights to edit task");
+    alert(translateNotEnoughRightsToEditTask());
   };
   return (
     <div>
       {isLoading() && loader()}
-      {!isLoading() && !activeSprint?.id && displayMessages("No active sprint")}
+      {!isLoading() && !activeSprint?.id && displayMessages(translateNoActiveSprint())}
       {!isLoading() && activeSprint?.id && <div className={"row"}>
         {TaskStateTable.map((state) => {
           return (
             <div key={state} className={"col-wrapper"}>
-              <h2 className={"col-header"}>{state}</h2>
+              <h2 className={"col-header"}>{capitalizedStatus(state)}</h2>
               <DropWrapper onDrop={canEdit ? onDrop : onDropDisabled} status={state}>
                 <Col>
                   {tasks

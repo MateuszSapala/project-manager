@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import {EditAccess} from "../model/access/EditAccess";
 
 export async function getAccessByProject(projectId: number): Promise<AxiosResponse> {

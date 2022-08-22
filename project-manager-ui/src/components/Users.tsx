@@ -5,13 +5,35 @@ import Sidebar from "./Sidebar";
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {stateGetUsers} from "../service/UseStateService";
-import {displayMessages, loader} from "./Util";
+import {displayMessages, loader, yesNoOption} from "./Util";
 import {confirm} from "react-confirm-box";
 import {AxiosResponse} from "axios";
 import {addUser, editUser} from "../service/UserService";
 import {AddUser} from "../model/user/AddUser";
 import {EditUser} from "../model/user/EditUser";
 import {Accordion} from "react-bootstrap";
+import {
+  translateAdd,
+  translateAdmin,
+  translateAreYouSureAdminRights,
+  translateCancel,
+  translateEdit,
+  translateEmail,
+  translateEnterEmail,
+  translateEnterName,
+  translateEnterPassword,
+  translateEnterSurname,
+  translateEnterUsername,
+  translateName,
+  translatePassword,
+  translateSave,
+  translateSurname,
+  translateTheFollowingDataIsMissing,
+  translateUnableToAddUser,
+  translateUnableToEditUser,
+  translateUsername,
+  translateUsers
+} from "../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -82,24 +104,24 @@ function Users({loggedUser, projects}: Props) {
     const edited = user.id === editedId;
     return (<div>
       <div className="form-group m-3">
-        <label>Username:
+        <label>{translateUsername()}:
           <input type="text" className="form-control text-primary"
-                 placeholder={edited ? "Enter username" : user.username} value={edited ? editUsername : ""}
+                 placeholder={edited ? translateEnterUsername() : user.username} value={edited ? editUsername : ""}
                  onChange={(event => setEditUsername(event.target.value))} disabled={!edited}/>
         </label>
-        <label>Email:
+        <label>{translateEmail()}:
           <input type="text" className="form-control text-primary"
-                 placeholder={edited ? "Enter email" : user.email} value={edited ? editEmail : ""}
+                 placeholder={edited ? translateEnterEmail() : user.email} value={edited ? editEmail : ""}
                  onChange={(event => setEditEmail(event.target.value))} disabled={!edited}/>
         </label>
-        <label>Name:
+        <label>{translateName()}:
           <input type="text" className="form-control text-primary"
-                 placeholder={edited ? "Enter name" : user.name} value={edited ? editName : ""}
+                 placeholder={edited ? translateName() : user.name} value={edited ? editName : ""}
                  onChange={(event => setEditName(event.target.value))} disabled={!edited}/>
         </label>
-        <label>Surname:
+        <label>{translateSurname()}:
           <input type="text" className="form-control text-primary"
-                 placeholder={edited ? "Enter surname" : user.surname} value={edited ? editSurname : ""}
+                 placeholder={edited ? translateEnterSurname() : user.surname} value={edited ? editSurname : ""}
                  onChange={event => setEditSurname(event.target.value)} disabled={!edited}/>
         </label>
         <label>
@@ -109,31 +131,31 @@ function Users({loggedUser, projects}: Props) {
                      setEditAdmin(!editAdmin);
                      return;
                    }
-                   const result = await confirm("Are you sure you want to add admin rights for this user?");
+                   const result = await confirm(translateAreYouSureAdminRights(), yesNoOption);
                    if (!result) {
                      console.log("Cancelled");
                      return;
                    }
                    setEditAdmin(!editAdmin)
-                 }}/> admin
+                 }}/> {translateAdmin()}
         </label>
         {edited ? displayMessages(editError) : ""}
         {!edited ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
-                    onClick={() => setEdited(user)}>Edit
+                    onClick={() => setEdited(user)}>{translateEdit()}
             </button>
           </div> : ""}
         {edited ?
           <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleEditUser}>
-                Save
+                {translateSave()}
               </button>
             </div>
             <div className="two-buttons float-right">
               <button className="btn btn-primary btn-block" onClick={() => setEdited()}>
-                Cancel
+                {translateCancel()}
               </button>
             </div>
           </div>
@@ -145,12 +167,12 @@ function Users({loggedUser, projects}: Props) {
   const handleEditUser = () => {
     setEditError("");
     const missing = [];
-    if (editUsername === "") missing.push("username");
-    if (editEmail === "") missing.push("email");
-    if (editName === "") missing.push("name");
-    if (editSurname === "") missing.push("surname");
+    if (editUsername === "") missing.push(translateUsername());
+    if (editEmail === "") missing.push(translateEnterEmail());
+    if (editName === "") missing.push(translateName());
+    if (editSurname === "") missing.push(translateSurname());
     if (missing.length > 0) {
-      setEditError("Following fields are missing: " + missing.toString().replaceAll(",", ", "));
+      setEditError(translateTheFollowingDataIsMissing(missing));
       return;
     }
 
@@ -170,7 +192,7 @@ function Users({loggedUser, projects}: Props) {
       const resp = response as AxiosResponse;
       if (resp.status !== 200) {
         console.log("Unable to edit user");
-        setEditError("Unable to add user");
+        setEditError(translateUnableToEditUser());
         return;
       }
       if (users === null) return;
@@ -182,24 +204,27 @@ function Users({loggedUser, projects}: Props) {
   const displayAdd = () => {
     return (<div>
       <div className="form-group">
-        <label>Username:
-          <input type="text" className="form-control text-primary" placeholder="Enter username" value={addUsername}
+        <label>{translateUsername()}:
+          <input type="text" className="form-control text-primary" placeholder={translateEnterUsername()}
+                 value={addUsername}
                  onChange={(event => setAddUsername(event.target.value))}/>
         </label>
-        <label>Password:
-          <input type="password" className="form-control text-primary" placeholder="Enter password" value={addPassword}
+        <label>{translatePassword()}:
+          <input type="password" className="form-control text-primary" placeholder={translateEnterPassword()}
+                 value={addPassword}
                  onChange={(event => setAddPassword(event.target.value))}/>
         </label>
-        <label>Email:
-          <input type="text" className="form-control text-primary" placeholder="Enter email" value={addEmail}
+        <label>{translateEmail()}:
+          <input type="text" className="form-control text-primary" placeholder={translateEnterEmail()} value={addEmail}
                  onChange={(event => setAddEmail(event.target.value))}/>
         </label>
-        <label>Name:
-          <input type="text" className="form-control text-primary" placeholder="Enter name" value={addName}
+        <label>{translateName()}:
+          <input type="text" className="form-control text-primary" placeholder={translateEnterName()} value={addName}
                  onChange={(event => setAddName(event.target.value))}/>
         </label>
-        <label>Surname:
-          <input type="text" className="form-control text-primary" placeholder="Enter surname" value={addSurname}
+        <label>{translateSurname()}:
+          <input type="text" className="form-control text-primary" placeholder={translateEnterSurname()}
+                 value={addSurname}
                  onChange={event => setAddSurname(event.target.value)}/>
         </label>
         <label>
@@ -209,16 +234,16 @@ function Users({loggedUser, projects}: Props) {
                      setAddAdmin(!addAdmin);
                      return;
                    }
-                   const result = await confirm("Are you sure you want to add admin rights for this user?");
+                   const result = await confirm(translateAreYouSureAdminRights(), yesNoOption);
                    if (!result) {
                      console.log("Cancelled");
                      return;
                    }
                    setAddAdmin(!addAdmin)
-                 }}/> admin
+                 }}/> {translateAdmin()}
         </label>
         {displayMessages(addError, addSuccess)}
-        <button className="btn btn-primary btn-block" onClick={handleAddUser}>Add</button>
+        <button className="btn btn-primary btn-block" onClick={handleAddUser}>{translateAdd()}</button>
       </div>
     </div>)
   }
@@ -227,13 +252,13 @@ function Users({loggedUser, projects}: Props) {
     setAddError("");
     setAddSuccess("");
     const missing = [];
-    if (addUsername === "") missing.push("username");
-    if (addPassword === "") missing.push("password");
-    if (addEmail === "") missing.push("email");
-    if (addName === "") missing.push("name");
-    if (addSurname === "") missing.push("surname");
+    if (addUsername === "") missing.push(translateUsername());
+    if (addPassword === "") missing.push(translatePassword());
+    if (addEmail === "") missing.push(translateEmail());
+    if (addName === "") missing.push(translateName());
+    if (addSurname === "") missing.push(translateSurname());
     if (missing.length > 0) {
-      setAddError("Following fields are missing: " + missing.toString().replaceAll(",", ", "));
+      setAddError(translateTheFollowingDataIsMissing(missing));
       return;
     }
 
@@ -241,7 +266,7 @@ function Users({loggedUser, projects}: Props) {
       const resp = response as AxiosResponse;
       if (resp.status !== 201) {
         console.log("Unable to add user");
-        setAddError("Unable to add user");
+        setAddError(translateUnableToAddUser);
         return;
       }
       setAddSuccess("Successfully added user")
@@ -256,7 +281,7 @@ function Users({loggedUser, projects}: Props) {
         <Sidebar projects={projects} loggedUser={loggedUser}/>
         <div className="d-flex flex-column main-content">
           <div className="m-2">
-            <h1>Users</h1>
+            <h1>{translateUsers()}</h1>
             {isLoading() && loader()}
             {!isLoading() && users?.map(u => displayUser(u))}
             {!isLoading() && displayAdd()}

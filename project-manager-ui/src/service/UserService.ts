@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import AppConfig from "../AppConfig";
+import AppConfig from "../config/AppConfig";
 import {AddUser} from "../model/user/AddUser";
 import {EditUser} from "../model/user/EditUser";
 

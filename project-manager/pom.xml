@@ -17,8 +17,8 @@
         <java.version>17</java.version>
         <okhttp.version>5.0.0-alpha.2</okhttp.version>
         <springdoc.version>1.6.9</springdoc.version>
-        <spring.boot.version>2.7.1</spring.boot.version>
-        <spring.security.version>5.7.1</spring.security.version>
+        <spring.boot.version>2.7.2</spring.boot.version>
+        <spring.security.version>5.7.2</spring.security.version>
     </properties>
     <dependencies>
         <!-- Web -->

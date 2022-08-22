@@ -18,6 +18,7 @@ import Accesses from "./components/Accesses";
 import AddProjectComponent from "./components/AddProjectComponent";
 import Users from "./components/Users";
 import Retro from "./components/retro/Retro";
+import AppConfig from "./config/AppConfig";
 
 function App() {
   const [loadingUser, setLoadingUser] = useState<Boolean>(true);
@@ -71,6 +72,7 @@ function App() {
   const props = {loggedUser: loggedUser!, projects: projects !== null && projects !== undefined ? projects : []}
   const projectPath = "/projects/:projectName";
   const loaded = !loadingUser && loggedUser !== null;
+  console.log(AppConfig)
   return (
     <div>
       <Routes>

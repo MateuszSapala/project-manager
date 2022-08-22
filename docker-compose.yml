@@ -9,6 +9,7 @@ services:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.sql
       - ./sql/admin.sql:/docker-entrypoint-initdb.d/2.sql
       - ./sql/data.sql:/docker-entrypoint-initdb.d/3.sql
+#      - ./sql/data-pl.sql:/docker-entrypoint-initdb.d/3.sql
     restart: always
     environment:
       MYSQL_DATABASE: project_manager

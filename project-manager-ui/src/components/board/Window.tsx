@@ -1,6 +1,7 @@
 import React from "react";
 import {Modal} from "react-bootstrap";
 import {Task} from "../../model/task/Task";
+import {translateDescription, translateState} from "../../service/LanguageService";
 
 interface Props {
   show: any;
@@ -23,9 +24,9 @@ const Window = ({show, onClose, item}: Props) => {
         </button>
       </div>
       <div>
-        <h2>Description</h2>
+        <h2>{translateDescription()}</h2>
         <p>{item.description}</p>
-        <h2>Status</h2>
+        <h2>{translateState()}</h2>
         <p>{item.taskState}</p>
       </div>
     </Modal>

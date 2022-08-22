@@ -6,6 +6,12 @@ import {AxiosResponse} from "axios";
 import Credentials from "../model/Credentials";
 import {sendLogin} from "../service/Login";
 import Message from "../model/Message";
+import {
+  translateLogin,
+  translateLoginButton,
+  translatePassword,
+  translateWelcomeAgain
+} from "../service/LanguageService";
 
 function Login(props: Message) {
   let navigate = useNavigate();
@@ -45,7 +51,7 @@ function Login(props: Message) {
                     <div className="p-5">
                       <div className="text-center">
                         <h1 className="h4 text-gray-900 mb-4">
-                          Welcome again!
+                          {translateWelcomeAgain()}
                         </h1>
                       </div>
                       <form className="user">
@@ -55,7 +61,7 @@ function Login(props: Message) {
                             className="form-control form-control-user"
                             id="username"
                             aria-describedby="emailHelp"
-                            placeholder="Login"
+                            placeholder={translateLogin()}
                           />
                         </div>
                         <div className="form-group">
@@ -63,14 +69,14 @@ function Login(props: Message) {
                             type="password"
                             className="form-control form-control-user"
                             id="password"
-                            placeholder="Password"
+                            placeholder={translatePassword()}
                           />
                         </div>
                         <button
                           className="btn btn-primary btn-user btn-block"
                           onClick={handleSubmit}
                         >
-                          Login
+                          {translateLoginButton()}
                         </button>
                       </form>
                     </div>

@@ -26,6 +26,29 @@ import {displayMessages, loader} from "./Util";
 import {Sprint} from "../model/sprint/Sprint";
 import {Entitlements} from "../model/access/Entitlements";
 import {capitalizedOption, SprintCheckboxOption, SprintCheckboxOptionTable} from "../model/sprint/SprintCheckboxOption";
+import {
+  translateAdd,
+  translateAssignedUser,
+  translateBacklogProject,
+  translateCancel,
+  translateDescription,
+  translateEdit,
+  translateEndDate,
+  translateEnterAssignedUser,
+  translateEnterDescription,
+  translateEnterEndDate,
+  translateEnterName,
+  translateEnterSprint,
+  translateName,
+  translateSave,
+  translateSprint,
+  translateState,
+  translateSuccessfullyAddedTask,
+  translateTheFollowingDataIsMissing,
+  translateUnableToAddTask,
+  translateUnableToEditTask,
+  translateUnassigned
+} from "../service/LanguageService";
 
 interface Props {
   loggedUser: User | null;
@@ -114,7 +137,7 @@ function Backlog({loggedUser, projects}: Props) {
               {task.name}
               <span className="accordion-task-right">
                 <span
-                  style={{marginRight: "20px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : "Unassigned"}
+                  style={{marginRight: "20px"}}>{task.assignedTo ? task.assignedTo.name + " " + task.assignedTo.surname : translateUnassigned()}
                 </span>
                 &#x290B; &#x290A;
               </span>
@@ -133,26 +156,27 @@ function Backlog({loggedUser, projects}: Props) {
       <div>
         <div className="form-group">
           <label htmlFor="taskName">
-            Task name:
-            <input type="text" className="form-control text-primary" placeholder="Enter task name" id="taskName"
+            {translateName()}:
+            <input type="text" className="form-control text-primary" placeholder={translateEnterName()} id="taskName"
                    value={taskName}
                    onChange={(event => setTaskName(event.target.value))}/>
           </label>
           <label htmlFor="taskDescription">
-            Description:
-            <textarea className="form-control text-primary" placeholder="Enter description" id="taskDescription"
+            {translateDescription()}:
+            <textarea className="form-control text-primary" placeholder={translateEnterDescription()}
+                      id="taskDescription"
                       value={taskDescription}
                       onChange={(event => setTaskDescription(event.target.value))}/>
           </label>
           <label htmlFor="taskEnd">
-            End date:
+            {translateEndDate()}:
             <DatePicker onChange={date => setTaskDate(date)} selected={taskDate} className="form-control text-primary"
-                        placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+                        placeholderText={translateEnterEndDate()} id="taskEnd" dateFormat='dd-MM-yyyy'/>
           </label>
           {displayUserSelect(false, accesses, taskAssignedUser, setTaskAssignedUser)}
           {displaySprintSelect(false, sprints !== null ? sprints.filter(s => !s.closed) : [], taskSprint, setTaskSprint)}
           {displayMessages(taskError, taskSuccess)}
-          <button className="btn btn-primary btn-block" onClick={handleAddTask}>Add</button>
+          <button className="btn btn-primary btn-block" onClick={handleAddTask}>{translateAdd()}</button>
         </div>
       </div>
     )
@@ -162,20 +186,20 @@ function Backlog({loggedUser, projects}: Props) {
     setTaskError("");
     setTaskSuccess("");
     const missing: Array<string> = [];
-    if (taskName === "") missing.push("name");
-    if (taskDescription === "") missing.push("description")
+    if (taskName === "") missing.push(translateName());
+    if (taskDescription === "") missing.push(translateDescription())
     if (missing.length > 0) {
-      setTaskError("The following data is missing: " + missing);
+      setTaskError(translateTheFollowingDataIsMissing(missing));
       return;
     }
     if (tasks === null) return;
     addTask(new AddTask(project!.id, taskName, taskDescription, taskDate, taskAssignedUser?.id, taskSprint?.id)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
-        setTaskError("Unable to add task")
+        setTaskError(translateUnableToAddTask())
         return;
       }
       setTasks([...tasks, new Task(response.data)]);
-      setTaskSuccess("Successfully added task");
+      setTaskSuccess(translateSuccessfullyAddedTask());
       setTaskDate(null);
       setTaskName("");
       setTaskDescription("");
@@ -188,25 +212,25 @@ function Backlog({loggedUser, projects}: Props) {
   const displayEdit = (disabled: boolean, task: Task) => {
     return (
       <div className="form-group m-3">
-        <p>State: {capitalizedStatus(task.taskState)}</p>
+        <p>{translateState()}: {capitalizedStatus(task.taskState)}</p>
         {disabled ? "" :
           <label htmlFor="taskName">
-            Task name:
+            {translateName()}:
             <input type="text" className="form-control text-primary" placeholder={task.name} id="taskName"
                    value={disabled ? "" : editedTaskName} disabled={disabled}
                    onChange={(event => setEditedTaskName(event.target.value))}/>
           </label>}
         <label htmlFor="taskDescription">
-          Description:
+          {translateDescription()}:
           <textarea className="form-control text-primary" placeholder={task.description} id="taskDescription"
                     value={disabled ? "" : editedTaskDescription} disabled={disabled}
                     onChange={(event => setEditedTaskDescription(event.target.value))}/>
         </label>
         <label htmlFor="taskEnd">
-          End date:
+          {translateEndDate()}:
           <DatePicker onChange={date => setEditedTaskDate(date)} selected={disabled ? task.end : editedTaskDate}
                       className={disabled ? "form-control" : "form-control text-primary"} disabled={disabled}
-                      placeholderText={"Enter end date"} id="taskEnd" dateFormat='dd-MM-yyyy'/>
+                      placeholderText={translateEnterEndDate()} id="taskEnd" dateFormat='dd-MM-yyyy'/>
         </label>
         {displayUserSelect(disabled, accesses, disabled ? task.assignedTo : editedTaskAssignedUser, setEditedTaskAssignedUser)}
         {displaySprintSelect(disabled, sprints !== null ? sprints.filter(s => !s.closed) : null, disabled ? task.sprint : editedTaskSprint, setEditedTaskSprint)}
@@ -215,19 +239,19 @@ function Backlog({loggedUser, projects}: Props) {
         {entitlements?.taskEditing && disabled ?
           <div className="accordion-buttons-container">
             <button className="btn btn-primary btn-block"
-                    onClick={() => editTaskChangeState(task)}>Edit
+                    onClick={() => editTaskChangeState(task)}>{translateEdit()}
             </button>
           </div> : ""}
         {entitlements?.taskEditing && !disabled ?
           <div className="accordion-buttons-container">
             <div className="two-buttons float-left">
               <button className="btn btn-primary btn-block" onClick={handleSaveTask}>
-                Save
+                {translateSave()}
               </button>
             </div>
             <div className="two-buttons float-right">
               <button className="btn btn-primary btn-block" onClick={() => editTaskChangeState()}>
-                Cancel
+                {translateCancel()}
               </button>
             </div>
           </div>
@@ -249,10 +273,10 @@ function Backlog({loggedUser, projects}: Props) {
   const handleSaveTask = () => {
     setEditedTaskError("");
     const missing: Array<string> = [];
-    if (editedTaskName === "") missing.push("name");
-    if (editedTaskDescription === "") missing.push("description")
+    if (editedTaskName === "") missing.push(translateName());
+    if (editedTaskDescription === "") missing.push(translateDescription())
     if (missing.length > 0) {
-      setEditedTaskError("The following data is missing: " + missing);
+      setEditedTaskError(translateTheFollowingDataIsMissing(missing));
       return;
     }
     if (tasks === null) return;
@@ -265,7 +289,7 @@ function Backlog({loggedUser, projects}: Props) {
     if (editedTaskSprint?.id !== oldTask.sprint?.id) editedFields.push("sprintId");
     editTask(editedTaskId!, new EditTask(editedFields, editedTaskDate, editedTaskName, editedTaskDescription, editedTaskAssignedUser?.id, editedTaskSprint?.id, undefined)).then(response => {
       if ((response as AxiosResponse).status !== 201) {
-        setEditedTaskError("Unable to edit task")
+        setEditedTaskError(translateUnableToEditTask())
         return;
       }
       setTasks([...(tasks.filter(t => t.id !== editedTaskId!)), new Task(response.data)].sort((a, b) => a.id - b.id));
@@ -277,12 +301,12 @@ function Backlog({loggedUser, projects}: Props) {
   const displayUserSelect = (disabled: boolean, accesses: Array<Access> | null, user: User | undefined, setUser?: Dispatch<User | undefined>) => {
     return (
       <label htmlFor="taskUser">
-        Assigned user:
+        {translateAssignedUser()}:
         <select
           className={disabled || !user ? "form-control" : "form-control text-primary"}
           id="taskUser" value={user ? user.id : ""} disabled={disabled}
           onChange={event => setUser && accesses !== null ? setUser(accesses.find(access => access.user.id.toString() === event.target.value)?.user) : {}}>
-          <option value="" disabled={disabled}>Add assigned user</option>
+          <option value="" disabled={disabled}>{translateEnterAssignedUser()}</option>
           {accesses ? accesses.map(access => {
             return (<option className="text-primary" value={access.user.id} key={access.user.id}
                             disabled={disabled}>
@@ -298,12 +322,12 @@ function Backlog({loggedUser, projects}: Props) {
     const value = sprint ? sprint.id : "";
     return (
       <label htmlFor="taskUser">
-        Sprint:
+        {translateSprint()}:
         <select
           className={disabled || !sprint ? "form-control" : "form-control text-primary"}
           id="taskUser" value={value} disabled={disabled} placeholder={value === "" ? undefined : sprint?.name}
           onChange={event => setSprint && sprints !== null ? setSprint(sprints.find(s => s.id.toString() === event.target.value)) : {}}>
-          <option value="" disabled={disabled}>Add sprint</option>
+          <option value="" disabled={disabled}>{translateEnterSprint()}</option>
           {sprints ? sprints.map(s => {
             return (<option className="text-primary" value={s.id} key={s.id} disabled={disabled}>{s.name}</option>)
           }) : ""}
@@ -335,18 +359,18 @@ function Backlog({loggedUser, projects}: Props) {
                  entitlements={entitlements}/>
         <div className="main-content">
           <div className="m-2">
-            <h1>Backlog {projectName}</h1>
+            <h1>{translateBacklogProject(projectName ? projectName : "")}</h1>
             {isLoading() && loader()}
             {!isLoading() &&
                 <>
                     <hr className="sidebar-divider my-0"/>
                     <div className="d-inline-block mr-5">
-                        <p className="h4 text-center">State</p>
+                        <p className="h4 text-center">{translateState()}</p>
                       {TaskStateTable.map(state => displayCheckbox(state))}
                     </div>
 
                     <div className="d-inline-block">
-                        <p className="h4 text-center">Sprint</p>
+                        <p className="h4 text-center">{translateSprint()}</p>
                       {SprintCheckboxOptionTable.map(option => displaySprintCheckbox(option))}
                     </div>
                     <hr className="sidebar-divider my-0"/>
